@@ -1,8 +1,9 @@
 const path = require('path');
 //const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const HTMLWebpackPlugin = require('html-webpack-plugin');
+//const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+//const ESLintPlugin = require('eslint-webpack-plugin');
 const webpack = require('webpack');
 
 // TODO eslint
@@ -69,12 +70,14 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                    options: {
-                        presets: ['@babel/preset-env']
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: {
+                            presets: ['@babel/preset-env']
+                        }
                     }
-                }
+                ]
             }
 
         ]
@@ -91,6 +94,7 @@ module.exports = {
                 {from: path.resolve(__dirname, 'frontend/fonts/'), to: path.resolve(__dirname, 'app/frontend/fonts')},
             ],
         }),
+        //new ESLintPlugin(),
         new webpack.HotModuleReplacementPlugin()
     ]
 };
