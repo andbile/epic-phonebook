@@ -1,0 +1,13 @@
+@import "../base/veriables";
+
+.main-header{
+  outline: 1px solid $bg-color-grey;
+}
+
+.main-header__logo-wrp{
+  height: 150px;
+}
+
+.main-header__content{
+  text-align: center;
+}

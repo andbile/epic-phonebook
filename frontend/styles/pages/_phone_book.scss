@@ -1,0 +1,29 @@
+@import "../base/veriables";
+
+.phone_book__btn-wrp{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+
+  .btn{
+    margin-left: 20px;
+  }
+}
+
+.phone_book__table-header{
+  background-color: $bg-color-grey;
+}
+
+.phone_book__department{
+  text-align: center;
+}
+
+.phone_book__department--seller{
+  background-color: $bg-color-seller;
+  color: $font-color-white;
+}
+
+.phone_book__department--not-seller{
+  background-color:$bg-color-not-seller;
+}

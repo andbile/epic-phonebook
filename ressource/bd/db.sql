@@ -45,6 +45,10 @@ ALTER TABLE employee
 
 
 -- добавление колонки
+ALTER TABLE department
+    ADD COLUMN IF NOT EXISTS isSeller boolean;
+Alter table department alter column isSeller set not null;
+
 ALTER TABLE employee
     ADD COLUMN IF NOT EXISTS email varchar ARRAY[];
 
@@ -54,8 +58,9 @@ ALTER TABLE employee
 ALTER TABLE employee
     ADD COLUMN IF NOT EXISTS position varchar;
 
+-- переименования таблицы
+ALTER TABLE department RENAME COLUMN isseller TO is_seller;
 
 -- очистка/удаление таблицы
 TRUNCATE employee RESTART IDENTITY;
-
 DROP TABLE IF EXISTS employee;

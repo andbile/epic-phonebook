@@ -1,7 +1,14 @@
 // vendor
+@import "vendor/bootstrap_grid_custom";
 @import "~bootstrap";
+@import "vendor/bootstrap_custom";
 
-body{
-  background-color: red;
-  font-size: 150px;
-}
+
+
+// modules
+@import "base/module";
+@import "components/module";
+
+
+//pages
+@import "pages/phone_book";

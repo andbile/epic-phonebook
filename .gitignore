@@ -2,6 +2,7 @@
 node_modules/
 
 app/frontend
+config/server.js
 
 ressource/bd_data
 ressource/fonts

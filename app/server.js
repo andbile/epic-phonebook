@@ -4,6 +4,8 @@ const path = require('path');
 const hbs = require("hbs");
 const bodyParser = require('body-parser');
 
+const phoneBook = require('./components/phone_book/phoneBook') // Довідник телефонних номерів та електронної пошти
+
 const port = 3000;
 app.listen(port, () => {
     console.log(`server started on port ${port}`);
@@ -31,4 +33,9 @@ app.get('/admin', (req, res) => {
     //res.send('ok')
     console.log('test2');
     res.render('admin/admin')
+});
+
+// Довідник телефонних номерів та електронної пошти
+app.get('/phone_book', (req, res) => {
+    phoneBook(req, res);
 });
