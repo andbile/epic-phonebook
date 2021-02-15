@@ -22,7 +22,7 @@ module.exports = {
     },
 
     output: {
-        path: path.resolve(__dirname, 'app/frontend'),
+        path: path.resolve(__dirname, 'app/static'),
         filename: "js/bundle.js"
     },
 
@@ -88,12 +88,12 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "css/style.bundle.css",
         }),
-        new CopyWebpackPlugin({
+       /* new CopyWebpackPlugin({
             patterns: [
                 {from: path.resolve(__dirname, 'frontend/img/'), to: path.resolve(__dirname, 'app/frontend/img')},
                 {from: path.resolve(__dirname, 'frontend/fonts/'), to: path.resolve(__dirname, 'app/frontend/fonts')},
             ],
-        }),
+        }),*/
         //new ESLintPlugin(),
         new webpack.HotModuleReplacementPlugin()
     ]

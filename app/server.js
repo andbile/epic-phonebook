@@ -11,7 +11,7 @@ app.listen(port, () => {
     console.log(`server started on port ${port}`);
 });
 
-app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.json());
 
 // handlebars template

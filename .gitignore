@@ -1,7 +1,8 @@
 .idea/
 node_modules/
 
-app/frontend
+app/static/js
+app/static/css
 config/server.js
 
 ressource/bd_data
