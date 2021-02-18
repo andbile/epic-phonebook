@@ -6,13 +6,13 @@
 
 
 <div class="container">
-    <main class="phone_book">
+    <main class="phone_book " id="js-phone-book">
         <h1 class="main__title">Довідник телефонних номерів та електронної пошти </h1>
 
         <div class="phone_book__btn-wrp">
-            <button class="btn btn-grey">Всі</button>
-            <button class="btn btn--seller">Торгові</button>
-            <button class="btn btn--not-seller">Не торгові</button>
+            <button class="btn btn-grey btn-item" data-filter="all">Всі</button>
+            <button class="btn btn--seller btn-item" data-filter="seller">Торгові</button>
+            <button class="btn btn--not-seller btn-item" data-filter="no-seller">Не торгові</button>
         </div>
 
 
@@ -27,7 +27,7 @@
 
             <!---->
             {{#each phoneBook as |department|}}
-                <tr>
+                <tr class="filter-item" {{#if department.department_isSeller}} data-filter="seller" {{else}} data-filter = "no-seller" {{/if}}>
                     <th colspan="5" class="phone_book__department
                         {{#if department.department_isSeller}}
                             phone_book__department--seller
@@ -38,7 +38,7 @@
                     </th>
                 </tr>
                 {{#each department.employees as |employees|}}
-                    <tr>
+                    <tr class="filter-item" {{#if department.department_isSeller}} data-filter="seller" {{else}} data-filter = "no-seller" {{/if}}>
                         <td>{{employees.first_name}} {{last_name}} {{patronymic_name}}</td>
                         <td>{{employees.position}}</td>
                         <td class="phone_book__tel">
