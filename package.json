@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm-run-all --sequential del build:dev --parallel watch:front watch:back",
-    "del": "del-cli ./app/frontend",
+    "start": "npm-run-all --sequential build:dev --parallel watch:front watch:back",
     "watch:front": "cross-env NODE_ENV=development webpack serve --mode development",
     "watch:back": "nodemon ./app/server.js",
     "build:dev": "cross-env NODE_ENV=development webpack --mode development",
