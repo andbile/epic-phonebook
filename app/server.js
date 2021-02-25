@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const hbs = require("hbs");
 const bodyParser = require('body-parser');
+const favicon = require('serve-favicon')
 
-const phoneBook = require('./components/phone_book/phoneBook') // Довідник телефонних номерів та електронної пошти
+const hbs = require("hbs");
+const config_content = require('./config/config_content') // general site content for handlebars
+
+const phoneBook = require('./components/phone_book/phoneBook') // telephone and e-mail directory
 
 const port = 3000;
 app.listen(port, () => {
@@ -12,6 +15,7 @@ app.listen(port, () => {
 });
 
 app.use(express.static(path.join(__dirname, 'static')));
+app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')))
 app.use(bodyParser.json());
 
 // handlebars template
@@ -19,9 +23,15 @@ hbs.registerPartials(path.join(__dirname, 'components'));
 app.set('views', path.join(__dirname, 'components'))
 app.set("view engine", "hbs");
 
-hbs.registerHelper("inc", (value) => {
+// get array index starting from 1
+hbs.registerHelper("inc", value => {
     return parseInt(value) + 1;
 });
+
+// general site content for handlebars
+hbs.registerHelper('config_content', options => {
+    return options.fn(config_content);
+})
 
 
 app.get('/', (req, res) => {
@@ -35,7 +45,7 @@ app.get('/admin', (req, res) => {
     res.render('admin/admin')
 });
 
-// Довідник телефонних номерів та електронної пошти
+// telephone and e-mail directory
 app.get('/phone_book', (req, res) => {
     phoneBook(req, res);
 });
