@@ -48,7 +48,8 @@
     "bootstrap": "4.5.3",
     "express": "4.17.1",
     "hbs": "4.1.1",
-    "pg": "8.5.1"
+    "pg": "8.5.1",
+    "serve-favicon": "2.5.0"
   },
   "browserslist": "> 0.25%, not dead"
 }
