@@ -3,10 +3,11 @@ node_modules/
 
 app/static/js
 app/static/css
-config/server.js
+app/config/config_server.js
 
 ressource/bd_data
 ressource/fonts
+ressource/images
 
 
 
