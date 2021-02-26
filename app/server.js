@@ -7,7 +7,7 @@ const favicon = require('serve-favicon')
 const hbs = require("hbs");
 const config_content = require('./config/config_content') // general site content for handlebars
 
-const phoneBook = require('./components/phone_book/phoneBook') // telephone and e-mail directory
+const PhoneBook = require('./components/phone_book/PhoneBook') // telephone and e-mail directory
 
 const port = 3000;
 app.listen(port, () => {
@@ -47,5 +47,5 @@ app.get('/admin', (req, res) => {
 
 // telephone and e-mail directory
 app.get('/phone_book', (req, res) => {
-    phoneBook(req, res);
+    new PhoneBook(req, res);
 });
