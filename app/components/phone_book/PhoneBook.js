@@ -1,7 +1,5 @@
 const {pool} = require('../../bd/connect') // connect to BD
 
-//TODO поменять гит на SSH
-
 // TODO Пошук по прізвищам
 // TODO Мобільні номера
 
