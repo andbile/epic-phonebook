@@ -9,12 +9,36 @@
     <main class="phone_book " id="js-phone-book">
         <h1 class="main__title">Довідник телефонних номерів та електронної пошти </h1>
 
-        <div class="phone_book__btn-wrp">
+      <!--  <div class="phone_book__btn-wrp">
             <button class="btn btn-grey btn-item" data-filter="all">Всі</button>
             <button class="btn btn--seller btn-item" data-filter="seller">Торгові</button>
             <button class="btn btn--not-seller btn-item" data-filter="no-seller">Не торгові</button>
-        </div>
+        </div>-->
 
+        <div class="phone_book__targets-wrp">
+            {{#if phoneBook}}
+                    <div class="phone_book__targets-item">
+                        {{#each phoneBook as |department|}}
+                            {{#if department.department_isSeller}}
+                                <button class="btn btn--seller btn-item" data-filter='{{department.department_code}}'>{{department.department_code}} - {{department.department_name}}</button>
+                            {{/if}}
+
+                        {{/each}}
+                    </div>
+
+                    <div class="phone_book__targets-item">
+                        {{#each phoneBook as |department|}}
+                            {{#unless department.department_isSeller}}
+                                <button class="btn btn--not-seller btn-item" data-filter='{{department.department_code}}'>{{department.department_code}} - {{department.department_name}}</button>
+                            {{/unless}}
+                        {{/each}}
+                    </div>
+                <button class="btn btn-grey btn-item" data-filter='all'>Всі відділи</button>
+            {{/if}}
+            <div class="phone_book__targets-item">
+
+            </div>
+        </div>
 
         <table class=" table table-hover">
             <tr class="phone_book__table-header">
@@ -22,6 +46,7 @@
                 <th>Посада</th>
                 <th>Телефон (стаціонарний)</th>
                 <th>Телефон (трубка)</th>
+                <th>Телефон (мобільний)</th>
                 <th>Email</th>
             </tr>
 
@@ -31,37 +56,58 @@
 
             {{#if phoneBook}}
                 {{#each phoneBook as |department|}}
-        <tr class="filter-item" {{#if department.department_isSeller}} data-filter="seller" {{else}} data-filter = "no-seller" {{/if}}>
-            <th colspan="5" class="phone_book__department
-                        {{#if department.department_isSeller}}
-                            phone_book__department--seller
-                        {{else}}
-                            phone_book__department--not-seller
-                        {{/if}}">
-                {{@key}} - {{department.department_name}}
-            </th>
-        </tr>
-    {{#each department.employees as |employees|}}
-            <tr class="filter-item" {{#if department.department_isSeller}} data-filter="seller" {{else}} data-filter = "no-seller" {{/if}}>
-                <td>{{employees.first_name}} {{last_name}} {{patronymic_name}}</td>
-                <td>{{employees.position}}</td>
-                <td class="phone_book__tel">
-                    {{#if employees.tel_number_landline}}
-                        <span class="icon-phone-landline">{{employees.tel_number_landline}}</span>
+                <tr class="filter-item" data-filter="{{department.department_code}}">
+                    <th colspan="6" id="phone_book_link_{{department.department_code}}"
+                    {{#if department.department_isSeller}}
+                        class="phone_book__department phone_book__department--seller"
+                    {{else}}
+                        class="phone_book__department phone_book__department--not-seller"
                     {{/if}}
-                </td>
-                <td class="phone_book__tel">
-                    {{#if employees.tel_number_dect}}
-                        <span class="icon-phone-dect">{{employees.tel_number_dect}}</span>
-                    {{/if}}
-                </td>
-                <td>
-                    {{#each employees.email}}
-                        <a href="mailto:{{this}}">{{this}}</a><br>
-                    {{/each}}
-                </td>
-            </tr>
-    {{/each}}
+                        class="phone_book__department
+                                {{#if department.department_isSeller}}
+                                    phone_book__department--seller
+                                {{else}}
+                                    phone_book__department--not-seller
+                                {{/if}}">
+                        {{department.department_code}} - {{department.department_name}}
+                         {{#if department.is_department_contacts}}&#8194;&#8194;&#8194;
+                        {{#if department.tel_number_dect}}<span class="icon-phone-dect"></span>{{department.tel_number_dect}} &#8194;&#8194;{{/if}}
+                        {{#if department.tel_number_landline}} <span class="icon-phone-landline"></span>{{department.tel_number_landline}} &#8194;&#8194;{{/if}}
+                        {{#if department.tel_number_mobile}} <a href="tel:{{department.tel_number_mobile}}">{{department.tel_number_mobile}}</a> &#8194;&#8194;{{/if}}
+                        {{#if department.email}}<a href="mailto:{{department.email}}">{{department.email}}</a>{{/if}}
+                            {{/if}}
+
+                    </th>
+
+                </tr>
+                {{#each department.employees as |employees|}}
+                        <tr class="filter-item" data-filter="{{department.department_code}}">
+                            <td>{{employees.first_name}} {{last_name}} {{patronymic_name}}</td>
+                            <td>{{employees.position}}</td>
+                            <td class="phone_book__tel">
+                                {{#if employees.tel_number_landline}}
+                                    {{#each employees.tel_number_landline as |tel_number_landline|}}
+                                        <span class="icon-phone-landline">{{tel_number_landline}}</span><br>
+                                    {{/each}}
+                                {{/if}}
+                            </td>
+                            <td class="phone_book__tel">
+                                {{#if employees.tel_number_dect}}
+                                    <span class="icon-phone-dect">{{employees.tel_number_dect}}</span>
+                                {{/if}}
+                            </td>
+                            <td class="phone_book__tel">
+                                {{#each employees.tel_number_mobile}}
+                                    <a href="tel:{{this}}">{{this}}</a><br>
+                                {{/each}}
+                            </td>
+                            <td>
+                                {{#each employees.email}}
+                                    <a href="mailto:{{this}}">{{this}}</a><br>
+                                {{/each}}
+                            </td>
+                        </tr>
+                {{/each}}
 
 {{/each}}
             {{/if}}
@@ -76,7 +122,7 @@
 
 
 
-
+{{> footer}}
 {{> footer_page}}
 </body>
 </html>

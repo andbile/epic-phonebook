@@ -2,6 +2,19 @@ const {pool} = require('../../bd/connect') // connect to BD
 
 // TODO Пошук по прізвищам
 // TODO Мобільні номера
+// TODO При додаванні контакту перевіряти наявність (чи вибирати із списку) відділ
+// TODO Придумати щось зі здвоєними відділами. Асистентів відділів копіювати у декілька відділів.
+// TODO Об'явити в групі, якщо э корпоративні номера можна забити лише їх. Змінити відділ якщо числиться
+//  в одному відділі а по факту працює в іншому відділі
+// TODO Якщо асистент двох відділів, додавати у оба, продумати цей нюанс в адмінці
+// TODO Перевірте всі дані особисто, якщо якоюсь поштою не користуєтесь, подзвоніть мені, видалимо її
+// TODO Зробити перевірку, щоб дві пошти в одну строку не засунули, приклад ['um.info50@epicentrk.com, um.info100@epicentrk.com']
+// TODO Зробити окрему строку: загальні номере відділу (DECT, стац, телефони кас), загальна пошта, якщо є
+// TODO Якщо багато поштових ящиків (фінік), можна залишити один основний
+// TODO При виборі якогось підрозділу, інші ховати. Кнопка показати всіх.
+// TODO Проверяйте может кого-то забыл или не в тот отдел вставил
+// TODO Зробити опис (пояснення) в адмінці: якщо є загальні номери, то всы ПІБ їх не прописувати
+// TODO Якщо є пропозиції по довіднику - пишіть на пошту
 
 /**
  * telephone and e-mail directory
@@ -21,13 +34,13 @@ class PhoneBook{
 
     // get departments from DB
     async getDepartments(){
-        const row = await pool.query('SELECT * FROM department')
+        const row = await pool.query('SELECT * FROM department_contacts RIGHT JOIN department on department.department_code = department_contacts.department_code ORDER BY department.department_code')
         return row.rows
     }
 
     // get employees from DB
     async getEmployees(){
-        const row = await pool.query('SELECT * FROM employee')
+        const row = await pool.query('SELECT * FROM employee ORDER BY last_name')
         return row.rows
     }
 
@@ -48,7 +61,7 @@ class PhoneBook{
      */
     getResultPhoneBookObj(){
         this.departments.forEach( item => {
-            this.phoneBook[item['department_id']] = this.setDepartments(item);
+            this.phoneBook[item['department_code']] = this.setDepartments(item);
 
             this.setEmployees(item)
         })
@@ -58,11 +71,26 @@ class PhoneBook{
      * Create object
      * @param {object} department - item of the departments list from BD
      * @returns {object} - {department_name: string, department_isSeller: boolean, employees: array}
+     *
+     *
      */
     setDepartments(department){
         return {
             department_name: department.department_name,
+            department_code: department.department_code,
             department_isSeller: department.is_seller,
+            // !!! TODO описать добавление новых контактов is_department_contacts сли есть хоть один контакт добовляем
+            //      * в шаблонизаторе - пеерделать!!!
+            is_department_contacts: ( () => {
+                if (department.tel_number_dect || department.tel_number_landline ||
+                    department.tel_number_mobile || department.email){
+                    return true
+                }else return false
+            })(),
+            tel_number_dect: department.tel_number_dect,
+            tel_number_landline: department.tel_number_landline,
+            tel_number_mobile: department.tel_number_mobile,
+            email:department.email,
             employees: []
         }
     }
@@ -73,8 +101,8 @@ class PhoneBook{
      * @param department {object} - item of the departments' list
      */
     setEmployees(department){
-        const id = department['department_id']
-        this.phoneBook[id].employees = this.employees.filter( item => item['department_id'] === id)
+        const departmentCode = department['department_code']
+        this.phoneBook[departmentCode].employees = this.employees.filter( item => item['department_code'] === departmentCode)
     }
 
 
