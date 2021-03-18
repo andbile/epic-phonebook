@@ -10,7 +10,7 @@ export default class FilterElements {
      * @property {string} options.parentElement - css селектор батьківського елемента
      * @property {string} options.btns - css селектор
      * @property {string} options.elements - css селектор
-     * @property {string} options.dataFilter - data-атрибут для пошуку і фільтрації елементів
+     * @property {string} options.dataAttribute - data-атрибут для пошуку і фільтрації елементів
      * @property {string} options.resetFilter - data-атрибут для скидання фільтру
      */
     constructor(options) {
@@ -54,7 +54,7 @@ export default class FilterElements {
         const target = evt.target
 
         /** @type {string} currentFilter - фільтр */
-        const currentFilter = target.dataset[this.options.dataFilter]
+        const currentFilter = target.dataset[this.options.dataAttribute]
 
         this.filter(currentFilter)
     }
@@ -71,7 +71,7 @@ export default class FilterElements {
         }
 
         // фільтруємо, приховуючи все, що не дорівнює currentFilter
-        this.filterElements.forEach( item =>{
+        this.filterElements.forEach( item => {
             item.hidden = item.dataset.filter !== currentFilter
         })
     }
