@@ -82,7 +82,7 @@
                 </tr>
                 {{#each department.employees as |employees|}}
                         <tr class="filter-item" data-filter="{{department.department_code}}">
-                            <td>{{employees.first_name}} {{last_name}} {{patronymic_name}}</td>
+                            <td>{{employees.last_name}} {{first_name}} {{patronymic_name}}</td>
                             <td>{{employees.position}}</td>
                             <td class="phone_book__tel">
                                 {{#if employees.tel_number_landline}}
