@@ -9,7 +9,7 @@ const config_content = require('./config/config_content') // general site conten
 
 const PhoneBook = require('./components/phone_book/PhoneBook') // telephone and e-mail directory
 
-const port = 3000;
+const port = 3001;
 app.listen(port, () => {
     console.log(`server started on port ${port}`);
 });
