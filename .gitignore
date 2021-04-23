@@ -1,5 +1,14 @@
 .idea/
 node_modules/
+client/node_modules
+client/build
+client/.env
+
+
+server/node_modules
+server/.env
+
+
 
 app/static/js
 app/static/css

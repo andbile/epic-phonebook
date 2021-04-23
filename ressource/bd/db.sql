@@ -166,3 +166,30 @@ TRUNCATE employee RESTART IDENTITY;
 DROP TABLE IF EXISTS employee;
 
 
+INSERT INTO departments VALUES (6, '100', 'Деко', true , current_timestamp, current_timestamp);
+
+
+
+
+
+
+-- Копирование таблиц, это создаст идентичную таблицу с данными.
+create table my_table_copy as
+select * from my_table;
+-- Добавление with no data скопирует схему без данных.
+create table my_table_copy as
+  select * from my_table
+with no data;
+-- Это создаст таблицу со всеми данными, но без индексов и триггеров и т.д.
+create table my_table_copy (like my_table including all);
+-- Синтаксис create table, такой как синтаксис, будет включать все триггеры, индексы, ограничения и т.д. Но не включать данные.
+
+create table employees_test (like employees including all);
+
+create table employees_test (like employees including all);
+insert into employees_test (last_name, first_name, patronymic_name, position, tel_mobile, "createdAt", "updatedAt")
+select last_name, first_name, patronymic_name, position, tel_number_mobile, current_timestamp, current_timestamp FROM employee_from_221;
+
+
+-- лечение счётчика
+SELECT setval('departments_id_seq', (SELECT MAX(id) from departments));

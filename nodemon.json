@@ -1,7 +1,0 @@
-{
-  "ext": "js,hbs",
-  "ignore": ["./app/public/**/*"],
-  "delay": 1500,
-  "watch": ["./app"]
-}
-
