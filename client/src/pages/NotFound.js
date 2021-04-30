@@ -1,10 +1,11 @@
 import React from 'react';
+import StyleMainContainer from "../components/MainContainer";
 
 const NotFound = () => {
     return (
-        <div>
+        <StyleMainContainer>
             Not found
-        </div>
+        </StyleMainContainer>
     );
 };
 

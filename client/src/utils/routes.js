@@ -24,10 +24,10 @@ export const publicRoutes = [
         Component: Auth
     },
     // TODO Регистрация отключена
-   /* {
+    {
         path: REGISTRATION_ROUTE,
         Component: Auth
-    },*/
+    },
 
     {
         path: PHONE_BOOK_ROUTE,

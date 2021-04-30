@@ -1,10 +1,13 @@
 import React from 'react';
+import StyleMainContainer from "../components/MainContainer";
 
 const Admin = () => {
     return (
-        <div>
-           Адміністративна панель
-        </div>
+        <StyleMainContainer>
+
+            Адміністративна панель
+
+        </StyleMainContainer>
     );
 };
 

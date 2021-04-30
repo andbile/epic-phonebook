@@ -17,6 +17,7 @@ export const login = async (email, password) => {
 }
 
 // каждый раз при обновлении старицы будем проверять валидность токина и/или розлогинивать пользователя
+// TODO розлогирование пока не реализовано
 export const check = async () => {
     const {data} = await $authHost.get('user/auth' )
     localStorage.setItem('token', data.token)

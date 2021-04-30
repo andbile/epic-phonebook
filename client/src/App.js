@@ -1,42 +1,43 @@
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {BrowserRouter} from "react-router-dom";
-import {Container, Spinner} from "react-bootstrap";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
 import AppRouter from "./components/AppRouter";
 import {Context} from "./index";
 import {check} from "./http/userAPI";
 import {observer} from "mobx-react-lite";
+import Preloader from "./components/Preloader";
 
 
-
-
-const App = observer( ()=>  {
+const App = observer(() => {
     const {user} = useContext(Context)
 
-    // проверяем идет загрузка или нет и логоном пользователя
+    // выводим прелоадер, пока проверяем и авторизуем пользователя
     const [loading, setLoading] = useState(true)
+    const [checkingUser, setCheckingUser] = useState(true)
 
     useEffect(() => {
         check().then(data => {
             user.setUser(true)
             user.setIsAuth(true)
-        })/*.finally(() => setLoading(false))*/
+            user.setRole(data.role)
+            user.setEmail(data.email)
+        }).finally(() => {
+            setTimeout( () => {
+                setLoading(false)
+                setCheckingUser(false)
+            }, 1500)
+        })
     }, [])
 
-   /* if (loading) {
-        return <Spinner animation={"grow"}/>
-    }*/
-
+     if (loading) {
+         return <Preloader/>
+     }
 
     return (
         <BrowserRouter>
             <Header/>
-            <Container className="main-content">
-                <main className="pt-4 pb-4">
-                    <AppRouter/>
-                </main>
-            </Container>
+            { !checkingUser &&  <AppRouter/> }
             <Footer/>
         </BrowserRouter>
     );

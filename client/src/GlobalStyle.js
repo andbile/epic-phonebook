@@ -23,13 +23,10 @@ body #root{
   height: 100%;
   padding: 10px 0;
 }
-.main-content{
-  flex-grow: 1;
-}
 
 // TODO перенести в отдельный компонент Image
-.img-wrapper img{
+/*.img-wrapper img{
   max-width: 100%;
   max-height: 100%
-}
+}*/
 `

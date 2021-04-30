@@ -6,16 +6,17 @@ import {Link, useLocation, useHistory} from "react-router-dom";
 import {Context} from "../index";
 import {login, registration} from "../http/userAPI";
 import {observer} from "mobx-react-lite";
+import MainContainer from "../components/MainContainer";
 
+// TODO валидация формы на клиенте
 
-const Auth = observer( () => {
+const Auth = observer(() => {
 
     const {user} = useContext(Context)
 
     // для надписи регистрация/авторизация в зависимости от маршрута
-
     const location = useLocation()
-    const isLogin = location.pathname === LOGIN_ROUTE
+    const isLoginRoute = location.pathname === LOGIN_ROUTE
     // TODO - регистрация отключена
     // const isLogin = true
 
@@ -25,49 +26,51 @@ const Auth = observer( () => {
     const [password, setPassword] = useState('')
 
     const click = async () => {
-        try{
+        try {
             let data
-            if(isLogin){
+            if (isLoginRoute) {
                 data = await login(email, password)
-            }else{
+            } else {
                 data = await registration(email, password)
             }
 
             user.setUser(user) // TODO непонятно для чего
             user.setIsAuth(true)
+            user.setEmail(data.email)
+            user.setRole(data.role)
             history.push(HOME_ROUTE) //если залогинились, редиректимся на главную страницу
-       }catch (e){
+
+        } catch (e) {
+            console.log(e)
             alert(e.response.data.message)
         }
     }
 
 
     return (
-        <Container className="d-flex justify-content-center align-content-center">
-
+        <MainContainer className={'d-flex flex-column justify-content-center align-items-center'}>
             <Card style={{width: 600}} className="p-5">
-                <h2 className="m-auto">{isLogin ? 'Авторизация' : "Регистрация"}</h2>
+                <h2 className="m-auto">{isLoginRoute ? 'Авторизация' : "Регистрация"}</h2>
 
                 <Form className="d-flex flex-column">
                     <Form.Control
                         className="mt-3"
                         placeholder="Введите ваш email..."
                         value={email}
-                        onChange={ evt => setEmail(evt.target.value)}
-
+                        onChange={evt => setEmail(evt.target.value)}
                     />
                     <Form.Control
                         className="mt-3"
                         placeholder="Введите ваш пароль..."
                         type="password"
                         value={password}
-                        onChange={ evt => setPassword(evt.target.value)}
+                        onChange={evt => setPassword(evt.target.value)}
                     />
 
                     <Row className="d-flex justify-content-between mt-3 pl-3 pr-3">
                         <div>
-                            {isLogin ?
-                                <div>Нет аккаунта? <Link to={REGISTRATION_ROUTE} onClick={ (evt) => evt.preventDefault()}>Зарегистрируйся!</Link></div>
+                            {isLoginRoute ?
+                                <div>Нет аккаунта? <Link to={REGISTRATION_ROUTE}>Зарегистрируйся!</Link></div>
                                 :
                                 <div>Есть аккаунт? <Link to={LOGIN_ROUTE}>Войдите!</Link></div>
                             }
@@ -77,15 +80,12 @@ const Auth = observer( () => {
                             variant={"outline-success"}
                             onClick={click}
                         >
-                            {isLogin ? 'Войти' : 'Регистрация'}
+                            {isLoginRoute ? 'Войти' : 'Регистрация'}
                         </Button>
                     </Row>
-
-
                 </Form>
             </Card>
-
-        </Container>
+        </MainContainer>
     );
 });
 
