@@ -1,11 +1,11 @@
 import React from 'react';
-import StyleMainContainer from "../components/MainContainer";
+import MainContainer from "../components/MainContainer";
 
 const NotFound = () => {
     return (
-        <StyleMainContainer>
+        <MainContainer className="d-flex justify-content-center align-items-center">
             Not found
-        </StyleMainContainer>
+        </MainContainer>
     );
 };
 

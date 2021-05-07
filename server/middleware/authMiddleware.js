@@ -17,7 +17,11 @@ module.exports = function (req, res, next) {
             return res.status(401).json({message: "Не авторизован"})
         }
         // а если есть
+        // TODO проверяем на валидность токен, но не сверяем юзера с БД в контроллере userController.check
+        //  после удаления юзера из БД, сам токен остался валидным со всеми правами на фронте
+        //
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
+
         req.user = decoded
         console.log(decoded)
         next()

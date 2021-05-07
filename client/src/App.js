@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {BrowserRouter} from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
-import AppRouter from "./components/AppRouter";
+import AppRouter from "./AppRouter";
 import {Context} from "./index";
 import {check} from "./http/userAPI";
 import {observer} from "mobx-react-lite";
@@ -18,10 +18,7 @@ const App = observer(() => {
 
     useEffect(() => {
         check().then(data => {
-            user.setUser(true)
-            user.setIsAuth(true)
-            user.setRole(data.role)
-            user.setEmail(data.email)
+            user.login(data)
         }).finally(() => {
             setTimeout( () => {
                 setLoading(false)

@@ -24,27 +24,3 @@ export {
     $host,
     $authHost
 }
-
-
-
-
-
-
-
-
-/*
-export const fetchFunc = async (url, method = "GET", body = null, headers = {})=>{
-    const baseURL = process.env.REACT_APP_API_URL
-    const fetchURL = baseURL + url
-
-    let response = await fetch(fetchURL, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(body)
-    })
-
-
-    return await response.json()
-}*/

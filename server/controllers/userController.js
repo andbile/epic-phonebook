@@ -50,6 +50,8 @@ class UserController{
 
     // проверяем авторизован пользователь или нет
     // если пользователь постоянно использует свой акаунт, токен будет перезаписываться
+    // TODO отправляем новый токин не проверив присутствует ли пользователь в БД и не изменились ли у него права
+    //  !!!Исправить
     async check(req, res, next) {
         const token = generateJwt(req.user.id, req.user.email, req.user.role)
         return res.json({token})

@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Row, Container, Form, Card} from "react-bootstrap";
+import {Row, Form, Card} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {HOME_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE} from "../utils/consts";
 import {Link, useLocation, useHistory} from "react-router-dom";
@@ -34,14 +34,12 @@ const Auth = observer(() => {
                 data = await registration(email, password)
             }
 
-            user.setUser(user) // TODO непонятно для чего
-            user.setIsAuth(true)
-            user.setEmail(data.email)
-            user.setRole(data.role)
+            user.login(data)
             history.push(HOME_ROUTE) //если залогинились, редиректимся на главную страницу
 
         } catch (e) {
             console.log(e)
+            // TODO Вывод ошибок в окне авторизации/регистрации
             alert(e.response.data.message)
         }
     }

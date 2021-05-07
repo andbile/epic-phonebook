@@ -2,7 +2,6 @@ import React from 'react';
 import styled from "styled-components";
 import PropTypes from 'prop-types'
 import {Container} from "react-bootstrap";
-import CheckPermissions from "./CheckPermissions";
 
 const StyleMainContainer = styled(Container)`
 flex-grow: 1;

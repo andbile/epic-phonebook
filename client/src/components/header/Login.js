@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import {Button, Col, Nav, Row} from "react-bootstrap";
-import {ADMIN_ROUTE, LOGIN_ROUTE} from "../../utils/consts";
+import {Button, Col, Row} from "react-bootstrap";
+import {ROLES_ADMIN_PANEL_PERMISSION, ADMIN_ROUTE, LOGIN_ROUTE, HOME_ROUTE} from "../../utils/consts";
 import {Context} from "../../index";
 import {useHistory} from "react-router-dom";
 import {observer} from "mobx-react-lite";
@@ -12,15 +12,10 @@ const Login = observer(() => {
     const {user} = useContext(Context)
     const history = useHistory()
 
-
     const logOut = () => {
-        user.setIsAuth(false)
-        user.setEmail('')
-        user.setUser({})
-        user.setRole([])
-        localStorage.removeItem('token')
+        user.loginOut()
+        history.push(HOME_ROUTE)
     }
-
 
     return (
         <>
@@ -29,7 +24,7 @@ const Login = observer(() => {
                     {
                         user.isAuth ?
                             <div>
-                                <CheckPermissions permissions={['PERSONAL']} >
+                                <CheckPermissions permissions={ROLES_ADMIN_PANEL_PERMISSION} >
                                     <Button
                                         onClick={() => history.push(ADMIN_ROUTE)}>
                                         Админка
