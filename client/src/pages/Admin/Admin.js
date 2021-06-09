@@ -16,11 +16,6 @@ const Admin =  ({routes}) => {
                     ))}
                 </div>
             </div>
-
-
-
-
-
         </MainContainer>
     );
 };
