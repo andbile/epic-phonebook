@@ -1,11 +1,10 @@
 import React from 'react';
-import MainContainer from "../../components/MainContainer";
 
 const WorkSchedule = () => {
     return (
-        <MainContainer>
+        <div>
             <h2>Графіки</h2>
-        </MainContainer>
+        </div>
     );
 };
 
