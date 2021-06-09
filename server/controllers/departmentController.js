@@ -17,6 +17,14 @@ class DepartmentController{
         return res.json(department)
     }
 
+    async updateDepartment(req, res){
+        const {id} = req.params
+        // TODO сделать обработку ошибок
+        //const department = await Department.findOne({where:{id}})
+
+        return res.json(department)
+    }
+
 
     // TODO  SequelizeUniqueConstraintError: повторяющееся значение ключа нарушает ограничение уникальности "departments_code_key"
     async createDepartment(req, res){

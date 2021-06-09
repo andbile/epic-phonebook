@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import checkUserPermissions from "../utils/checkUserPermissions";
 
 const RouteWithSubRoutes = (route) => {
-
     const {user} = useContext(Context)
     
     if( checkUserPermissions(route.permissions , user.Role)){

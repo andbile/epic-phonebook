@@ -5,7 +5,7 @@ const sequelize = require('./db')
 const cors = require('cors')
 const path = require('path')
 const router = require('./routes/index') // основной маршрут
-const errorHandler = require('./middleware/ErrorHandlingMiddleware') // обработка ошибок
+const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 
 const PORT = process.env.PORT || 5000
 const app = express()
