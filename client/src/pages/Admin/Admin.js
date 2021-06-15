@@ -1,23 +1,27 @@
 import React from 'react';
 import MainContainer from "../../components/MainContainer";
 import RouteWithSubRoutes from "../../components/RouteWithSubRoutes";
-import AdminMenu from "./AdminMenu";
+import AdminBar from "./AdminBar";
+import {Row, Col} from "react-bootstrap";
 
 const Admin =  ({routes}) => {
     return (
         <MainContainer>
             <h2 className="text-center">Адміністративна панель</h2>
-            <div className="d-flex">
-                <AdminMenu/>
-
-                <div>
+            <hr/>
+            <Row>
+                <Col md={3} className='pr-2'>
+                    <AdminBar/>
+                </Col>
+                <Col md={9}>
                     {routes.map((route, i) => (
                         <RouteWithSubRoutes key={i} {...route} />
                     ))}
-                </div>
-            </div>
+                </Col>
+            </Row>
         </MainContainer>
     );
 };
 
+// TODO proptypes
 export default Admin;

@@ -27,7 +27,7 @@ const Login = observer(() => {
                                 <CheckPermissions permissions={ROLES_ADMIN_PANEL_PERMISSION} >
                                     <Button
                                         onClick={() => history.push(ADMIN_ROUTE)}>
-                                        Админка
+                                        Адмінка
                                     </Button>
                                 </CheckPermissions>
                                 <Button
@@ -35,7 +35,7 @@ const Login = observer(() => {
                                     onClick={() => {
                                         logOut()
                                     }}>
-                                    Выйти
+                                    Вийти
                                 </Button>
                             </div>
                             :

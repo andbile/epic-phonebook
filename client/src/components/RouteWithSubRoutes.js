@@ -28,7 +28,8 @@ const RouteWithSubRoutes = (route) => {
 RouteWithSubRoutes.propTypes = {
     path: PropTypes.string.isRequired,
     permissions: PropTypes.arrayOf(PropTypes.string),
-    component: PropTypes.func.isRequired
+    // TODO получаем Warning: Failed prop type: Invalid prop `component` of type `object` supplied to `RouteWithSubRoutes`, expected `function`.
+    //component: PropTypes.func
 }
 
 export default RouteWithSubRoutes;

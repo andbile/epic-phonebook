@@ -19,9 +19,9 @@ import Auth from './../pages/Auth'
 // admins components
 import Admin from '../pages/admin/Admin'
 import WorkSchedule from "../pages/admin/WorkSchedule";
-import Departments from "../pages/admin/personal/Departments";
+import Departments from "../pages/admin/Deportments/Departments";
 import Employees from "../pages/admin/personal/Employees";
-import DepartmentsContacts from "../pages/admin/personal/DepartmentsContacts";
+import DepartmentContacts from "../pages/admin/Deportments/DepartmentContacts";
 
 
 //
@@ -39,7 +39,7 @@ const personalRoutes =
         },
         {
             path: ADMIN_PERSONAL_DEPARTMENTS_CONTACTS_ROUTE,
-            component: DepartmentsContacts,
+            component: DepartmentContacts,
             permissions: [ROLE_PERSONAL]
         }
     ]
