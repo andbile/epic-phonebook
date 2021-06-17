@@ -4,23 +4,49 @@ import {Context} from "../../../index";
 import Table from "react-bootstrap/Table";
 import {PencilSquare, Trash} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
-import CreateDepartmentsModal from "./CreateDepartmentsModal";
-import DeleteDepartmentsModal from "./DeleteDepartmentsModal";
+import DepartmentModal from "./DepartmentModal";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import {useModal} from '../../../hooks/useModal'
+
 
 const Departments = observer(() => {
     const {department} = useContext(Context)
 
-    // отображение модального окна
-    const [modalDepartmentVisible, setModalDepartmentVisible] = useState(false)
-    // текущий id департамента, передается модальному окну для последующего редактирования
+    const modal = useModal()
+
+    // current department id, used to delete/update a department in a modal window
     const [departmentId, setDepartmentId] = useState('')
-    // отображение модального окна - подтверждение удаления
-    const [modalDeleteDepartmentVisible, setModalDeleteDepartmentVisible] = useState(false)
+    // write to a state create/delete/update for use to identify the pressed button
+    const [action, setAction] = useState({})
 
 
-    // TODO tooltip правка/удаление
-    // TODO сделать ощее модальное окно
-    //
+    /**
+     * event handler - delete department
+     * @param {string} id - department id from BD
+     */
+    const deleteDepartment = (id) => {
+        setDepartmentId(id)
+        setAction({delete: true})
+        modal.showAModal()
+    }
+
+    /**
+     * event handler - update department
+     * @param {string} id - department id from BD
+     */
+    const updateDepartment = (id) => {
+        setDepartmentId(id)
+        setAction({update: true})
+        modal.showAModal()
+    }
+
+    // event handler - add department
+    const addDepartment = () => {
+        setDepartmentId('')
+        setAction({create: true})
+        modal.showAModal()
+    }
 
     return (
         <div>
@@ -31,9 +57,9 @@ const Departments = observer(() => {
                 <tr className='text-center'>
                     <th className='align-middle'>Відділ</th>
                     <th className='align-middle'>Назва</th>
-                    <th className='align-middle'>Торговий /&#10; не торговий</th>
-                    <th></th>
-                    <th></th>
+                    <th className='align-middle'>Торговий /<br/> не торговий</th>
+                    <th/>
+                    <th/>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,51 +74,36 @@ const Departments = observer(() => {
                             >
                                 {department.is_seller ? 'Торговий' : 'Не торговий'}
                             </td>
-                            <td
-                                className='align-middle text-center'
-                                style={{cursor: 'pointer'}}
-                                onClick={(evt, id = department.id) => {
-                                    setModalDepartmentVisible(true)
-                                    setDepartmentId(id)
-                                }}
-                            >
-                                <PencilSquare/>
-                            </td>
-                            <td
-                                className='align-middle text-center'
-                                style={{cursor: 'pointer'}}
-                                onClick={(evt, id = department.id) => {
-                                setModalDeleteDepartmentVisible(true)
-                                setDepartmentId(id)
-                            }}
-                            >
 
-                                <Trash style={{color:'red'}}/>
-                            </td>
+                            <OverlayTrigger
+                                overlay={<Tooltip id="tooltip-department-update">Редагувати відділ</Tooltip>}>
+                                <td className='align-middle text-center p-0'
+                                    onClick={() => updateDepartment(department.id)}
+                                >
+                                    <Button variant="outline-dark" style={{border: 'none'}}>
+                                        <PencilSquare/>
+                                    </Button>
+                                </td>
+                            </OverlayTrigger>
+
+                            <OverlayTrigger
+                                overlay={<Tooltip id="tooltip-department-delete">Видалити відділ</Tooltip>}>
+                                <td className='align-middle text-center p-0'
+                                    onClick={() => deleteDepartment(department.id)}
+                                >
+                                    <Button variant="outline-danger" style={{border: 'none'}}>
+                                        <Trash/>
+                                    </Button>
+                                </td>
+                            </OverlayTrigger>
                         </tr>
                     )
                 }
                 </tbody>
             </Table>
 
-            <CreateDepartmentsModal show={modalDepartmentVisible}
-                                    onHide={() => setModalDepartmentVisible(false)}
-                                    id={departmentId}
-            />
-            <DeleteDepartmentsModal
-                show={modalDeleteDepartmentVisible}
-                onHide={() => setModalDeleteDepartmentVisible(false)}
-                id={departmentId}
-            />
-            <Button onClick={
-                () => {
-                    setDepartmentId('')
-                    setModalDepartmentVisible(true)
-                }
-            }
-            >
-                Створити новий департамент
-            </Button>
+            <DepartmentModal {...modal} id={departmentId} action={action} setAction={setAction}/>
+            <Button onClick={addDepartment}>Створити новий відділ</Button>
         </div>
     );
 });

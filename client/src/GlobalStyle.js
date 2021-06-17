@@ -23,4 +23,9 @@ body #root{
   height: 100%;
   padding: 10px 0;
 }
+
+.btn:focus{
+  box-shadow: none !important;
+}
+
 `
