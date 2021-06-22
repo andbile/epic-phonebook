@@ -174,7 +174,7 @@ const DepartmentModal = observer((props) => {
             {
                 action.delete && (
                     <Modal.Body>
-                        Ви дійсно бажаєте видалити департамент:<br/>
+                        Ви дійсно бажаєте видалити відділ:<br/>
                         {`${currentDepartment[0].code} ${currentDepartment[0].name}`}
                     </Modal.Body>
                 )

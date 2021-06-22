@@ -28,4 +28,21 @@ body #root{
   box-shadow: none !important;
 }
 
+.icon{
+  transform: translateY(-2px);
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.seller{
+background-color: #28a745;
+color: #ffffff;
+}
+
+.not-seller{
+background-color: #007bff;
+color: #ffffff;
+}
+
+
 `

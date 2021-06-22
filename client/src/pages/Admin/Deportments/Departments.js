@@ -54,7 +54,7 @@ const Departments = observer(() => {
 
             <Table striped bordered hover>
                 <thead>
-                <tr className='text-center'>
+                <tr className='text-center' style={{backgroundColor:'#bababa'}}>
                     <th className='align-middle'>Відділ</th>
                     <th className='align-middle'>Назва</th>
                     <th className='align-middle'>Торговий /<br/> не торговий</th>

@@ -13,7 +13,7 @@ import {
     ADMIN_PERSONAL_EMPLOYEES_ROUTE, ADMIN_PERSONAL_DEPARTMENTS_CONTACTS_ROUTE
 } from './consts'
 import Home from './../pages/Home'
-import PhoneBook from './../pages/PhoneBook'
+import PhoneBook from '../pages/phoneBook/PhoneBook'
 import Auth from './../pages/Auth'
 
 // admins components

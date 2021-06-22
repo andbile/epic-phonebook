@@ -16,8 +16,8 @@ const DepartmentContact = sequelize.define('department_contact', {
     id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
     position: {type: DataTypes.STRING},
     tel_dect: {type: DataTypes.STRING},
-    tel_landline: {type: DataTypes.STRING},
-    tel_mobile:{type: DataTypes.STRING},
+    tel_landline: {type: DataTypes.ARRAY(DataTypes.STRING)},
+  /*  tel_mobile:{type: DataTypes.STRING},*/
     email: {type: DataTypes.ARRAY(DataTypes.STRING)},
 })
 
