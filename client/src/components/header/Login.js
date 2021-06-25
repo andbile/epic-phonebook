@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Button, Col, Row} from "react-bootstrap";
 import {ROLES_ADMIN_PANEL_PERMISSION, ADMIN_ROUTE, LOGIN_ROUTE, HOME_ROUTE} from "../../utils/consts";
 import {Context} from "../../index";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {observer} from "mobx-react-lite";
 import CheckPermissions from "../CheckPermissions";
 
@@ -24,11 +24,10 @@ const Login = observer(() => {
                     {
                         user.isAuth ?
                             <div>
-                                <CheckPermissions permissions={ROLES_ADMIN_PANEL_PERMISSION} >
-                                    <Button
-                                        onClick={() => history.push(ADMIN_ROUTE)}>
-                                        Адмінка
-                                    </Button>
+                                <CheckPermissions permissions={ROLES_ADMIN_PANEL_PERMISSION}>
+                                    <Link to={ADMIN_ROUTE}>
+                                        <Button>Адмінка</Button>
+                                    </Link>
                                 </CheckPermissions>
                                 <Button
                                     className="ml-3"
