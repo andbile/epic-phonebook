@@ -6,18 +6,18 @@ import checkUserPermissions from "../utils/checkUserPermissions";
 
 const RouteWithSubRoutes = (route) => {
     const {user} = useContext(Context)
-    
-    if( checkUserPermissions(route.permissions , user.Role)){
+
+    if (checkUserPermissions(route.permissions, user.Role)) {
         return (
             <Route
                 path={route.path}
-                strict
-                render={ props =>
-                {
+                exact={route.exact}
+                render={props => {
                     return (
                         // pass the sub-routes down to keep nesting
-                        <route.component {...props} routes={route.routes} exact />
-                    )}
+                        <route.component {...props} routes={route.routes}/>
+                    )
+                }
                 }
             />
         )
