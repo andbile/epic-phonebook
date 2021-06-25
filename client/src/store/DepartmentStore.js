@@ -68,6 +68,7 @@ export default class DepartmentStore {
                 "email":["um.nach50@epicentrk.com"]
             }
         ]
+        this._currentDepartment = ''
         makeAutoObservable(this)
     }
 
@@ -79,11 +80,19 @@ export default class DepartmentStore {
         this._departmentsContacts = departmentsContacts
     }
 
+    setCurrentDepartment(currentDepartment){
+        this._currentDepartment = currentDepartment
+    }
+
     get departments() {
         return this._departments
     }
 
     get departmentsContacts(){
         return this._departmentsContacts
+    }
+
+    get currentDepartment(){
+        return this._currentDepartment
     }
 }

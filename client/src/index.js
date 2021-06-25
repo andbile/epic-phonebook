@@ -7,6 +7,7 @@ import {ThemeProvider} from "styled-components";
 import {theme} from './theme'
 import {Global} from "./GlobalStyle";
 import DepartmentStore from "./store/DepartmentStore";
+import EmployeesStore from "./store/EmployeesStore";
 
 export const Context = createContext(null)
 
@@ -15,7 +16,8 @@ ReactDOM.render(
     <React.StrictMode>
         <Context.Provider value={{
             user: new UserStore(),
-            department: new DepartmentStore()
+            department: new DepartmentStore(),
+            employees: new EmployeesStore()
         }}>
            <ThemeProvider theme={theme}>
                <Global/>

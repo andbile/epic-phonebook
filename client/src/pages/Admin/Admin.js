@@ -16,6 +16,7 @@ const Admin =  ({routes}) => {
                 <Col md={9}>
                     {routes.map((route, i) => (
                         <RouteWithSubRoutes key={i} {...route} />
+                        // TODO маршрут по умолчанию, доделать
                     ))}
                 </Col>
             </Row>
