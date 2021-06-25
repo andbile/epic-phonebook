@@ -16,8 +16,8 @@ const AppRouter = observer(() => {
 
     return (
         <Switch>
-            {publicRoutes.map(({path, component}) =>
-                <Route key={path} path={path} component={component} exact/>
+            {publicRoutes.map(( routeItem) =>
+                <Route key={routeItem.path} {...routeItem} />
             )}
 
             {checkUserPermissions(ROLES_ADMIN_PANEL_PERMISSION, user.Role) && authRoutes.map( (route, i) =>
