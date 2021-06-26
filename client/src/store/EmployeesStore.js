@@ -13,13 +13,31 @@ export default class EmployeesStore{
                 tel_mobile: ['+380504118913', '+380963357050']
             },
             {
-                id:420,
+                id:421,
                 departmentId : 1,
                 last_name: 'Ведецький',
                 first_name: 'Ігор',
                 patronymic_name: 'Степанович',
                 position: 'заступник директора з адміністративно-господарських питань',
                 tel_mobile: ['+380972797775']
+            },
+            {
+                id:395,
+                departmentId : 5,
+                last_name: 'Колісник',
+                first_name: 'Світлана',
+                patronymic_name: 'Антонівна',
+                position: 'продавець непродовольчих товарів',
+                tel_mobile: ['+380984444180']
+            },
+            {
+                id:375,
+                departmentId : 5,
+                last_name: 'Саранюк',
+                first_name: 'Тетяна',
+                patronymic_name: 'Павлівна',
+                position: 'старший продавець непродовольчих товарів',
+                tel_mobile: ['+380989086095']
             }
         ]
         makeAutoObservable(this)

@@ -18,11 +18,11 @@ const PhoneBookItem = (props) => {
                 >
                     <div className='d-flex align-items-center'>
                         <span className='flex-grow-1'>{department.code} &ndash; {department.name}</span>
-                        <Button variant="outline-dark bg-secondary text-white"
+                        {<Button variant="outline-dark bg-secondary text-white pt-1 pb-1"
                                 onClick={() =>
                                     history.push(`${PHONE_BOOK_BY_DEPARTMENT_LINK}${department.code}`)
                                 }
-                        >Детально<Person className='icon'/></Button>
+                        >Детально<Person className='icon'/></Button>}
                     </div>
                 </td>
             </tr>
