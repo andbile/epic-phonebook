@@ -35,12 +35,12 @@ body #root{
 }
 
 .seller{
-background-color: #28a745;
+background-color: #007bff;
 color: #ffffff;
 }
 
 .not-seller{
-background-color: #007bff;
+background-color: #28a745;
 color: #ffffff;
 }
 
