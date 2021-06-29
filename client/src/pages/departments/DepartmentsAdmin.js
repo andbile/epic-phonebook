@@ -1,21 +1,21 @@
 import React, {useContext, useState} from 'react';
 import {observer} from "mobx-react-lite";
-import {Context} from "../../../index";
-import Table from "react-bootstrap/Table";
+import {Context} from "../../index";
 import {PencilSquare, Trash} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
-import DepartmentModal from "./DepartmentModal";
+import DepartmentModalAdmin from "./DepartmentModalAdmin";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import {useModal} from '../../../hooks/useModal'
+import {useModal} from '../../hooks/useModal'
+import PersonalTable from "../../components/PersonalTable";
 
-
-const Departments = observer(() => {
-    const {department} = useContext(Context)
+// Create, update, delete departments
+const DepartmentsAdmin = observer(() => {
+    const {departmentStore} = useContext(Context)
 
     const modal = useModal()
 
-    // current department id, used to delete/update a department in a modal window
+    // current department id, used to delete/update a department in the modal window
     const [departmentId, setDepartmentId] = useState('')
     // write to a state create/delete/update for use to identify the pressed button
     const [action, setAction] = useState({})
@@ -50,34 +50,33 @@ const Departments = observer(() => {
 
     return (
         <div>
-            <h3 className='text-center pt-2 pb-2'>Відділи</h3>
+            <h3 className='pt-2 pb-2'>Відділи</h3>
 
-            <Table striped bordered hover>
+            <PersonalTable striped bordered hover>
                 <thead>
-                <tr className='text-center' style={{backgroundColor:'#bababa'}}>
-                    <th className='align-middle'>Відділ</th>
-                    <th className='align-middle'>Назва</th>
-                    <th className='align-middle'>Торговий /<br/> не торговий</th>
-                    <th/>
-                    <th/>
+                <tr>
+                    <th>Відділ</th>
+                    <th>Назва</th>
+                    <th>Торговий /<br/> не торговий</th>
+                    <th colSpan={2}/>
                 </tr>
                 </thead>
                 <tbody>
                 {
-                    department.departments.map(department =>
+                    departmentStore.departments.map(department =>
                         <tr key={department.id}>
                             <td>{department.code}</td>
-                            <td>{department.name}</td>
+                            <td className='text-left'>{department.name}</td>
                             <td className={department.is_seller ?
-                                'bg-primary text-white align-middle text-center'
-                                : 'bg-success text-white align-middle text-center'}
+                                'bg-primary text-white'
+                                : 'bg-success text-white'}
                             >
                                 {department.is_seller ? 'Торговий' : 'Не торговий'}
                             </td>
 
                             <OverlayTrigger
                                 overlay={<Tooltip id="tooltip-department-update">Редагувати відділ</Tooltip>}>
-                                <td className='align-middle text-center p-0'
+                                <td className='p-0'
                                     onClick={() => updateDepartment(department.id)}
                                 >
                                     <Button variant="outline-dark" style={{border: 'none'}}>
@@ -88,7 +87,7 @@ const Departments = observer(() => {
 
                             <OverlayTrigger
                                 overlay={<Tooltip id="tooltip-department-delete">Видалити відділ</Tooltip>}>
-                                <td className='align-middle text-center p-0'
+                                <td className='p-0'
                                     onClick={() => deleteDepartment(department.id)}
                                 >
                                     <Button variant="outline-danger" style={{border: 'none'}}>
@@ -100,12 +99,12 @@ const Departments = observer(() => {
                     )
                 }
                 </tbody>
-            </Table>
+            </PersonalTable>
 
-            <DepartmentModal {...modal} id={departmentId} action={action} setAction={setAction}/>
+            <DepartmentModalAdmin {...modal} id={departmentId} action={action} setAction={setAction}/>
             <Button onClick={addDepartment}>Створити новий відділ</Button>
         </div>
     );
 });
 
-export default Departments;
+export default DepartmentsAdmin;

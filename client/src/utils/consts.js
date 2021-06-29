@@ -1,21 +1,21 @@
-// -----------------------------------------------
-// маршруты - для неавторизованных пользователей
+// routes for unauthorized users
 export const HOME_ROUTE = '/'
 export const LOGIN_ROUTE = '/login'
 export const REGISTRATION_ROUTE = '/registration'
 
-export const PHONE_BOOK_ROUTE = '/phonebook'
-export const PHONE_BOOK_BY_DEPARTMENT_LINK = '/phonebook-by-department/'
-export const PHONE_BOOK_BY_DEPARTMENT_ROUTE = `${PHONE_BOOK_BY_DEPARTMENT_LINK}:departId`
+export const DEPARTMENT_PHONE_BOOK_LINK = '/department-phonebook/'
+export const DEPARTMENT_PHONE_BOOK_ROUTE = `${DEPARTMENT_PHONE_BOOK_LINK}:departId`
+export const DEPARTMENTS_PHONE_BOOK_ROUTE = '/departments-phonebook'
 
 
 // -----------------------------------------------
 // маршруты - админка
 export const ADMIN_ROUTE = '/admin'
-export const ADMIN_PERSONAL_DEPARTMENTS_ROUTE = '/admin/departments'
-export const ADMIN_PERSONAL_DEPARTMENTS_CONTACTS_ROUTE = '/admin/personal-dept-contact/:departId'
-export const ADMIN_PERSONAL_EMPLOYEES_ROUTE = '/admin/employees'
-export const ADMIN_WORK_SCHEDULE_ROUTE = '/admin/work-schedule'
+export const ADMIN_DEPARTMENTS_ROUTE = '/admin/departments'
+export const ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE = '/admin/department-phonebook/:departId'
+
+//export const ADMIN_PERSONAL_EMPLOYEES_ROUTE = '/admin/employees' // --
+//export const ADMIN_WORK_SCHEDULE_ROUTE = '/admin/work-schedule' // --
 
 
 // роли пользователей

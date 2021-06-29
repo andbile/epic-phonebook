@@ -9,13 +9,13 @@ thead {
   background-color:#bababa;
   padding-top: 0.75em;
   padding-bottom: 0.75em;
+  text-align: center;
   }
 }
 
 th,td{
-vertical-align: middle;
+vertical-align: middle !important;
 text-align: center;
-
 }
 
 td{

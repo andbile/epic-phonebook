@@ -4,13 +4,14 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import PropTypes from 'prop-types'
 import {observer} from "mobx-react-lite";
-import {Context} from "../../../index";
+import {Context} from "../../index";
 import Card from "react-bootstrap/Card";
 
 // TODO Доробити видалення відділу. Якщо в нього входять якість співробітники, спочатку зробити сповіщення
 //  об необхідності переведення в інший відділ, видаляти тільки після перенесення (кількість співробітників = 0)
 
 /**
+ * Modal window for create/update/delete the department
  * @type {React.FunctionComponent<object>}
  * param {Object} -
  * param {boolean} props.modalVisible - show modal state
@@ -19,8 +20,8 @@ import Card from "react-bootstrap/Card";
  * param {Object} props.action - state to identify the pressed button (create/delete/update)
  * param {function} props.setAction - set action state
  */
-const DepartmentModal = observer((props) => {
-    const {department} = useContext(Context)
+const DepartmentModalAdmin = observer((props) => {
+    const {departmentStore} = useContext(Context)
 
     const {modalVisible, closeModal, id, action, setAction} = props
 
@@ -29,7 +30,7 @@ const DepartmentModal = observer((props) => {
     const [isSeller, setIsSeller] = useState(false)
 
     // current department for update or delete
-    const currentDepartment = department.departments.filter((item) => {
+    const currentDepartment = departmentStore.departments.filter((item) => {
            return id === item.id
        })
 
@@ -53,8 +54,8 @@ const DepartmentModal = observer((props) => {
 
     // create new department
     const createDepartment = () => {
-        department.setDepartments(
-            [...department.departments,
+        departmentStore.setDepartments(
+            [...departmentStore.departments,
                 {id: 10, code: code, name: name, is_seller: isSeller}
                 ]
         )
@@ -65,11 +66,11 @@ const DepartmentModal = observer((props) => {
     // update department
     const updateDepartment = () => {
         // select all departments except the current updated one
-        const otherDepartments = department.departments.filter((item) => {
+        const otherDepartments = departmentStore.departments.filter((item) => {
             return id !== item.id
         })
 
-        department.setDepartments(
+        departmentStore.setDepartments(
             [...otherDepartments,
                 {id: currentDepartment[0].id, code: code, name: name, is_seller: isSeller}
                 ]
@@ -82,11 +83,11 @@ const DepartmentModal = observer((props) => {
     // delete department
     const deleteDepartment = () => {
         // select all departments except the current deleted one
-        const otherDepartments = department.departments.filter((item) => {
+        const otherDepartments = departmentStore.departments.filter((item) => {
             return id !== item.id
         })
 
-        department.setDepartments(
+        departmentStore.setDepartments(
             [...otherDepartments])
 
         closeModalWindow()
@@ -191,7 +192,7 @@ const DepartmentModal = observer((props) => {
     );
 });
 
-DepartmentModal.propTypes = {
+DepartmentModalAdmin.propTypes = {
     modalVisible: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -203,4 +204,4 @@ DepartmentModal.propTypes = {
     setAction: PropTypes.func.isRequired
 }
 
-export default DepartmentModal;
+export default DepartmentModalAdmin;
