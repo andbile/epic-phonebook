@@ -24,12 +24,20 @@ body #root{
   padding: 10px 0;
 }
 
+h1, h2, h3, h4, h5, h6{
+text-align: center;
+}
+
 .btn:focus{
   box-shadow: none !important;
 }
 
 .icon{
   transform: translateY(-2px);
+  
+}
+
+.icon-phone{
   margin-left: 5px;
   margin-right: 5px;
 }

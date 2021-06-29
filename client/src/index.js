@@ -16,7 +16,7 @@ ReactDOM.render(
     <React.StrictMode>
         <Context.Provider value={{
             user: new UserStore(),
-            department: new DepartmentStore(),
+            departmentStore: new DepartmentStore(),
             employees: new EmployeesStore()
         }}>
            <ThemeProvider theme={theme}>

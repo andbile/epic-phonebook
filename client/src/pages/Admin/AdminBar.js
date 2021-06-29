@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from "styled-components";
 import {
-    ADMIN_PERSONAL_DEPARTMENTS_CONTACTS_ROUTE,
-    ADMIN_PERSONAL_DEPARTMENTS_ROUTE, ADMIN_PERSONAL_EMPLOYEES_ROUTE,
-    ADMIN_WORK_SCHEDULE_ROUTE,
+    ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE,
+    ADMIN_DEPARTMENTS_ROUTE,
+    //ADMIN_PERSONAL_EMPLOYEES_ROUTE,
+    //ADMIN_WORK_SCHEDULE_ROUTE,
     ROLE_PERSONAL,
     ROLE_TEST_ADMIN
 } from "../../utils/consts";
@@ -15,24 +16,24 @@ import {Button} from "react-bootstrap";
 const menuList = [
     {
         name: 'Відділи',
-        route: ADMIN_PERSONAL_DEPARTMENTS_ROUTE,
+        route: ADMIN_DEPARTMENTS_ROUTE,
         permissions: [ROLE_PERSONAL]
     },
-    {
+    /*{
         name: "Співробітники",
         route: ADMIN_PERSONAL_EMPLOYEES_ROUTE,
         permissions: [ROLE_PERSONAL]
-    },
+    },*/
     {
-        name: "Контакти департаментів",
-        route: ADMIN_PERSONAL_DEPARTMENTS_CONTACTS_ROUTE,
+        name: "Контакти відділів",
+        route: ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE,
         permissions: [ROLE_PERSONAL]
     },
-    {
+   /* {
         name: "Графіки",
         route: ADMIN_WORK_SCHEDULE_ROUTE,
         permissions: [ROLE_TEST_ADMIN],
-    }
+    }*/
 
 ]
 
