@@ -12,7 +12,7 @@ import {DEPARTMENT_PHONE_BOOK_LINK} from "../../../utils/consts";
  * @return {JSX.Element}
  * @constructor
  */
-const PhoneBookItem = (props) => {
+const DepartmentPhoneBookItem = (props) => {
     const {department, departmentPhoneBook} = props
     const history = useHistory()
 
@@ -72,10 +72,9 @@ const PhoneBookItem = (props) => {
 };
 
 
-PhoneBookItem.prototype = {
+DepartmentPhoneBookItem.prototype = {
     department: PropTypes.object.isRequired,
-    departmentContacts: PropTypes.object.isRequired,
-    setDepartmentCode: PropTypes.func.isRequired
+    departmentPhoneBook: PropTypes.object.isRequired
 }
 
-export default PhoneBookItem;
+export default DepartmentPhoneBookItem;

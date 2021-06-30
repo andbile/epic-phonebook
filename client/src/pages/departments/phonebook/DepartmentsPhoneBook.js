@@ -2,11 +2,10 @@ import React, {useContext, useReducer} from 'react';
 import MainContainer from "../../../components/MainContainer";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../../index";
-import PhoneBookItem from "./DepartmentPhoneBookItem";
+import DepartmentPhoneBookItem from "./DepartmentPhoneBookItem";
 import PersonalTable from "../../../components/PersonalTable";
 import {Button} from "react-bootstrap";
 import {DepartmentPhoneBookReducer, departmentActions} from "./reducer";
-import DepartmentPhoneBookItem from "./DepartmentPhoneBookItem";
 
 // Display the abbreviated phone book of all departments
 const DepartmentsPhoneBook = observer(() => {
