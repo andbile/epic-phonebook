@@ -24,6 +24,7 @@ import DepartmentsAdmin from "../pages/departments/DepartmentsAdmin";
 import Employees from "../pages/admin/personal/Employees";
 //import DepartmentContacts from "../pages/departments/DepartmentContacts----";
 import EmployeesPhoneBook from "../pages/departments/phonebook/EmployeesPhoneBook";
+import DepartmentsPhoneBookAdmin from "../pages/departments/phonebook/DepartmentsPhoneBookAdmin";
 
 
 //
@@ -35,6 +36,12 @@ const personalRoutes =
             permissions: [ROLE_PERSONAL],
             exact: true
         },
+        {
+            path: ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE,
+            component:DepartmentsPhoneBookAdmin,
+            permissions: [ROLE_PERSONAL],
+            exact: true
+        }
         /*{
             path: ADMIN_PERSONAL_EMPLOYEES_ROUTE,
             component: Employees,

@@ -59,14 +59,14 @@ const EmployeesPhoneBook = observer(() => {
                 <tbody>
                 {
                     currentEmployees.map((employeesItem, i) =>
-                        <tr key={i}>
+                        <tr key={employeesItem.id}>
                             <td>{employeesItem.last_name} {employeesItem.first_name} {employeesItem.patronymic_name}</td>
                             <td className='text-left'>{employeesItem.position}</td>
                             <td>
                                 {
                                     employeesItem.tel_mobile.length > 0 ?
                                         employeesItem.tel_mobile.map((tel, i) =>
-                                            <div key={i}><a href={'tel:' + tel}>{tel}</a></div>)
+                                            <div key={tel}><a href={'tel:' + tel}>{tel}</a></div>)
                                         :
                                         <span>&mdash;</span>
                                 }

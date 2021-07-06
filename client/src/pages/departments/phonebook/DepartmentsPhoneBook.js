@@ -7,25 +7,12 @@ import PersonalTable from "../../../components/PersonalTable";
 import {Button} from "react-bootstrap";
 import {DepartmentPhoneBookReducer, departmentActions} from "./reducer";
 
-// Display the abbreviated phone book of all departments
+// Display the abbreviated phone book of all departments (code, name of department and phone book entries of the current department)
 const DepartmentsPhoneBook = observer(() => {
     const {departmentStore} = useContext(Context)
 
     // Save state from mobx store and use it for toggle display seller/notSeller/all departments
-    // TODO Before switching the display of departments, set the initial state in the reducer. Need to fix !!!
     const [departmentState, dispatch] = useReducer(DepartmentPhoneBookReducer, departmentStore.departments)
-
-
-    /**
-     * Get the contacts of the department
-     * @param departmentId - department id from BD
-     * @return [{tel_dect: string, departmentId: number, id: number, position: string, tel_landline: [string], email: [string]}]
-     */
-    const getDepartmentPhoneBook = departmentId => {
-        return departmentStore.departmentsContacts.filter(item =>
-            item.departmentId === departmentId
-        )
-    }
 
     return (
         <MainContainer>
@@ -60,7 +47,6 @@ const DepartmentsPhoneBook = observer(() => {
                 </Button>
             </div>
 
-
             <PersonalTable>
                 <thead>
                 <tr>
@@ -74,9 +60,8 @@ const DepartmentsPhoneBook = observer(() => {
                 {
                     departmentState.map(departmentItem =>
                         <DepartmentPhoneBookItem
-                            key={departmentItem.id}
-                            department={departmentItem}
-                            departmentPhoneBook={getDepartmentPhoneBook(departmentItem.id)}
+                            key={departmentItem.code}
+                            departmentId={departmentItem.id}
                         />
                     )
                 }
