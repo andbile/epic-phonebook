@@ -36,14 +36,6 @@ export default class DepartmentStore {
         ]
         this._departmentsContacts = [
             {
-                "id": 2,
-                "departmentId": 1,
-                "position": "Директор",
-                "tel_dect": "2000",
-                "tel_landline": [],
-                "email":["um.dir@epicentrk.com", "um.dir2@epicentrk.com"]
-            },
-            {
                 "id": 1,
                 "departmentId": 1,
                 "position": "Асистент діра",
@@ -51,6 +43,15 @@ export default class DepartmentStore {
                 "tel_landline": ["2022", "4-67-26"],
                 "email":["um.office@epicentrk.com"]
             },
+            {
+                "id": 2,
+                "departmentId": 1,
+                "position": "Директор",
+                "tel_dect": "2000",
+                "tel_landline": [],
+                "email":["um.dir@epicentrk.com", "um.dir2@epicentrk.com"]
+            },
+
             {
                 "id": 3,
                 "departmentId": 5,

@@ -21,8 +21,12 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
             <td>
                 {
                     departmentPhoneBookEntryItem.tel_landline.length > 0 ?
-                        departmentPhoneBookEntryItem.tel_landline.map((tel, i) =>
-                            <div>{tel}<Telephone className='icon icon-phone'/></div>)
+                        departmentPhoneBookEntryItem.tel_landline.map(tel =>
+                            <div key={departmentPhoneBookEntryItem.id + tel}>
+                                {tel}
+                                <Telephone className='icon icon-phone'/>
+                            </div>
+                        )
                         :
                         <span>&mdash;</span>
                 }
@@ -38,8 +42,12 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
             <td>
                 {
                     departmentPhoneBookEntryItem.email.length > 0 ?
-                        departmentPhoneBookEntryItem.email.map((email, i) =>
-                            <><a href={"mailto:" + email}>{email}</a><br/></>)
+                        departmentPhoneBookEntryItem.email.map(email =>
+                            <span key={departmentPhoneBookEntryItem.id + email}>
+                                <a href={"mailto:" + email}>{email}</a>
+                                <br/>
+                            </span>
+                        )
                         :
                         <span>&mdash;</span>
                 }
@@ -67,7 +75,6 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
         </tr>
     );
 });
-
 
 
 // TODO props
