@@ -21,9 +21,6 @@ export const DepartmentPhoneBookReducer = (state, action) => {
             return state
         default:
             state = action.playload
-            // TODO тут восстанавливаем состояния из mobx, сделано для тестов,
-            // когда данные будет получать из БД этого делать не будем
-            // а может и оставим, если обновления с БД делать не надо
             return state
     }
 }

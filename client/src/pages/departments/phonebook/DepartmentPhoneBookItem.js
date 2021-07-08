@@ -12,10 +12,13 @@ import DepartmentPhoneBookEntryItem from "./DepartmentPhoneBookEntryItem";
 /**
  * Display the abbreviated phone book of one departments (code, name of department and phone book entries of the department)
  * Button - link to employees phone book of one department
- * @param props
- * @return {JSX.Element}
- * @constructor
+ * @param {object} props
+ * @param {number} props.departmentId - department id from DB
+ * @param {boolean} props.isAdminPanel - call react component from admin route
+ * @param {object} props.phoneBookBtnCallbacks - event handlers delete/update phone book entry
+ * @return {React.FunctionComponent<object>}
  */
+
 const DepartmentPhoneBookItem = observer((props) => {
     const {departmentStore} = useContext(Context)
     const history = useHistory()
@@ -84,16 +87,11 @@ const DepartmentPhoneBookItem = observer((props) => {
     );
 });
 
-// TODO проверить везде запись propTypes
 
 DepartmentPhoneBookItem.propTypes = {
     departmentId: PropTypes.number.isRequired,
     isAdminPanel: PropTypes.bool,
-    phoneBookBtnCallbacks: PropTypes.exact({
-        updatePhoneBookEntry: PropTypes.func,
-        deletePhoneBookEntry: PropTypes.func,
-        setPhoneBookEntryId: PropTypes.func
-    })
+    phoneBookBtnCallbacks: PropTypes.object
 }
 
 export default DepartmentPhoneBookItem;

@@ -8,13 +8,17 @@ import Button from "react-bootstrap/Button";
 import {useModal} from '../../../hooks/useModal'
 import DepartmentsPhoneBookModalAdmin from "./DepartmentsPhoneBookModalAdmin";
 
+// Display the abbreviated phone book of the department using select HTML element
 const DepartmentsPhoneBookAdmin = observer(() => {
     const {departmentStore} = useContext(Context)
 
     const modal = useModal()
 
+    // selected department id, used to display department with phone book after choosing one
     const [selectedDepartmentId, setSelectedDepartmentId] = useState('')
+    // current phone book entry id, used to delete/update a phone book entry in the modal window
     const [phoneBookEntryId, setPhoneBookEntryId] = useState('')
+    // write to a state create/delete/update for use to identify the pressed button
     const [action, setAction] = useState({})
 
 
@@ -25,14 +29,14 @@ const DepartmentsPhoneBookAdmin = observer(() => {
 
 
     // event handler - delete phone book entry
-    const deletePhoneBookEntry = (id) => {
+    const deletePhoneBookEntry = id => {
         setPhoneBookEntryId(id)
         setAction({delete: true})
         modal.showAModal()
     }
 
     // event handler - update phone book entry
-    const updatePhoneBookEntry = (id) => {
+    const updatePhoneBookEntry = id => {
         setPhoneBookEntryId(id)
         setAction({update: true})
         modal.showAModal()
@@ -87,7 +91,7 @@ const DepartmentsPhoneBookAdmin = observer(() => {
                             <tbody>
                             <DepartmentPhoneBookItem
                                 departmentId={selectedDepartmentId}
-                                phoneBookBtnCallbacks={{updatePhoneBookEntry, deletePhoneBookEntry, setPhoneBookEntryId}}
+                                phoneBookBtnCallbacks={{updatePhoneBookEntry, deletePhoneBookEntry}}
                                 isAdminPanel={true}
                             />
                             </tbody>

@@ -5,7 +5,20 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {Context} from "../../../index";
 import ButtonDelete from "../../../components/Buttons/ButtonDelete";
+import PropTypes from "prop-types";
+import DepartmentModalAdmin from "../DepartmentModalAdmin";
 
+/**
+ * Modal window for create/update/delete the phone book entry
+ * @type {React.FunctionComponent<object>}
+ * @param {object} props
+ * @param {boolean} props.modalVisible - show modal state
+ * @param {function} props.closeModal - set show modal state
+ * @param {string} props.phoneBookEntryId - phone book entry id from DB
+ * @param {string} props.selectedDepartmentId - department id from DB
+ * @param {Object} props.action - state to identify the pressed button (create/delete/update)
+ * @param {function} props.setAction - set action state
+ */
 
 const DepartmentsPhoneBookModalAdmin = observer((props) => {
     const {departmentStore} = useContext(Context)
@@ -22,38 +35,37 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
         +phoneBookEntryId === item.id
     )
 
-    // TODO из-за несоответствия типов (number/string), некоректно обновлялось состояние, внести изменения
-
-    // временный затык, что бы отдельно управлять состоянием почты/телефоном добавил id
-    // при сохранении нового состояния необходимо обратно подчищать масив (хранить только номера/почту в виде массива)
-    const getEmailsState = (emails) => {
+    /**
+     * Modification state tel/emails (array to object) adding id to be able to manage the state and change it separately
+     * if an array state
+     * @param {object} state - mobx state
+     * @param {string} keyName - new object key name
+     * @return {[{keyName: string, keyName_id: number}]}
+     */
+    const getModifiedState = (state, keyName) => {
         const arr = []
 
-        emails.map((item, i) => {
+        state.map((item, i) =>
             arr.push({
-                email: item,
-                email_id: i
+                [keyName]: item,
+                [keyName + '_id']: i
             })
-        })
+        )
 
         return arr
     }
 
-    const getTelLandlineState = (tels) => {
-        const arr = []
-
-        tels.map((item, i) => {
-            arr.push({
-                tel: item,
-                tel_id: i
-            })
-        })
-
-        return arr
-    }
+    /**
+     * Return the state (object to array) tel/emails by deleted id
+     * @param {object} state - mobx state
+     * @param {string} keyName - object key
+     * @return {*}
+     */
+    const returnState = (state, keyName) => state.map(item => item[keyName])
 
 
-    // filling input fields for update phone book
+
+    // filling input fields for update phone book entry
     useEffect(() => {
         if (action.update) {
             setPosition(() => {
@@ -65,11 +77,11 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
             })
 
             setTelLandline(() => {
-                return getTelLandlineState(currentPhoneBookEntry.tel_landline)
+                return getModifiedState(currentPhoneBookEntry.tel_landline, 'tel')
             })
 
             setEmail(() => {
-                return getEmailsState(currentPhoneBookEntry.email)
+                return getModifiedState(currentPhoneBookEntry.email, 'email')
             })
         }
     }, [action])
@@ -77,11 +89,6 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
 
     // create new phone book entry
     const createPhoneBookEntry = () => {
-        const emailArray = email.map(item => item.email)
-        const telLandlineArray = telLandline.map(item => item.tel)
-
-        console.log(selectedDepartmentId)
-        console.log([...departmentStore.departmentsContacts])
 
         const otherPhoneBookEntries = [...departmentStore.departmentsContacts]
 
@@ -90,39 +97,33 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                 {
                     id: otherPhoneBookEntries.length + 1,
                     departmentId: +selectedDepartmentId,
-                    email: emailArray,
+                    email: returnState(email, 'email'),
                     position: position,
                     tel_dect: telDect,
-                    tel_landline: telLandlineArray
+                    tel_landline: returnState(email, 'tel')
                 }
             ]
         )
 
-        console.log(departmentStore.departmentsContacts)
         closeModalWindow()
     }
 
     // update phone book entry
     const updatePhoneBookEntry = () => {
 
-        // временный затык, что бы отдельно управлять состоянием почты/телефоном добавил id
-        // при сохранении нового состояния необходимо обратно подчищать масив (хранить только номера/почту в виде массива)
-        const emailArray = email.map(item => item.email)
-        const telLandlineArray = telLandline.map(item => item.tel)
-
-
         // select all phone book entries except the current updated one
         const otherPhoneBookEntries = departmentStore.departmentsContacts.filter(item => +phoneBookEntryId !== item.id)
+
 
         departmentStore.setDepartmentsContacts(
             [...otherPhoneBookEntries,
                 {
                     id: currentPhoneBookEntry.id,
                     departmentId: currentPhoneBookEntry.departmentId,
-                    email: emailArray,
+                    email: returnState(email, 'email'),
                     position: position,
                     tel_dect: telDect,
-                    tel_landline: telLandlineArray
+                    tel_landline: returnState(telLandline, 'tel')
                 }
             ]
         )
@@ -133,8 +134,8 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
 
     // delete phone book entry
     const deletePhoneBookEntry = () => {
-        // select all phone book entry except the current deleted one
 
+        // select all phone book entry except the current deleted one
         const otherPhoneBookEntries = departmentStore.departmentsContacts.filter(item => +phoneBookEntryId !== item.id)
 
         departmentStore.setDepartmentsContacts(
@@ -156,31 +157,25 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
         ])
     }
 
-    // update phone landline entry
-    const updateTelLandline = (evt, id) => {
 
-        // сделал так чтобы пункты не прыгали по очередности спика
-        // TODO тоже сае сделать в департаментах
-        const updateTelState = () => {
-            telLandline[id] = {
-                tel: evt.target.value,
-                tel_id: id
-            }
-            return [
-                ...telLandline
-            ]
+    // update state in current position in the state
+    // will not change the position (tel/email) of entries in the table after render
+    const updateStateWithSavingPositions = (evt, state, id, keyName) => {
+        state[id] = {
+            [keyName]: evt.target.value,
+            [keyName + '_id']: id
         }
 
+        return [...state]
+    }
 
-        setTelLandline(
-            updateTelState()
-        )
+    // update phone landline entry
+    const updateTelLandline = (evt, id) => {
+        setTelLandline(updateStateWithSavingPositions(evt, telLandline, id, 'tel'))
     }
 
     const deleteTelLandline = (tel_id) => {
         const tels = telLandline.filter(item => tel_id !== item.tel_id)
-        console.log(tels)
-
         setTelLandline(tels)
     }
 
@@ -198,23 +193,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
 
     // update email entry
     const updateEmail = (evt, id) => {
-
-        // сделал так чтобы пункты не прыгали по очередности спика
-        // TODO тоже сае сделать в департаментах
-        const updateEmailsState = () => {
-            email[id] = {
-                email: evt.target.value,
-                email_id: id
-            }
-            return [
-                ...email
-            ]
-        }
-
-
-        setEmail(
-            updateEmailsState()
-        )
+        setEmail(updateStateWithSavingPositions(evt, email, id, 'email'))
     }
 
     // delete email entry
@@ -382,5 +361,19 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
         </Modal>
     );
 });
+
+// TODO phoneBookEntryId, selectedDepartmentId FIX type of variable
+DepartmentsPhoneBookModalAdmin.propTypes = {
+    modalVisible: PropTypes.bool.isRequired,
+    closeModal: PropTypes.func.isRequired,
+    phoneBookEntryId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    selectedDepartmentId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    action: PropTypes.exact({
+        create: PropTypes.bool,
+        update: PropTypes.bool,
+        delete: PropTypes.bool,
+    }).isRequired,
+    setAction: PropTypes.func.isRequired
+}
 
 export default DepartmentsPhoneBookModalAdmin;

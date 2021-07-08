@@ -13,12 +13,12 @@ import Card from "react-bootstrap/Card";
 /**
  * Modal window for create/update/delete the department
  * @type {React.FunctionComponent<object>}
- * param {Object} -
- * param {boolean} props.modalVisible - show modal state
- * param {function} props.closeModal - set show modal state
- * param {string} props.id - department id from DB
- * param {Object} props.action - state to identify the pressed button (create/delete/update)
- * param {function} props.setAction - set action state
+ * @param {Object} -
+ * @param {boolean} props.modalVisible - show modal state
+ * @param {function} props.closeModal - set show modal state
+ * @param {string} props.id - department id from DB
+ * @param {Object} props.action - state to identify the pressed button (create/delete/update)
+ * @aram {function} props.setAction - set action state
  */
 const DepartmentModalAdmin = observer((props) => {
     const {departmentStore} = useContext(Context)

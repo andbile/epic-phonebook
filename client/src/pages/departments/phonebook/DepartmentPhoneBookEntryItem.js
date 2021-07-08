@@ -4,13 +4,18 @@ import CheckPermissions from "../../../components/CheckPermissions";
 import ButtonUpdateInTable from "../../../components/Buttons/ButtonUpdateInTable";
 import ButtonDeleteInTable from "../../../components/Buttons/ButtonDeleteInTable";
 import {observer} from "mobx-react-lite";
-import {Context} from "../../../index";
+import PropTypes from "prop-types";
 
 
-// TODO передать функции через контекст
-// Get phone book entry item
+/**
+ * Get phone book entry
+ * @param {object} props
+ * @param {object} props.departmentPhoneBookEntryItem - phone book entry
+ * @param {boolean} props.isAdminPanel - call react component from admin route
+ * @param {object} props.phoneBookBtnCallbacks - event handlers delete/update phone book entry
+ * @type {React.FunctionComponent<object>}
+ */
 const DepartmentPhoneBookEntryItem = observer((props) => {
-    //const {departmentStore} = useContext(Context)
 
     const {departmentPhoneBookEntryItem, isAdminPanel, phoneBookBtnCallbacks} = props
 
@@ -77,5 +82,25 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
 });
 
 
-// TODO props
+DepartmentPhoneBookEntryItem.propTypes = {
+    departmentPhoneBookEntryItem: PropTypes.object.isRequired,
+    isAdminPanel: PropTypes.bool,
+    phoneBookBtnCallbacks: props => {
+        const {isAdminPanel, phoneBookBtnCallbacks} = props
+        if (isAdminPanel) {
+            if (typeof phoneBookBtnCallbacks != 'object')
+                return new Error(`The prop "phoneBookBtnCallbacks" required object, but its value '${phoneBookBtnCallbacks}'`)
+
+            if (typeof phoneBookBtnCallbacks.updatePhoneBookEntry != 'function') {
+                return new Error(`The prop "phoneBookBtnCallbacks.updatePhoneBookEntry" required function, but its value '${phoneBookBtnCallbacks.updatePhoneBookEntry}'`)
+            }
+
+            if (typeof phoneBookBtnCallbacks.deletePhoneBookEntry != 'function') {
+                return new Error(`The prop "phoneBookBtnCallbacks.deletePhoneBookEntry" required function, but its value '${phoneBookBtnCallbacks.deletePhoneBookEntry}'`)
+            }
+        }
+    }
+}
+
+
 export default DepartmentPhoneBookEntryItem;
