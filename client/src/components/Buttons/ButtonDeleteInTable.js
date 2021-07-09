@@ -5,13 +5,13 @@ import Button from "react-bootstrap/Button";
 import {Trash} from "react-bootstrap-icons";
 
 const ButtonDeleteInTable = (props) => {
-    const {tooltipId, tooltipIdMessage, eventHandler, phoneBookItemId} = props
+    const {tooltipId, tooltipIdMessage, eventHandler, itemId} = props
 
     return (
         <OverlayTrigger
             overlay={<Tooltip id={tooltipId}>{tooltipIdMessage}</Tooltip>}>
             <td className='p-0'
-                onClick={()=>{eventHandler(phoneBookItemId)}}
+                onClick={()=>{eventHandler(itemId)}}
             >
                 <Button variant="outline-danger" style={{border: 'none'}}>
                     <Trash/>

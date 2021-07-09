@@ -56,7 +56,7 @@ const DepartmentModalAdmin = observer((props) => {
     const createDepartment = () => {
         departmentStore.setDepartments(
             [...departmentStore.departments,
-                {id: 10, code: code, name: name, is_seller: isSeller}
+                {id: Date.now(), code: code, name: name, is_seller: isSeller}
                 ]
         )
 

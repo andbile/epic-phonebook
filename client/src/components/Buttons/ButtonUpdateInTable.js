@@ -5,13 +5,13 @@ import Button from "react-bootstrap/Button";
 import {PencilSquare} from "react-bootstrap-icons";
 
 const ButtonUpdateInTable = (props) => {
-    const {tooltipId, tooltipIdMessage, eventHandler, phoneBookItemId} = props
+    const {tooltipId, tooltipIdMessage, eventHandler, itemId} = props
 
     return (
         <OverlayTrigger
             overlay={<Tooltip id={tooltipId}>{tooltipIdMessage}</Tooltip>}>
             <td className='p-0'
-                onClick={()=>{eventHandler(phoneBookItemId)}}
+                onClick={()=>{eventHandler(itemId)}}
             >
                 <Button variant="outline-dark" style={{border: 'none'}}>
                     <PencilSquare/>

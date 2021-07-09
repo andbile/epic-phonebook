@@ -8,6 +8,8 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import {useModal} from '../../hooks/useModal'
 import PersonalTable from "../../components/PersonalTable";
+import ButtonUpdateInTable from "../../components/Buttons/ButtonUpdateInTable";
+import ButtonDeleteInTable from "../../components/Buttons/ButtonDeleteInTable";
 
 // Create, update, delete departments
 const DepartmentsAdmin = observer(() => {
@@ -15,7 +17,7 @@ const DepartmentsAdmin = observer(() => {
 
     const modal = useModal()
 
-    // current department id, used to delete/update a department in the modal window
+    // department id, used to delete/update the department in the modal window
     const [departmentId, setDepartmentId] = useState('')
     // write to a state create/delete/update for use to identify the pressed button
     const [action, setAction] = useState({})
@@ -74,27 +76,20 @@ const DepartmentsAdmin = observer(() => {
                                 {department.is_seller ? 'Торговий' : 'Не торговий'}
                             </td>
 
-                            <OverlayTrigger
-                                overlay={<Tooltip id="tooltip-department-update">Редагувати відділ</Tooltip>}>
-                                <td className='p-0'
-                                    onClick={() => updateDepartment(department.id)}
-                                >
-                                    <Button variant="outline-dark" style={{border: 'none'}}>
-                                        <PencilSquare/>
-                                    </Button>
-                                </td>
-                            </OverlayTrigger>
+                            <ButtonUpdateInTable
+                                tooltipId='tooltip-department-update'
+                                tooltipIdMessage='Редагувати відділ'
+                                eventHandler={updateDepartment}
+                                itemId={department.id}
+                            />
 
-                            <OverlayTrigger
-                                overlay={<Tooltip id="tooltip-department-delete">Видалити відділ</Tooltip>}>
-                                <td className='p-0'
-                                    onClick={() => deleteDepartment(department.id)}
-                                >
-                                    <Button variant="outline-danger" style={{border: 'none'}}>
-                                        <Trash/>
-                                    </Button>
-                                </td>
-                            </OverlayTrigger>
+                            <ButtonDeleteInTable
+                                tooltipId='tooltip-department-delete'
+                                tooltipIdMessage='Видалити відділ'
+                                eventHandler={deleteDepartment}
+                                itemId={department.id}
+
+                            />
                         </tr>
                     )
                 }

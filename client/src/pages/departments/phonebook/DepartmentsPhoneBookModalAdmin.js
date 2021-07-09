@@ -93,7 +93,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
         departmentStore.setDepartmentsContacts(
             [...otherPhoneBookEntries,
                 {
-                    id: otherPhoneBookEntries.length + 1,
+                    id: Date.now(),
                     departmentId: +selectedDepartmentId,
                     email: returnState(email, 'email'),
                     position: position,
@@ -109,27 +109,26 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
     // update phone book entry
     const updatePhoneBookEntry = () => {
 
-        // select all phone book entries except the current updated one
-        const phoneBookEntries = departmentStore.departmentsContacts.slice()
 
-        // find index of the entry in state
-        // not to change the position after render
-        const index = phoneBookEntries.findIndex( item =>
-            item.id === currentPhoneBookEntry.id
+        // select all phone book entries except the current updated one
+        const otherPhoneBookEntries = departmentStore.departmentsContacts.filter(item => +phoneBookEntryId !== item.id)
+
+
+        departmentStore.setDepartmentsContacts(
+            [...otherPhoneBookEntries,
+                {
+                    id: currentPhoneBookEntry.id,
+                    departmentId: currentPhoneBookEntry.departmentId,
+                    email: returnState(email, 'email'),
+                    position: position,
+                    tel_dect: telDect,
+                    tel_landline: returnState(telLandline, 'tel')
+                }
+            ]
         )
 
-        phoneBookEntries[index] = {
-            id: currentPhoneBookEntry.id,
-            departmentId: currentPhoneBookEntry.departmentId,
-            email: returnState(email, 'email'),
-            position: position,
-            tel_dect: telDect,
-            tel_landline: returnState(telLandline, 'tel')
-        }
-
-        departmentStore.setDepartmentsContacts([...phoneBookEntries])
-
         closeModalWindow()
+
     }
 
 
@@ -253,27 +252,26 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
 
                             {
                                 telLandline.map((item, id) =>
-                                    <>
-                                        <InputGroup className="mb-3">
-                                            <FormControl
-                                                type='text'
-                                                placeholder="Введіть номер телефону"
-                                                value={item.tel}
-                                                onChange={(evt) => {
-                                                    updateTelLandline(evt, id)
-                                                }}
+                                    <InputGroup
+                                        key={currentPhoneBookEntry.id + item.tel}
+                                        className="mb-3">
+                                        <FormControl
+                                            type='text'
+                                            placeholder="Введіть номер телефону"
+                                            value={item.tel}
+                                            onChange={(evt) => {
+                                                updateTelLandline(evt, id)
+                                            }}
+                                        />
+                                        <InputGroup.Append>
+                                            <ButtonDelete
+                                                id='tooltip-dept-phonebook-delete-telLandline-entry'
+                                                tooltipMessage='Видалити номер телефону'
+                                                itemId={item.tel_id}
+                                                eventHandler={deleteTelLandline}
                                             />
-                                            <InputGroup.Append>
-                                                <ButtonDelete
-                                                    id='tooltip-dept-phonebook-delete-telLandline-entry'
-                                                    tooltipMessage='Видалити номер телефону'
-                                                    itemId={item.tel_id}
-                                                    eventHandler={deleteTelLandline}
-                                                />
-                                            </InputGroup.Append>
-                                        </InputGroup>
-
-                                    </>
+                                        </InputGroup.Append>
+                                    </InputGroup>
                                 )
                             }
 
@@ -300,27 +298,26 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                             </div>
                             {
                                 email.map((item, id) =>
-                                    <>
-                                        <InputGroup className="mb-3">
-                                            <FormControl
-                                                type='text'
-                                                placeholder="Введіть email"
-                                                value={item.email}
-                                                onChange={(evt) => {
-                                                    updateEmail(evt, id)
-                                                }}
+                                    <InputGroup
+                                        key={currentPhoneBookEntry.id + item.email}
+                                        className="mb-3">
+                                        <FormControl
+                                            type='text'
+                                            placeholder="Введіть email"
+                                            value={item.email}
+                                            onChange={(evt) => {
+                                                updateEmail(evt, id)
+                                            }}
+                                        />
+                                        <InputGroup.Append>
+                                            <ButtonDelete
+                                                id='tooltip-dept-phonebook-delete-email-entry'
+                                                tooltipMessage='Видалити email'
+                                                itemId={item.email_id}
+                                                eventHandler={deleteEmail}
                                             />
-                                            <InputGroup.Append>
-                                                <ButtonDelete
-                                                    id='tooltip-dept-phonebook-delete-email-entry'
-                                                    tooltipMessage='Видалити email'
-                                                    itemId={item.email_id}
-                                                    eventHandler={deleteEmail}
-                                                />
-                                            </InputGroup.Append>
-                                        </InputGroup>
-
-                                    </>
+                                        </InputGroup.Append>
+                                    </InputGroup>
                                 )
                             }
                         </Form.Group>

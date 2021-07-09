@@ -65,14 +65,14 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
                             tooltipId='tooltip-dept-phonebook-update'
                             tooltipIdMessage='Редагувати запис'
                             eventHandler={phoneBookBtnCallbacks.updatePhoneBookEntry}
-                            phoneBookItemId={departmentPhoneBookEntryItem.id}
+                            itemId={departmentPhoneBookEntryItem.id}
                         />
 
                         <ButtonDeleteInTable
                             tooltipId='tooltip-dept-phonebook-delete'
                             tooltipIdMessage='Видалити запис'
                             eventHandler={phoneBookBtnCallbacks.deletePhoneBookEntry}
-                            phoneBookItemId={departmentPhoneBookEntryItem.id}
+                            itemId={departmentPhoneBookEntryItem.id}
                         />
                     </CheckPermissions>
                 )
