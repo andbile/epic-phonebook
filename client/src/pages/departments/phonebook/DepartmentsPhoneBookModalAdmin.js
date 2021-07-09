@@ -6,7 +6,6 @@ import Button from "react-bootstrap/Button";
 import {Context} from "../../../index";
 import ButtonDelete from "../../../components/Buttons/ButtonDelete";
 import PropTypes from "prop-types";
-import DepartmentModalAdmin from "../DepartmentModalAdmin";
 
 /**
  * Modal window for create/update/delete the phone book entry
@@ -59,10 +58,9 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
      * Return the state (object to array) tel/emails by deleted id
      * @param {object} state - mobx state
      * @param {string} keyName - object key
-     * @return {*}
+     * @return {array}
      */
     const returnState = (state, keyName) => state.map(item => item[keyName])
-
 
 
     // filling input fields for update phone book entry
@@ -112,21 +110,24 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
     const updatePhoneBookEntry = () => {
 
         // select all phone book entries except the current updated one
-        const otherPhoneBookEntries = departmentStore.departmentsContacts.filter(item => +phoneBookEntryId !== item.id)
+        const phoneBookEntries = departmentStore.departmentsContacts.slice()
 
-
-        departmentStore.setDepartmentsContacts(
-            [...otherPhoneBookEntries,
-                {
-                    id: currentPhoneBookEntry.id,
-                    departmentId: currentPhoneBookEntry.departmentId,
-                    email: returnState(email, 'email'),
-                    position: position,
-                    tel_dect: telDect,
-                    tel_landline: returnState(telLandline, 'tel')
-                }
-            ]
+        // find index of the entry in state
+        // not to change the position after render
+        const index = phoneBookEntries.findIndex( item =>
+            item.id === currentPhoneBookEntry.id
         )
+
+        phoneBookEntries[index] = {
+            id: currentPhoneBookEntry.id,
+            departmentId: currentPhoneBookEntry.departmentId,
+            email: returnState(email, 'email'),
+            position: position,
+            tel_dect: telDect,
+            tel_landline: returnState(telLandline, 'tel')
+        }
+
+        departmentStore.setDepartmentsContacts([...phoneBookEntries])
 
         closeModalWindow()
     }
@@ -138,9 +139,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
         // select all phone book entry except the current deleted one
         const otherPhoneBookEntries = departmentStore.departmentsContacts.filter(item => +phoneBookEntryId !== item.id)
 
-        departmentStore.setDepartmentsContacts(
-            [...otherPhoneBookEntries]
-        )
+        departmentStore.setDepartmentsContacts([...otherPhoneBookEntries])
 
         closeModalWindow()
     }
