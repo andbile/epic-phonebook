@@ -7,6 +7,7 @@ import PersonalTable from "../../../components/PersonalTable";
 import Button from "react-bootstrap/Button";
 import {useModal} from '../../../hooks/useModal'
 import DepartmentsPhoneBookModalAdmin from "./DepartmentsPhoneBookModalAdmin";
+import SelectDepartment from "../../../components/SelectDepartment";
 
 // Display the abbreviated phone book of the department using select HTML element
 const DepartmentsPhoneBookAdmin = observer(() => {
@@ -55,24 +56,10 @@ const DepartmentsPhoneBookAdmin = observer(() => {
             <h3 className='pt-2 pb-2'>Контакти відділів</h3>
 
             <Form>
-                <Form.Group>
-                    <Form.Label>Виберіть відділ:</Form.Label>
-                    <Form.Control as='select' onChange={evt => {
-                        onChangeDepartment(evt)
-                    }}>
-                         <option/>
-                        {
-                            departmentStore.departments.map(departmentItem =>
-                                <option
-                                    key={departmentItem.id}
-                                    value={departmentItem.id}
-                                >
-                                    {departmentItem.code} &ndash; {departmentItem.name}
-                                </option>
-                            )
-                        }
-                    </Form.Control>
-                </Form.Group>
+                <SelectDepartment
+                    departments={departmentStore.departments}
+                    onChangeDepartment={onChangeDepartment}
+                />
             </Form>
 
             {
