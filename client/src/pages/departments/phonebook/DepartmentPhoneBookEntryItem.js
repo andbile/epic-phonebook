@@ -5,6 +5,7 @@ import ButtonUpdateInTable from "../../../components/Buttons/ButtonUpdateInTable
 import ButtonDeleteInTable from "../../../components/Buttons/ButtonDeleteInTable";
 import {observer} from "mobx-react-lite";
 import PropTypes from "prop-types";
+import {ROLES_ADMIN_PANEL_PERMISSION} from "../../../utils/consts";
 
 
 /**
@@ -60,7 +61,7 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
 
             {
                 isAdminPanel && (
-                    <CheckPermissions permissions={['PERSONAL']}>
+                    <CheckPermissions permissions={ROLES_ADMIN_PANEL_PERMISSION}>
                         <ButtonUpdateInTable
                             tooltipId='tooltip-dept-phonebook-update'
                             tooltipIdMessage='Редагувати запис'
