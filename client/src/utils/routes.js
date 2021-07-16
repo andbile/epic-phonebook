@@ -11,7 +11,7 @@ import {
     ROLE_TEST_ADMIN,
     ROLE_PERSONAL,
     ADMIN_DEPARTMENTS_ROUTE,
-    ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE, DEPARTMENT_PHONE_BOOK_ROUTE
+    ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE, DEPARTMENT_PHONE_BOOK_ROUTE, ADMIN_EMPLOYEES_PHONE_BOOK_ROUTE
 } from './consts'
 import Home from './../pages/Home'
 import DepartmentsPhoneBook from '../pages/departments/phonebook/DepartmentsPhoneBook'
@@ -25,6 +25,7 @@ import Employees from "../pages/admin/personal/Employees";
 //import DepartmentContacts from "../pages/departments/DepartmentContacts----";
 import EmployeesPhoneBook from "../pages/departments/phonebook/EmployeesPhoneBook";
 import DepartmentsPhoneBookAdmin from "../pages/departments/phonebook/DepartmentsPhoneBookAdmin";
+import EmployeesPhoneBookAdmin from "../pages/departments/phonebook/EmployeesPhoneBookAdmin";
 
 
 //
@@ -41,13 +42,13 @@ const personalRoutes =
             component:DepartmentsPhoneBookAdmin,
             permissions: [ROLE_PERSONAL],
             exact: true
-        }
-        /*{
-            path: ADMIN_PERSONAL_EMPLOYEES_ROUTE,
-            component: Employees,
+        },
+        {
+            path: ADMIN_EMPLOYEES_PHONE_BOOK_ROUTE,
+            component: EmployeesPhoneBookAdmin,
             permissions: [ROLE_PERSONAL],
             exact: true
-        },*/
+        },
        /* {
             path: ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE,
             component: DepartmentContacts,

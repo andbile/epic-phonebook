@@ -13,8 +13,8 @@ export const DEPARTMENTS_PHONE_BOOK_ROUTE = '/departments-phonebook'
 export const ADMIN_ROUTE = '/admin'
 export const ADMIN_DEPARTMENTS_ROUTE = '/admin/departments'
 export const ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE = '/admin/department-phonebook'
+export const ADMIN_EMPLOYEES_PHONE_BOOK_ROUTE = '/admin/employees'
 
-//export const ADMIN_PERSONAL_EMPLOYEES_ROUTE = '/admin/employees' // --
 //export const ADMIN_WORK_SCHEDULE_ROUTE = '/admin/work-schedule' // --
 
 

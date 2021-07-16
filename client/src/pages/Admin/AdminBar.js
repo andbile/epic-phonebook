@@ -2,7 +2,7 @@ import React from 'react';
 import styled from "styled-components";
 import {
     ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE,
-    ADMIN_DEPARTMENTS_ROUTE,
+    ADMIN_DEPARTMENTS_ROUTE, ADMIN_EMPLOYEES_PHONE_BOOK_ROUTE,
     //ADMIN_PERSONAL_EMPLOYEES_ROUTE,
     //ADMIN_WORK_SCHEDULE_ROUTE,
     ROLE_PERSONAL,
@@ -19,11 +19,11 @@ const menuList = [
         route: ADMIN_DEPARTMENTS_ROUTE,
         permissions: [ROLE_PERSONAL]
     },
-    /*{
-        name: "Співробітники",
-        route: ADMIN_PERSONAL_EMPLOYEES_ROUTE,
+    {
+        name: "Контакти співробітників",
+        route: ADMIN_EMPLOYEES_PHONE_BOOK_ROUTE,
         permissions: [ROLE_PERSONAL]
-    },*/
+    },
     {
         name: "Контакти відділів",
         route: ADMIN_DEPARTMENTS_PHONE_BOOK_ROUTE,
