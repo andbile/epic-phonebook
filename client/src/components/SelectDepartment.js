@@ -6,10 +6,10 @@ import PropTypes from "prop-types";
  *  Get id of the selected department and update state
  * @param props
  * @return {JSX.Element}
- * @param {Object} props.departments - departments list from mobx state
+ * @param {array} props.departments - departments list from mobx state
  * @param {function} props.onChangeDepartment - set state
  */
-const SelectDepartment = (props) => {
+const SelectDepartment = props => {
 
     const {departments, onChangeDepartment} = props
 
@@ -36,7 +36,7 @@ const SelectDepartment = (props) => {
 };
 
 SelectDepartment.propTypes = {
-    departments: PropTypes.object.isRequired,
+    departments: PropTypes.array.isRequired,
     onChangeDepartment: PropTypes.func.isRequired
 }
 
