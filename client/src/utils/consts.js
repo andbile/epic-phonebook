@@ -4,7 +4,7 @@ export const LOGIN_ROUTE = '/login'
 export const REGISTRATION_ROUTE = '/registration'
 
 export const DEPARTMENT_PHONE_BOOK_LINK = '/department-phonebook/'
-export const DEPARTMENT_PHONE_BOOK_ROUTE = `${DEPARTMENT_PHONE_BOOK_LINK}:departId`
+export const DEPARTMENT_PHONE_BOOK_ROUTE = `${DEPARTMENT_PHONE_BOOK_LINK}:departmentCode`
 export const DEPARTMENTS_PHONE_BOOK_ROUTE = '/departments-phonebook'
 
 

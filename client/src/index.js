@@ -17,7 +17,7 @@ ReactDOM.render(
         <Context.Provider value={{
             user: new UserStore(),
             departmentStore: new DepartmentStore(),
-            employees: new EmployeesStore()
+            employeesStore: new EmployeesStore()
         }}>
            <ThemeProvider theme={theme}>
                <Global/>
