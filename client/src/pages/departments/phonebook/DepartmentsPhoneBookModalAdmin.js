@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
  * @param {function} props.setAction - set action state
  */
 
-const DepartmentsPhoneBookModalAdmin = observer((props) => {
+const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
     const {departmentStore} = useContext(Context)
     const {modalVisible, closeModal, phoneBookEntryId, selectedDepartmentId, action, setAction} = props
 
@@ -28,6 +28,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
     const [telLandline, setTelLandline] = useState([])
     const [email, setEmail] = useState([])
 
+    // TODO доработать ключи, берем ключи из значений но они могут быть одинаковыми
 
     // current phone book entry of the department for update or delete
     const currentPhoneBookEntry = departmentStore.departmentsContacts.find(item =>
@@ -41,10 +42,10 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
      * @param {string} keyName - new object key name
      * @return {[{keyName: string, keyName_id: number}]}
      */
-    const getModifiedState = (state, keyName) => {
+    const getModifiedState = ( state, keyName ) => {
         const arr = []
 
-        state.map((item, i) =>
+        state.map(( item, i ) =>
             arr.push({
                 [keyName]: item,
                 [keyName + '_id']: i
@@ -60,7 +61,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
      * @param {string} keyName - object key
      * @return {array}
      */
-    const returnState = (state, keyName) => state.map(item => item[keyName])
+    const returnState = ( state, keyName ) => state.map(item => item[keyName])
 
 
     // filling input fields for update phone book entry
@@ -158,7 +159,8 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
 
     // update state in current position in the state
     // will not change the position (tel/email) of entries in the table after render
-    const updateStateWithSavingPositions = (evt, state, id, keyName) => {
+    const updateStateWithSavingPositions = ( evt, state, id, keyName ) => {
+        // TODO переделать
         state[id] = {
             [keyName]: evt.target.value,
             [keyName + '_id']: id
@@ -168,11 +170,11 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
     }
 
     // update phone landline entry
-    const updateTelLandline = (evt, id) => {
+    const updateTelLandline = ( evt, id ) => {
         setTelLandline(updateStateWithSavingPositions(evt, telLandline, id, 'tel'))
     }
 
-    const deleteTelLandline = (tel_id) => {
+    const deleteTelLandline = ( tel_id ) => {
         const tels = telLandline.filter(item => tel_id !== item.tel_id)
         setTelLandline(tels)
     }
@@ -190,12 +192,12 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
     }
 
     // update email entry
-    const updateEmail = (evt, id) => {
+    const updateEmail = ( evt, id ) => {
         setEmail(updateStateWithSavingPositions(evt, email, id, 'email'))
     }
 
     // delete email entry
-    const deleteEmail = (email_id) => {
+    const deleteEmail = ( email_id ) => {
         const emails = email.filter(item => {
             return email_id !== item.email_id
         })
@@ -251,15 +253,15 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                             </div>
 
                             {
-                                telLandline.map((item, id) =>
+                                telLandline.map(( item, id ) =>
                                     <InputGroup
-                                        key={currentPhoneBookEntry.id + item.tel}
+                                        key={item.tel}
                                         className="mb-3">
                                         <FormControl
                                             type='text'
                                             placeholder="Введіть номер телефону"
                                             value={item.tel}
-                                            onChange={(evt) => {
+                                            onChange={( evt ) => {
                                                 updateTelLandline(evt, id)
                                             }}
                                         />
@@ -297,15 +299,16 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                                 > + Додати</Button>
                             </div>
                             {
-                                email.map((item, id) =>
+                                email.map(( item, id ) =>
                                     <InputGroup
-                                        key={currentPhoneBookEntry.id + item.email}
+
+                                        key={item.email}
                                         className="mb-3">
                                         <FormControl
                                             type='text'
                                             placeholder="Введіть email"
                                             value={item.email}
-                                            onChange={(evt) => {
+                                            onChange={( evt ) => {
                                                 updateEmail(evt, id)
                                             }}
                                         />

@@ -86,6 +86,7 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
 DepartmentPhoneBookEntryItem.propTypes = {
     departmentPhoneBookEntryItem: PropTypes.object.isRequired,
     isAdminPanel: PropTypes.bool,
+    // TODO вывести в отдельную функцию, так как етсь похожие учаски
     phoneBookBtnCallbacks: props => {
         const {isAdminPanel, phoneBookBtnCallbacks} = props
         if (isAdminPanel) {
