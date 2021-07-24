@@ -5,7 +5,7 @@ import {Context} from "../../../index";
 import DepartmentPhoneBookItem from "./DepartmentPhoneBookItem";
 import PersonalTable from "../../../components/PersonalTable";
 import Button from "react-bootstrap/Button";
-import {useModal} from '../../../hooks/useModal'
+import useModal from '../../../hooks/useModal'
 import DepartmentsPhoneBookModalAdmin from "./DepartmentsPhoneBookModalAdmin";
 import SelectDepartment from "../../../components/SelectDepartment";
 

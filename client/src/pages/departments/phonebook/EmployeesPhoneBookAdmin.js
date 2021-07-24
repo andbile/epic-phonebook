@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Context} from "../../../index";
-import {useModal} from "../../../hooks/useModal";
+import useModal from "../../../hooks/useModal";
 import Form from "react-bootstrap/Form";
 import SelectDepartment from "../../../components/SelectDepartment";
 import EmployeesPhoneBook from "./EmployeesPhoneBook";

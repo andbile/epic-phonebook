@@ -1,12 +1,9 @@
 import React, {useContext, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
-import {PencilSquare, Trash} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import DepartmentModalAdmin from "./DepartmentModalAdmin";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import {useModal} from '../../hooks/useModal'
+import useModal from '../../hooks/useModal'
 import PersonalTable from "../../components/PersonalTable";
 import ButtonUpdateInTable from "../../components/Buttons/ButtonUpdateInTable";
 import ButtonDeleteInTable from "../../components/Buttons/ButtonDeleteInTable";
