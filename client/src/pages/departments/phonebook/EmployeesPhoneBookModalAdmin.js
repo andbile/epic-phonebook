@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ButtonDelete from "../../../components/Buttons/ButtonDelete";
 import PropTypes from "prop-types";
+import useModifyStore from "../../../hooks/useModifyStore";
 
 /**
  * Modal window for create/update/delete theEmployee phone book entry
@@ -27,6 +28,10 @@ const EmployeesPhoneBookModalAdmin = observer( props => {
     const [patronymicName, setPatronymicName] = useState( '' )
     const [position, setPosition] = useState( '' )
     const [tel, setTel] = useState( [] )
+
+    //const [tel2, setTel2] = useModifyStore([], 'tel')
+
+    const telInput = useModifyStore([], 'tel')
 
     // current employee phone book entry for update/delete
     const currentEmployeePhoneBookEntry = employeesStore.employees.find( item =>
@@ -82,9 +87,15 @@ const EmployeesPhoneBookModalAdmin = observer( props => {
                 return currentEmployeePhoneBookEntry.position
             } )
 
-            setTel( () => {
+          /*  setTel( () => {
                 return getModifiedState( currentEmployeePhoneBookEntry.tel_mobile, 'tel' )
-            } )
+            } )*/
+
+            telInput.getModifiedState(currentEmployeePhoneBookEntry.tel_mobile)
+
+          /*  setTel( () => {
+                return getModifiedState( currentEmployeePhoneBookEntry.tel_mobile, 'tel' )
+            } )*/
         }
     }, [action] )
 
@@ -126,7 +137,8 @@ const EmployeesPhoneBookModalAdmin = observer( props => {
                     first_name: firstName,
                     patronymic_name: patronymicName,
                     position: position,
-                    tel_mobile: returnState( tel, 'tel' ),
+                    /*tel_mobile: returnState( tel, 'tel' ),*/
+                    tel_mobile: telInput.returnState()
 
                 }
             ]
@@ -190,7 +202,7 @@ const EmployeesPhoneBookModalAdmin = observer( props => {
      * @param {number} tel_id - tel id in the modified state
      */
     const updateTel = ( evt, tel_id ) => {
-        setTel( updateStateWithSavingPositions( evt, tel, 'tel', tel_id ) )
+        //setTel( updateStateWithSavingPositions( evt, tel, 'tel', tel_id ) )
     }
 
     /**
@@ -276,12 +288,13 @@ const EmployeesPhoneBookModalAdmin = observer( props => {
                             <div className='d-flex align-items-center'>
                                 <Form.Label className="mb-0">Мобільний телефон</Form.Label>
                                 <Button variant="string" className='text-right mb-0' style={{color: "#007bff"}}
-                                        onClick={addTel}
+                                        /*onClick={addTel}*/
+                                    onClick={telInput.add}
                                 > + Додати</Button>
                             </div>
 
                             {
-                                tel.map( ( item, i ) =>
+                                telInput.value.map( ( item, i ) =>
                                     <InputGroup
                                         key={i + item.tel_id}
                                         className="mb-3">
@@ -289,7 +302,8 @@ const EmployeesPhoneBookModalAdmin = observer( props => {
                                             type='text'
                                             placeholder="Введіть номер телефону"
                                             value={item.tel}
-                                            onChange={evt => updateTel( evt, item.tel_id )}
+                                            /*onChange={evt => updateTel( evt, item.tel_id )}*/
+                                            onChange={evt => telInput.update( evt, item.tel_id )}
                                             autoComplete='nope'
                                         />
                                         <InputGroup.Append>
@@ -297,7 +311,8 @@ const EmployeesPhoneBookModalAdmin = observer( props => {
                                                 id='tooltip-dept-employee-phonebook-delete-tel-entry'
                                                 tooltipMessage='Видалити номер телефону'
                                                 itemId={item.tel_id}
-                                                eventHandler={deleteTel}
+                                               /* eventHandler={deleteTel}*/
+                                                 eventHandler={telInput.del}
                                             />
                                         </InputGroup.Append>
                                     </InputGroup>
