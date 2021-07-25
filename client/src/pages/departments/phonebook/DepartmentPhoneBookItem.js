@@ -7,11 +7,11 @@ import {DEPARTMENT_PHONE_BOOK_LINK} from "../../../utils/consts";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../../index";
 import DepartmentPhoneBookEntryItem from "./DepartmentPhoneBookEntryItem";
-
+import isPhoneBookBtnCallbacks from "../../../components/propTypeValidators/isPhoneBookBtnCallbacks";
 
 /**
- * Display the abbreviated phone book of one departments (code, name of department and phone book entries of the department)
- * Button - link to employees phone book of one department
+ * Display the abbreviated phone book of the department
+ * Button - link to employees phone book of the department
  * @param {object} props
  * @param {number} props.departmentId - department id from DB
  * @param {boolean} props.isAdminPanel - call react component from admin route
@@ -25,20 +25,13 @@ const DepartmentPhoneBookItem = observer((props) => {
 
     const {departmentId, isAdminPanel, phoneBookBtnCallbacks} = props
 
-
-    /**
-     * Get the department
-     * @type {{code: string, is_seller: boolean, name: string, id: number}}
-     */
+    // Get the department
     const department = departmentStore.departments.find(item =>
         item.id === +departmentId
     )
 
 
-    /**
-     * Get phone book entries of the department
-     * @type {[{tel_dect: string, departmentId: number, id: number, position: string, tel_landline: [string], email: [string]}]}
-     */
+    // Get phone book entries of the department
     const phoneBookEntries = departmentStore.departmentsContacts.filter(item =>
         item.departmentId === +departmentId
     )
@@ -47,7 +40,7 @@ const DepartmentPhoneBookItem = observer((props) => {
      * Button to display employees phone book of the department
      * @return {JSX.Element}
      */
-    const btnToShowDepartmentPhoneBook = () => {
+    const btnToShowEmployeesPhoneBookByDepartment = () => {
         return (
             <Button variant="outline-dark bg-secondary text-white pt-1 pb-1"
                     onClick={() =>
@@ -67,7 +60,7 @@ const DepartmentPhoneBookItem = observer((props) => {
                 >
                     <div className='d-flex align-items-center'>
                         <span className='flex-grow-1'>{department.code} &ndash; {department.name}</span>
-                        {!isAdminPanel && btnToShowDepartmentPhoneBook()}
+                        {!isAdminPanel && btnToShowEmployeesPhoneBookByDepartment()}
                     </div>
                 </td>
             </tr>
@@ -91,7 +84,7 @@ const DepartmentPhoneBookItem = observer((props) => {
 DepartmentPhoneBookItem.propTypes = {
     departmentId: PropTypes.number.isRequired,
     isAdminPanel: PropTypes.bool,
-    phoneBookBtnCallbacks: PropTypes.object
+    phoneBookBtnCallbacks: isPhoneBookBtnCallbacks
 }
 
 export default DepartmentPhoneBookItem;

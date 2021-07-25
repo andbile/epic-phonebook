@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Phone, Telephone} from "react-bootstrap-icons";
 import CheckPermissions from "../../../components/CheckPermissions";
 import ButtonUpdateInTable from "../../../components/Buttons/ButtonUpdateInTable";
@@ -6,6 +6,7 @@ import ButtonDeleteInTable from "../../../components/Buttons/ButtonDeleteInTable
 import {observer} from "mobx-react-lite";
 import PropTypes from "prop-types";
 import {ROLES_ADMIN_PANEL_PERMISSION} from "../../../utils/consts";
+import isPhoneBookBtnCallbacks from "../../../components/propTypeValidators/isPhoneBookBtnCallbacks";
 
 
 /**
@@ -17,9 +18,7 @@ import {ROLES_ADMIN_PANEL_PERMISSION} from "../../../utils/consts";
  * @type {React.FunctionComponent<object>}
  */
 const DepartmentPhoneBookEntryItem = observer((props) => {
-
     const {departmentPhoneBookEntryItem, isAdminPanel, phoneBookBtnCallbacks} = props
-
 
     return (
         <tr>
@@ -86,22 +85,7 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
 DepartmentPhoneBookEntryItem.propTypes = {
     departmentPhoneBookEntryItem: PropTypes.object.isRequired,
     isAdminPanel: PropTypes.bool,
-    // TODO вывести в отдельную функцию, так как етсь похожие учаски
-    phoneBookBtnCallbacks: props => {
-        const {isAdminPanel, phoneBookBtnCallbacks} = props
-        if (isAdminPanel) {
-            if (typeof phoneBookBtnCallbacks != 'object')
-                return new Error(`The prop "phoneBookBtnCallbacks" required object, but its value '${phoneBookBtnCallbacks}'`)
-
-            if (typeof phoneBookBtnCallbacks.updatePhoneBookEntry != 'function') {
-                return new Error(`The prop "phoneBookBtnCallbacks.updatePhoneBookEntry" required function, but its value '${phoneBookBtnCallbacks.updatePhoneBookEntry}'`)
-            }
-
-            if (typeof phoneBookBtnCallbacks.deletePhoneBookEntry != 'function') {
-                return new Error(`The prop "phoneBookBtnCallbacks.deletePhoneBookEntry" required function, but its value '${phoneBookBtnCallbacks.deletePhoneBookEntry}'`)
-            }
-        }
-    }
+    phoneBookBtnCallbacks: isPhoneBookBtnCallbacks
 }
 
 

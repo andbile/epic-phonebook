@@ -7,11 +7,11 @@ import PersonalTable from "../../../components/PersonalTable";
 import {Button} from "react-bootstrap";
 import {DepartmentPhoneBookReducer, departmentActions} from "./reducer";
 
-// Display the abbreviated phone book of all departments (code, name of department and phone book entries of the current department)
+// Display the abbreviated phone book of all departments
 const DepartmentsPhoneBook = observer(() => {
     const {departmentStore} = useContext(Context)
 
-    // Save state from mobx store and use it for toggle display seller/notSeller/all departments
+    // Toggle display seller/notSeller/all departments
     const [departmentState, dispatch] = useReducer(DepartmentPhoneBookReducer, departmentStore.departments)
 
     return (
