@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import {Context} from "../../../index";
 import ButtonDelete from "../../../components/Buttons/ButtonDelete";
 import PropTypes from "prop-types";
+import useModifyStore from "../../../hooks/useModifyStore";
 
 /**
  * Modal window for create/update/delete the phone book entry
@@ -19,50 +20,21 @@ import PropTypes from "prop-types";
  * @param {function} props.setAction - set action state
  */
 
-const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
+const DepartmentsPhoneBookModalAdmin = observer((props) => {
     const {departmentStore} = useContext(Context)
     const {modalVisible, closeModal, phoneBookEntryId, selectedDepartmentId, action, setAction} = props
 
     const [position, setPosition] = useState('')
     const [telDect, setTelDect] = useState('')
-    const [telLandline, setTelLandline] = useState([])
-    const [email, setEmail] = useState([])
+    const tel = useModifyStore([], 'tel')
+    const email = useModifyStore([], 'email')
 
-    // TODO доработать ключи, берем ключи из значений но они могут быть одинаковыми
+
 
     // current phone book entry of the department for update or delete
     const currentPhoneBookEntry = departmentStore.departmentsContacts.find(item =>
         +phoneBookEntryId === item.id
     )
-
-    /**
-     * Modification state tel/emails (array to object) adding id to be able to manage the state and change it separately
-     * if an array state
-     * @param {object} state - mobx state
-     * @param {string} keyName - new object key name
-     * @return {[{keyName: string, keyName_id: number}]}
-     */
-    const getModifiedState = ( state, keyName ) => {
-        const arr = []
-
-        state.map(( item, i ) =>
-            arr.push({
-                [keyName]: item,
-                [keyName + '_id']: i
-            })
-        )
-
-        return arr
-    }
-
-    /**
-     * Return the state (object to array) tel/emails by deleted id
-     * @param {object} state - mobx state
-     * @param {string} keyName - object key
-     * @return {array}
-     */
-    const returnState = ( state, keyName ) => state.map(item => item[keyName])
-
 
     // filling input fields for update phone book entry
     useEffect(() => {
@@ -75,13 +47,9 @@ const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
                 return currentPhoneBookEntry.tel_dect
             })
 
-            setTelLandline(() => {
-                return getModifiedState(currentPhoneBookEntry.tel_landline, 'tel')
-            })
+            tel.getModifiedState(currentPhoneBookEntry.tel_landline)
 
-            setEmail(() => {
-                return getModifiedState(currentPhoneBookEntry.email, 'email')
-            })
+            email.getModifiedState(currentPhoneBookEntry.email)
         }
     }, [action])
 
@@ -96,10 +64,10 @@ const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
                 {
                     id: Date.now(),
                     departmentId: +selectedDepartmentId,
-                    email: returnState(email, 'email'),
+                    email: email.returnStructureState(),
                     position: position,
                     tel_dect: telDect,
-                    tel_landline: returnState(email, 'tel')
+                    tel_landline: tel.returnStructureState(),
                 }
             ]
         )
@@ -110,26 +78,23 @@ const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
     // update phone book entry
     const updatePhoneBookEntry = () => {
 
-
         // select all phone book entries except the current updated one
         const otherPhoneBookEntries = departmentStore.departmentsContacts.filter(item => +phoneBookEntryId !== item.id)
-
 
         departmentStore.setDepartmentsContacts(
             [...otherPhoneBookEntries,
                 {
                     id: currentPhoneBookEntry.id,
                     departmentId: currentPhoneBookEntry.departmentId,
-                    email: returnState(email, 'email'),
+                    email: email.returnStructureState(),
                     position: position,
                     tel_dect: telDect,
-                    tel_landline: returnState(telLandline, 'tel')
+                    tel_landline: tel.returnStructureState(),
                 }
             ]
         )
 
         closeModalWindow()
-
     }
 
 
@@ -145,75 +110,15 @@ const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
     }
 
 
-    // add phone landline entry
-    const addTelLandline = () => {
-        setTelLandline([
-            ...telLandline,
-            {
-                tel: '',
-                tel_id: Date.now()
-            }
-        ])
-    }
-
-
-    // update state in current position in the state
-    // will not change the position (tel/email) of entries in the table after render
-    const updateStateWithSavingPositions = ( evt, state, id, keyName ) => {
-        // TODO переделать
-        state[id] = {
-            [keyName]: evt.target.value,
-            [keyName + '_id']: id
-        }
-
-        return [...state]
-    }
-
-    // update phone landline entry
-    const updateTelLandline = ( evt, id ) => {
-        setTelLandline(updateStateWithSavingPositions(evt, telLandline, id, 'tel'))
-    }
-
-    const deleteTelLandline = ( tel_id ) => {
-        const tels = telLandline.filter(item => tel_id !== item.tel_id)
-        setTelLandline(tels)
-    }
-
-
-    // add email entry
-    const addEmail = () => {
-        setEmail([
-            ...email,
-            {
-                email: '',
-                email_id: Date.now()
-            }
-        ])
-    }
-
-    // update email entry
-    const updateEmail = ( evt, id ) => {
-        setEmail(updateStateWithSavingPositions(evt, email, id, 'email'))
-    }
-
-    // delete email entry
-    const deleteEmail = ( email_id ) => {
-        const emails = email.filter(item => {
-            return email_id !== item.email_id
-        })
-
-        setEmail(emails)
-    }
-
-
     const closeModalWindow = () => {
         setPosition('')
         setTelDect('')
-        setTelLandline([])
-        setEmail([])
+        tel.setInitialState()
+        email.setInitialState()
         setAction({})
         closeModal()
     }
+
 
     return (
         <Modal
@@ -248,35 +153,32 @@ const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
                             <div className='d-flex align-items-center'>
                                 <Form.Label className="mb-0">Телефон (стаціонарний)</Form.Label>
                                 <Button variant="string" className='text-right mb-0' style={{color: "#007bff"}}
-                                        onClick={addTelLandline}
+                                        onClick={tel.add}
                                 > + Додати</Button>
                             </div>
 
                             {
-                                telLandline.map(( item, id ) =>
+                                tel.value.map((item, i) =>
                                     <InputGroup
-                                        key={item.tel}
+                                        key={i + item.tel_id}
                                         className="mb-3">
                                         <FormControl
                                             type='text'
                                             placeholder="Введіть номер телефону"
                                             value={item.tel}
-                                            onChange={( evt ) => {
-                                                updateTelLandline(evt, id)
-                                            }}
+                                            onChange={evt => tel.update(evt, item.tel_id)}
                                         />
                                         <InputGroup.Append>
                                             <ButtonDelete
                                                 id='tooltip-dept-phonebook-delete-telLandline-entry'
                                                 tooltipMessage='Видалити номер телефону'
                                                 itemId={item.tel_id}
-                                                eventHandler={deleteTelLandline}
+                                                eventHandler={tel.del}
                                             />
                                         </InputGroup.Append>
                                     </InputGroup>
                                 )
                             }
-
                         </Form.Group>
 
 
@@ -295,29 +197,26 @@ const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
                             <div className='d-flex align-items-center'>
                                 <Form.Label className='mb-0'>Електронна пошта</Form.Label>
                                 <Button variant="string" className='text-right mb-0' style={{color: "#007bff"}}
-                                        onClick={addEmail}
+                                        onClick={email.add}
                                 > + Додати</Button>
                             </div>
                             {
-                                email.map(( item, id ) =>
+                                email.value.map((item, i) =>
                                     <InputGroup
-
-                                        key={item.email}
+                                        key={i + item.email_id}
                                         className="mb-3">
                                         <FormControl
                                             type='text'
                                             placeholder="Введіть email"
                                             value={item.email}
-                                            onChange={( evt ) => {
-                                                updateEmail(evt, id)
-                                            }}
+                                            onChange={evt => email.update(evt, item.email_id)}
                                         />
                                         <InputGroup.Append>
                                             <ButtonDelete
                                                 id='tooltip-dept-phonebook-delete-email-entry'
                                                 tooltipMessage='Видалити email'
                                                 itemId={item.email_id}
-                                                eventHandler={deleteEmail}
+                                                eventHandler={email.del}
                                             />
                                         </InputGroup.Append>
                                     </InputGroup>
@@ -355,18 +254,15 @@ const DepartmentsPhoneBookModalAdmin = observer(( props ) => {
                 {action.delete && <Button variant="danger" onClick={deletePhoneBookEntry}>Видалити</Button>}
                 <Button onClick={closeModalWindow}>Закрити</Button>
             </Modal.Footer>
-
-
         </Modal>
     );
 });
 
-// TODO phoneBookEntryId, selectedDepartmentId FIX type of variable
 DepartmentsPhoneBookModalAdmin.propTypes = {
     modalVisible: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
-    phoneBookEntryId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    selectedDepartmentId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    phoneBookEntryId: PropTypes.number.isRequired,
+    selectedDepartmentId: PropTypes.number.isRequired,
     action: PropTypes.exact({
         create: PropTypes.bool,
         update: PropTypes.bool,
