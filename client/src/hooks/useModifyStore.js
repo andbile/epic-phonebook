@@ -1,62 +1,87 @@
 import {useState} from "react";
 
+/**
+ * Modification/return a state such as a tel/email, adding an id to be able to manage the state and change it separately
+ * @param {array} initialValue
+ * @param {string} keyName - object key name of modified state
+ * @return {{
+ *  add: (function():void),
+ *  getModifiedState: (function(state:array):void),
+ *  setInitialState: (function():void),
+ *  returnStructureState: (function(): array),
+ *  update: (function(evt:object, id:number):void),
+ *  del: (function(id:number):void),
+ *  value: Array
+ *     }}
+ */
+export default function useModifyStore(initialValue, keyName) {
+    const [value, setValue] = useState(initialValue)
+    // key name of object (for example tel_id / email_id)
+    const keyNameId = keyName + '_id'
 
-export default function useModifyStore( initialValue, keyName ) {
-    const [value, setValue] = useState( initialValue )
-
-
-    const getModifiedState = ( state ) => {
-
+    /**
+     * Modification a state, adding an id
+     * @param {array} state - mobx state
+     */
+    function getModifiedState (state) {
         const arr = []
 
-        state.map( ( item, i ) =>
-            arr.push( {
+        state.map((item, i) =>
+            arr.push({
                 [keyName]: item,
-                [keyName + '_id']: i
-            } )
+                [keyNameId]: i
+            })
         )
-        setValue( arr )
+        setValue(arr)
     }
 
+    // Returning the structure to its original state before updating the state in the mobx
+    const returnStructureState = () => value.map(item => item[keyName])
 
-    const returnState = () => value.map( item => item[keyName] )
-
-
+    // add entry to modified state
     const add = () => {
-        setValue( [
+        setValue([
             ...value,
             {
                 [keyName]: '',
-                [keyName + '_id']: Date.now()
+                [keyNameId]: Date.now()
             }
-        ] )
+        ])
     }
 
-    const update = ( evt, id ) => {
-        console.log( evt )
-        console.log( id )
-
-        const index = value.findIndex( item =>
-            item[keyName + '_id'] === id
+    /**
+     * Update entry to modified state and keep the position after render
+     * @param {object} evt - event object
+     * @param {number} id - id in the modified state
+     */
+    const update = (evt, id) => {
+        const index = value.findIndex(item =>
+            item[keyNameId] === id
         )
 
         value[index] = {
             [keyName]: evt.target.value,
-            [keyName + '_id']: id
+            [keyNameId]: id
         }
 
-        setValue( [...value] )
+        setValue([...value])
     }
 
+    /**
+     * Delete entry to modified state
+     * @param {number} id - id in the modified state
+     */
+    const del = (id) => {
+        const values = value.filter(item => id !== item[keyNameId])
+        setValue(values)
+    }
 
-    const del = ( id ) => {
-        console.log(id)
-        console.log(value)
-        const values = value.filter( item => id !== item[keyName + '_id'] )
-        setValue( values)
+    // set initial value in the state after close modal window
+    const setInitialState = () => {
+        setValue(initialValue)
     }
 
     return {
-        value, getModifiedState, returnState, add, update, del
+        value, getModifiedState, returnStructureState, add, update, del, setInitialState
     }
 }
