@@ -4,23 +4,39 @@ const {Department} = require('../models/models')
 class DepartmentController{
     async getAllDepartment(req, res){
         const departments = await Department.findAll({
-            attributes:['id', 'code', 'name', 'is_seller']
+            attributes:['id', 'code', 'name', 'is_seller'],
+            order:[
+                ['is_seller', 'DESC'],
+                ['code', 'ASC']
+            ]
         })
         return res.json(departments)
     }
 
+
     async getOneDepartment(req, res){
         const {id} = req.params
+        console.log(id)
         // TODO сделать обработку ошибок
+
         const department = await Department.findOne({where:{id}})
 
         return res.json(department)
     }
 
+
+
+
+
+
+
+
+
+
     async updateDepartment(req, res){
         const {id} = req.params
         // TODO сделать обработку ошибок
-        //const department = await Department.findOne({where:{id}})
+        const department = await Department.findOne({where:{id}})
 
         return res.json(department)
     }

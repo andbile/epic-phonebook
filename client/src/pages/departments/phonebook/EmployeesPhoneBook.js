@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import MainContainer from "../../../components/MainContainer";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../../index";
@@ -12,6 +12,8 @@ import EmployeesPhoneBookEntryItem from "./EmployeesPhoneBookEntryItem";
 import PropTypes from 'prop-types'
 import isPhoneBookBtnCallbacks from './../../../components/propTypeValidators/isPhoneBookBtnCallbacks'
 import isDepartmentId from './../../../components/propTypeValidators/isDepartmentId'
+import {fetchDepartments} from "../../../http/departmentAPI";
+
 
 /**
  * Display a list employees of the department
@@ -23,9 +25,26 @@ import isDepartmentId from './../../../components/propTypeValidators/isDepartmen
  */
 const EmployeesPhoneBook = observer( props => {
     const {employeesStore, departmentStore} = useContext( Context )
-    const {departmentCode} = useParams()
     const {departmentId, isAdminPanel, phoneBookBtnCallbacks} = props
 
+
+    const {departmentCode} = useParams()
+
+    const [currentDepartment, setCurrentDepartment] = useState({})
+
+    //TODO если такого departmentCode нету, вывод ошибки - такого департамента не существует, сейчас реакт крушится
+    // с базы тянуть только конкретный департамент по departmentCode
+
+    useEffect(() => {
+        fetchDepartments().then(data => {
+            departmentStore.setDepartments(data)
+
+            setCurrentDepartment(
+                isAdminPanel
+                    ? getCurrentDepartmentByID( departmentId )
+                    : getCurrentDepartmentByCode( departmentCode ))
+        })
+    }, [])
 
     /**
      * Get the department using department id
@@ -59,7 +78,7 @@ const EmployeesPhoneBook = observer( props => {
             item.departmentId === departmentId
         )
 
-    const currentDepartment = isAdminPanel ? getCurrentDepartmentByID( departmentId ) : getCurrentDepartmentByCode( departmentCode )
+
     const employees = getCurrentEmployees( currentDepartment.id )
 
 

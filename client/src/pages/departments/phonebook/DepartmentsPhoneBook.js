@@ -1,4 +1,4 @@
-import React, {useContext, useReducer} from 'react';
+import React, {useCallback, useContext, useEffect, useReducer, useState} from 'react';
 import MainContainer from "../../../components/MainContainer";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../../index";
@@ -6,13 +6,25 @@ import DepartmentPhoneBookItem from "./DepartmentPhoneBookItem";
 import PersonalTable from "../../../components/PersonalTable";
 import {Button} from "react-bootstrap";
 import {DepartmentPhoneBookReducer, departmentActions} from "./reducer";
+import {fetchDepartments} from '../../../http/departmentAPI'
 
 // Display the abbreviated phone book of all departments
 const DepartmentsPhoneBook = observer(() => {
     const {departmentStore} = useContext(Context)
 
     // Toggle display seller/notSeller/all departments
-    const [departmentState, dispatch] = useReducer(DepartmentPhoneBookReducer, departmentStore.departments)
+    const [departments, dispatch] = useReducer(DepartmentPhoneBookReducer, departmentStore.departments)
+
+    useEffect(() => {
+        fetchDepartments().then(data => {
+            departmentStore.setDepartments(data)
+            dispatch({
+                type: departmentActions.all,
+                playload: departmentStore.departments
+            })
+        })
+    }, [])
+
 
     return (
         <MainContainer>
@@ -58,7 +70,7 @@ const DepartmentsPhoneBook = observer(() => {
                 </thead>
                 <tbody>
                 {
-                    departmentState.map(departmentItem =>
+                    departments && departments.map(departmentItem =>
                         <DepartmentPhoneBookItem
                             key={departmentItem.code}
                             departmentId={departmentItem.id}

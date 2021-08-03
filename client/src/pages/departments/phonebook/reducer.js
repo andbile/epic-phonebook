@@ -5,22 +5,20 @@ export const departmentActions = {
 }
 
 export const DepartmentPhoneBookReducer = (state, action) => {
+    state = action.playload
+
     switch (action.type) {
         case departmentActions.seller:
-            state = action.playload
             return state.filter(item =>
                 item.is_seller === true
             );
         case departmentActions.notSeller:
-            state = action.playload
             return state.filter(item =>
                 item.is_seller !== true
             );
         case departmentActions.all:
-            state = action.playload
             return state
         default:
-            state = action.playload
             return state
     }
 }
