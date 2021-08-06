@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import Card from "react-bootstrap/Card";
+import {createDepartment, deleteDepartment, updateDepartment} from "../../http/departmentAPI";
 
 // TODO Доробити видалення відділу. Якщо в нього входять якість співробітники, спочатку зробити сповіщення
 //  об необхідності переведення в інший відділ, видаляти тільки після перенесення (кількість співробітників = 0)
@@ -23,7 +24,7 @@ import Card from "react-bootstrap/Card";
 const DepartmentModalAdmin = observer((props) => {
     const {departmentStore} = useContext(Context)
 
-    const {modalVisible, closeModal, id, action, setAction} = props
+    const {modalVisible, closeModal, departmentId, action, setAction} = props
 
     const [code, setCode] = useState('')
     const [name, setName] = useState('')
@@ -31,12 +32,13 @@ const DepartmentModalAdmin = observer((props) => {
 
     // current department for update or delete
     const currentDepartment = departmentStore.departments.filter((item) => {
-           return id === item.id
-       })
+        return departmentId === item.id
+    })
+
 
     // filling input fields for update department
-    useEffect( ()=> {
-        if(action.update){
+    useEffect(() => {
+        if (action.update) {
             setCode(() => {
                 return currentDepartment[0].code
             })
@@ -53,44 +55,59 @@ const DepartmentModalAdmin = observer((props) => {
 
 
     // create new department
-    const createDepartment = () => {
-        departmentStore.setDepartments(
-            [...departmentStore.departments,
-                {id: Date.now(), code: code, name: name, is_seller: isSeller}
-                ]
-        )
-
-        closeModalWindow()
+    // TODO add validation response from server
+    const addDepartment = () => {
+        createDepartment({code: code, name: name, is_seller: isSeller})
+            .then(data => {
+                departmentStore.setDepartments(
+                    [...departmentStore.departments,
+                        {id: data.id, code: data.code, name: data.name, is_seller: data.is_seller}
+                    ]
+                )
+                closeModalWindow()
+            })
     }
 
     // update department
-    const updateDepartment = () => {
-        // select all departments except the current updated one
-        const otherDepartments = departmentStore.departments.filter((item) => {
-            return id !== item.id
-        })
+    // TODO add validation response from server
+    const changeDepartment = () => {
 
-        departmentStore.setDepartments(
-            [...otherDepartments,
-                {id: currentDepartment[0].id, code: code, name: name, is_seller: isSeller}
-                ]
+        updateDepartment(departmentId,
+            {code: code, name: name, is_seller: isSeller}
         )
+            .then(data => {
 
-        closeModalWindow()
+
+                // select all departments except the current updated one
+                const otherDepartments = departmentStore.departments.filter((item) => {
+                    return departmentId !== item.id
+                })
+
+                departmentStore.setDepartments(
+                    [...otherDepartments,
+                        {id: currentDepartment[0].id, code: code, name: name, is_seller: isSeller}
+                    ]
+                )
+
+
+                console.log(data)
+                closeModalWindow()
+            })
+
     }
 
 
     // delete department
-    const deleteDepartment = () => {
-        // select all departments except the current deleted one
-        const otherDepartments = departmentStore.departments.filter((item) => {
-            return id !== item.id
-        })
+    // TODO add validation response from server (если уже удалено)
+    const removeDepartment = () => {
 
-        departmentStore.setDepartments(
-            [...otherDepartments])
+        deleteDepartment(departmentId)
+            .then(id => {
+                const otherDepartments = departmentStore.departments.filter((item) => departmentId !== item.id)
+                departmentStore.setDepartments([...otherDepartments])
 
-        closeModalWindow()
+                closeModalWindow()
+            })
     }
 
 
@@ -176,16 +193,16 @@ const DepartmentModalAdmin = observer((props) => {
                 action.delete && (
                     <Modal.Body>
                         Ви дійсно бажаєте видалити відділ:<br/>
-                        {`${currentDepartment[0].code} ${currentDepartment[0].name}`}
+                        {currentDepartment[0] && `${currentDepartment[0].code} ${currentDepartment[0].name}`}
                     </Modal.Body>
                 )
             }
 
 
             <Modal.Footer>
-                {action.create && <Button variant="success" onClick={createDepartment}>Додати</Button>}
-                {action.update && <Button variant="success" onClick={updateDepartment}>Застосувати</Button>}
-                {action.delete && <Button variant="danger" onClick={deleteDepartment}>Видалити</Button>}
+                {action.create && <Button variant="success" onClick={addDepartment}>Додати</Button>}
+                {action.update && <Button variant="success" onClick={changeDepartment}>Застосувати</Button>}
+                {action.delete && <Button variant="danger" onClick={removeDepartment}>Видалити</Button>}
                 <Button onClick={closeModalWindow}>Закрити</Button>
             </Modal.Footer>
         </Modal>

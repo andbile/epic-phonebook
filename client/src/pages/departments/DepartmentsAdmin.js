@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import Button from "react-bootstrap/Button";
@@ -7,10 +7,16 @@ import useModal from '../../hooks/useModal'
 import PersonalTable from "../../components/PersonalTable";
 import ButtonUpdateInTable from "../../components/Buttons/ButtonUpdateInTable";
 import ButtonDeleteInTable from "../../components/Buttons/ButtonDeleteInTable";
+import {fetchDepartments} from "../../http/departmentAPI";
 
 // Create, update, delete departments
 const DepartmentsAdmin = observer(() => {
     const {departmentStore} = useContext(Context)
+
+    useEffect(() => {
+        fetchDepartments().then(data => departmentStore.setDepartments(data))
+    }, [])
+
 
     const modal = useModal()
 
@@ -85,7 +91,6 @@ const DepartmentsAdmin = observer(() => {
                                 tooltipIdMessage='Видалити відділ'
                                 eventHandler={deleteDepartment}
                                 itemId={department.id}
-
                             />
                         </tr>
                     )
@@ -93,7 +98,7 @@ const DepartmentsAdmin = observer(() => {
                 </tbody>
             </PersonalTable>
 
-            <DepartmentModalAdmin {...modal} id={departmentId} action={action} setAction={setAction}/>
+            <DepartmentModalAdmin {...modal} departmentId={departmentId} action={action} setAction={setAction}/>
             <Button onClick={addDepartment}>Створити новий відділ</Button>
         </div>
     );
