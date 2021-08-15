@@ -7,10 +7,12 @@ import {Context} from "./index";
 import {check} from "./http/userAPI";
 import {observer} from "mobx-react-lite";
 import Preloader from "./components/Preloader";
+import ModalError from "./components/modal/ModalError";
 
 
 const App = observer(() => {
     const {user} = useContext(Context)
+    const {fetchErrorStore} = useContext(Context)
 
     // выводим прелоадер, пока проверяем и авторизуем пользователя
     const [loading, setLoading] = useState(true)
@@ -36,6 +38,7 @@ const App = observer(() => {
             <Header/>
             { !checkingUser &&  <AppRouter/> }
             <Footer/>
+            <ModalError/>
         </BrowserRouter>
     );
 })

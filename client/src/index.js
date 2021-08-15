@@ -8,6 +8,7 @@ import {theme} from './theme'
 import {Global} from "./GlobalStyle";
 import DepartmentStore from "./store/DepartmentStore";
 import EmployeesStore from "./store/EmployeesStore";
+import FetchError from "./store/FetchError";
 
 export const Context = createContext(null)
 
@@ -17,7 +18,8 @@ ReactDOM.render(
         <Context.Provider value={{
             user: new UserStore(),
             departmentStore: new DepartmentStore(),
-            employeesStore: new EmployeesStore()
+            employeesStore: new EmployeesStore(),
+            fetchErrorStore: new FetchError()
         }}>
            <ThemeProvider theme={theme}>
                <Global/>
