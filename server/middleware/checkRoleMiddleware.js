@@ -1,51 +1,40 @@
-// проверка прав пользователей
-// что бы товар мог добавить только администратор
-// используется в typeRouter
-
 const jwt = require('jsonwebtoken')
 
-// будем экспортировать функцию которая принимает параметром role (через замыкание)
-// и уже из этой функции мы будем возвращать тот самый middleware
-// то есть мы вызываем функцию передаем туда роль fn('admin')
-// и эта функция уже нам возвращает middleware
-module.exports = function (role) {
+/**
+ * Checking user rights
+ * Using in routers
+ * @param {array} permissions - necessary rights
+ */
+module.exports = function (permissions = []) {
     return function (req, res, next) {
         if (req.method === "OPTIONS") {
             next()
         }
         try {
+            // get token
             const token = req.headers.authorization.split(' ')[1] // Bearer token
             if (!token) {
-                return res.status(401).json({message: "Не авторизован"})
+                return res.status(401).json({message: "Не авторизований"})
             }
+
+            // decoded token
             const decoded = jwt.verify(token, process.env.SECRET_KEY)
-            // после того как декодировали  выципляем от туда роль пользователя
-            // и сравниваем с ролью каторую мы передали в middleware
-            // сверяем роль из токена с переданной ролью
-            console.log(decoded.role);
 
-            // пример из видео
-            /*if (decoded.role !== role) {
-                return res.status(403).json({message: "Нет доступа"})
-            }*/
+            // Iterate over the permissions array and look for a match in the roles of the authorized user.
+            const isPermission = (permissionItem) => {
+                let index = decoded.role.indexOf(permissionItem)
+                return index !== -1
+            }
+            const isAllowed = permissions.some(isPermission)
 
-
-            const candidateRole = decoded.role.filter(item => {
-                return item === role
-            })
-            console.log(candidateRole);
-
-            if (candidateRole.length === 0) {
-                return res.status(403).json({message: "Нет доступа"})
+            if(!isAllowed){
+                return res.status(403).json({message: "Немає доступу"})
             }
 
             req.user = decoded;
             next()
         } catch (e) {
-            res.status(401).json({message: "Не авторизован"})
+            res.status(401).json({message: "Не авторизований"})
         }
     };
 }
-
-
-
