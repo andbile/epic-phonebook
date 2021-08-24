@@ -8,7 +8,7 @@ import {observer} from "mobx-react-lite";
 
 const StyledModalError = styled(Modal)`
 .modal-content{
-margin: 10px;
+//margin: 10px;
 border-color: #FF0000;
 box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 15px;
 }

@@ -8,15 +8,18 @@ import PersonalTable from "../../components/PersonalTable";
 import ButtonUpdateInTable from "../../components/Buttons/ButtonUpdateInTable";
 import ButtonDeleteInTable from "../../components/Buttons/ButtonDeleteInTable";
 import {fetchDepartments} from "../../http/departmentAPI";
+import useFetching from "../../hooks/useFetching";
 
 // Create, update, delete departments
 const DepartmentsAdmin = observer(() => {
     const {departmentStore} = useContext(Context)
+    const fetching = useFetching(null)
 
     useEffect(() => {
-        fetchDepartments().then(data => departmentStore.setDepartments(data))
+        fetching(async () => {
+            await fetchDepartments().then(data => departmentStore.setDepartments(data))
+        })
     }, [])
-
 
     const modal = useModal()
 
@@ -98,8 +101,13 @@ const DepartmentsAdmin = observer(() => {
                 </tbody>
             </PersonalTable>
 
-            <DepartmentModalAdmin {...modal} departmentId={departmentId} action={action} setAction={setAction}/>
             <Button onClick={addDepartment}>Створити новий відділ</Button>
+
+            <DepartmentModalAdmin
+                {...modal}
+                departmentId={departmentId} action={action} setAction={setAction}
+            />
+
         </div>
     );
 });

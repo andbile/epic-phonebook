@@ -9,7 +9,7 @@ export default function useFetching() {
     const {fetchErrorStore} = useContext(Context)
 
     return callback => {
-        callback
+        callback()
             .catch(error => {
                 let message = ''
 
