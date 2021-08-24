@@ -10,6 +10,7 @@ const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const PORT = process.env.PORT || 5000
 const app = express()
 app.use(cors()) // что бы могли отправлять запросы с браузера
+//app.use(express.urlencoded());
 app.use(express.json())
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use('/', router) // подключаем роутер

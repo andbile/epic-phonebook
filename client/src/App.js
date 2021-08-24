@@ -19,6 +19,7 @@ const App = observer(() => {
     const [checkingUser, setCheckingUser] = useState(true)
 
     useEffect(() => {
+        // TODO обработка ошибок
         check().then(data => {
             user.login(data)
         }).finally(() => {

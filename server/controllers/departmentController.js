@@ -1,36 +1,59 @@
+const {Sequelize} = require('sequelize')
+const ApiError = require("../error/ApiError");
 const {Department} = require('../models/models')
-
-//const ApiError = require('../error/ApiError');
+const DepartmentValidator = require('../validators/DepartmentValidator')
+const fetchDataFromBD = require('../utils/fetchDataFromBD')
+const {Employee} = require("../models/models");
 
 class DepartmentController {
-    async getAllDepartment(req, res) {
-        const departments = await Department.findAll({
-            attributes: ['id', 'code', 'name', 'is_seller'],
-            order: [
-                ['is_seller', 'DESC'],
-                ['code', 'ASC']
-            ]
-        })
-        return res.json(departments)
+    async getAllDepartment(req, res, next) {
+        fetchDataFromBD(async () => {
+            const departments = await Department.findAll({
+                attributes: ['id', 'code', 'name', 'is_seller'],
+                order: [
+                    ['is_seller', 'DESC'],
+                    ['code', 'ASC']
+                ]
+            })
+            res.json(departments)
+        }, req, res, next)
     }
 
-    // TODO сделать валидацию
-    async createDepartment(req, res) {
+    async createDepartment(req, res, next) {
         const {code, name, is_seller} = req.body
-        const department = await Department.create({code, name, is_seller})
-        return res.json(department)
+
+        const isCode = DepartmentValidator.isCode(code)
+        if (!isCode.result) return next(ApiError.badRequest(isCode.errorMessage))
+
+        const isName = DepartmentValidator.isName(name.trim())
+        if (!isName.result) return next(ApiError.badRequest(isName.errorMessage))
+
+        const isPosition = DepartmentValidator.isPosition(is_seller)
+        if (!isPosition.result) return next(ApiError.badRequest(isPosition.errorMessage))
+
+        fetchDataFromBD(async () => {
+            const department = await Department.create({code, name, is_seller})
+            return res.json(department)
+        }, req, res, next)
     }
 
-    // TODO не цдалять если к депортаменту привязаны работники
-    // проверка id
-    async deleteDepartment(req, res) {
+    async deleteDepartment(req, res, next) {
         const {id} = req.params
-        //console.log(id)
-        // 1 удален 0 не удален
-        // ошибка если такого депортамента не существует, хотя странно, если бы его не было он бы не пояился
-        // хотя может удалить кто-то другой, сообщение что такого нету, необходимо перегрузить страницу
-        const deletedDepartment = await Department.destroy({where: {id}})
-        return res.json(id)
+
+        //
+        const numberEmployees = await fetchDataFromBD(async () => {
+            return await Employee.count({where: {departmentId: id}})
+        }, req, res, next)
+
+        // cannot deleted a department if employees are attached to it
+        if (numberEmployees > 0) {
+            return next(ApiError.badRequest(`За відділом закріплено ${numberEmployees} співробітник(а/ів), перед видаленням відділу перемістить їх у інший відділ`))
+        } else{
+            fetchDataFromBD(async ()=>{
+                const deletedDepartment = await Department.destroy({where: {id}})
+                return res.json({deletedDepartment})
+            }, req, res, next)
+        }
     }
 
 
@@ -46,11 +69,6 @@ class DepartmentController {
 
         return res.json(department)
     }
-
-
-    // TODO  SequelizeUniqueConstraintError: повторяющееся значение ключа нарушает ограничение уникальности "departments_code_key"
-
-
 }
 
 module.exports = new DepartmentController()
