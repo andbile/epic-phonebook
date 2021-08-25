@@ -14,9 +14,10 @@ class DepartmentValidator {
 
     // name of the department
     static isName(value) {
-        return validator.isLength(value, {min: 4, max: 255})
+        const regExp = /^[,\s\.А-Яа-яёЁЇїІіЄєҐґ]{3,255}$/
+        return regExp.test(value)
             ? getValidationResult(true)
-            : getValidationResult(false, 'Назва відділу має містити від 4 до 255 символів')
+            : getValidationResult(false, 'Назва відділу має містити від 3 до 255 символів українського алфавіту')
     }
 
     // seller/not seller sign
