@@ -20,11 +20,30 @@ class DepartmentValidator {
             : getValidationResult(false, 'Назва відділу має містити від 3 до 255 символів українського алфавіту')
     }
 
-    // seller/not seller sign
+    // seller/not seller sign of the department
     static isPosition(value) {
         return validator.isBoolean(value.toString(), {loose: false})
             ? getValidationResult(true)
             : getValidationResult(false, 'Необхідно поставити відмітку: "Торговий" або "Не торговий"')
+    }
+
+
+    /**
+     * Get field validation
+     * @param {object} fields - form fields
+     * @return {{result: boolean, errorMessage: string}}
+     */
+    static fieldsValidation(fields = {}){
+        const isCode = DepartmentValidator.isCode(fields.code)
+        if (!isCode.result) return isCode
+
+        const isName = DepartmentValidator.isName(fields.name.trim())
+        if (!isName.result) return isName
+
+        const isPosition = DepartmentValidator.isPosition(fields.is_seller)
+        if (!isPosition.result) return isPosition
+
+        return getValidationResult(true)
     }
 }
 

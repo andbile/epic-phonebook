@@ -70,48 +70,37 @@ const DepartmentModalAdmin = observer(props => {
             })
         }
 
-
         // delete department
         const removeDepartment = () => {
             fetching(async () => {
                 await deleteDepartment(departmentId)
-                    .then(id => {
+                    .then(() => {
                         const otherDepartments = departmentStore.departments.filter((item) => departmentId !== item.id)
                         departmentStore.setDepartments([...otherDepartments])
-                    }).then(() => closeModalWindow())
+                    })
+                    .then(() => closeModalWindow())
             })
         }
 
 
-
-
-
-// update department
-// TODO add validation response from server
+        // change department
         const changeDepartment = () => {
+            fetching(async () => {
+                await updateDepartment(departmentId, {code: code, name: name, is_seller: isSeller})
+                    .then(() => {
+                        // select all departments except the current updated one
+                        const otherDepartments = departmentStore.departments.filter((item) => {
+                            return departmentId !== item.id
+                        })
 
-            updateDepartment(departmentId,
-                {code: code, name: name, is_seller: isSeller}
-            )
-                .then(data => {
-
-
-                    // select all departments except the current updated one
-                    const otherDepartments = departmentStore.departments.filter((item) => {
-                        return departmentId !== item.id
+                        departmentStore.setDepartments(
+                            [...otherDepartments,
+                                {id: currentDepartment[0].id, code: code, name: name, is_seller: isSeller}
+                            ]
+                        )
                     })
-
-                    departmentStore.setDepartments(
-                        [...otherDepartments,
-                            {id: currentDepartment[0].id, code: code, name: name, is_seller: isSeller}
-                        ]
-                    )
-
-
-                    console.log(data)
-                    closeModalWindow()
-                })
-
+                    .then(() => closeModalWindow())
+            })
         }
 
 
