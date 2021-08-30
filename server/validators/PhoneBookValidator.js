@@ -34,11 +34,11 @@ class PhoneBookValidator {
 
         const validatorEmail = validator.isEmail
 
-        if (typeof value === 'string') return validationUsingValidator(value,  validatorEmail, 'Некоректна адреса поштової скриньки')
+        if (typeof value === 'string') return validationUsingValidator(value,  validatorEmail, {},'Некоректна адреса поштової скриньки')
 
         if (Array.isArray(value)) {
             for (let i = 0; i < value.length; i++) {
-                const validationResult = validationUsingValidator(value[i], validatorEmail, 'Некоректна адреса поштової скриньки')
+                const validationResult = validationUsingValidator(value[i], validatorEmail, {},'Некоректна адреса поштової скриньки')
                 // if an error, we stop the iterating and return the error
                 if(!validationResult.result) return validationResult
             }

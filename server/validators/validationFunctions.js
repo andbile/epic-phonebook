@@ -34,17 +34,18 @@ const validationUsingRegexp = (value, regExp, errorMessage = '', isEmptyValueAll
  * Validation using other libraries
  * @param {string} value - value for validation
  * @param {function} validatorFunc - validation function
+ * @param {object} validatorOptions - validation options
  * @param {string} errorMessage - error message
  * @param {boolean} isEmptyValueAllowed - field is optional to fill
  * @return {{result: boolean, errorMessage: string}}
  */
-const validationUsingValidator = (value, validatorFunc, errorMessage = '', isEmptyValueAllowed = false) => {
+const validationUsingValidator = (value, validatorFunc, validatorOptions = {}, errorMessage = '', isEmptyValueAllowed = false) => {
     // field is optional to fill
     if(isEmptyValueAllowed && value.trim() === ''){
         return getValidationResult(true)
     }
 
-    return validatorFunc(value)
+    return validatorFunc(value, validatorOptions)
         ? getValidationResult(true)
         : getValidationResult(false, errorMessage)
 }
