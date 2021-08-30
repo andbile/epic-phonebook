@@ -1,29 +1,53 @@
-const {Department, Employee, DepartmentContact} = require('../models/models')
+const {DepartmentContact} = require('../models/models')
+const fetchDataFromBD = require('../utils/fetchDataFromBD')
+const ApiError = require("../error/ApiError");
+const PhoneBookValidator = require("../validators/PhoneBookValidator");
 
-//const ApiError = require('../error/ApiError');
 
 class PhoneBookController {
-    async getPhoneBook(req, res) {
-        const phoneBook = await  DepartmentContact.findAll()
-        console.log(phoneBook[0]['department_contact'])
-        console.log(phoneBook[0].dataValues)
-        const id = phoneBook[0].dataValues.departmentId
-        console.log(id);
-        //const department = await Department.findOne({where:{id}})
-        const department = await Department.findAll()
-        const arr = [phoneBook, department]
-        res.json(arr)
+    async getAllPhoneBook(req, res, next) {
+        fetchDataFromBD(async () => {
+            const phoneBook = await DepartmentContact.findAll({
+                attributes: ['id', 'position', 'tel_dect', 'tel_landline', 'email', 'departmentId'],
+                order: [
+                    ['position', 'ASC']
+                ]
+            })
+
+            res.json(phoneBook)
+        }, req, res, next)
     }
 
-    async createItemOfPhoneBook(req, res){
-        const {position, tel_dect, tel_mobile, email, departmentId} = req.body
-        const itemPhoneBook = await DepartmentContact.create({position, tel_dect, tel_mobile, email, departmentId})
+    async createPhoneBookItem(req, res, next) {
+        const {position, tel_landline, tel_dect, email, departmentId} = req.body
 
-        console.log(req.body)
-        res.json(itemPhoneBook)
+        const emailLowerCase = email.map(item => item.toLowerCase().trim())
+
+        const validationResult = PhoneBookValidator.fieldsValidation({
+            position: position.trim(), tel_landline, tel_dect, email: emailLowerCase, departmentId
+        })
+        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+
+
+        fetchDataFromBD(async () => {
+            const itemPhoneBook = await DepartmentContact.create({
+                position: position.trim(), tel_landline, tel_dect, email: emailLowerCase, departmentId
+            })
+            return res.json(itemPhoneBook)
+        }, req, res, next)
     }
 
-    async deleteItemOfPhoneBook(req, res){
+
+
+
+
+
+
+
+
+
+
+    async deleteItemOfPhoneBook(req, res) {
         const {id} = req.params
         const itemOfPhoneBook = await DepartmentContact.destroy({where: {id}})
         res.json(itemOfPhoneBook)
