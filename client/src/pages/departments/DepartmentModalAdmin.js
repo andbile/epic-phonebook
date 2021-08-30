@@ -8,7 +8,6 @@ import {Context} from "../../index";
 import Card from "react-bootstrap/Card";
 import {createDepartment, deleteDepartment, updateDepartment} from "../../http/departmentAPI";
 import useFetching from "../../hooks/useFetching";
-import useModal from "../../hooks/useModal";
 
 
 /**
@@ -59,7 +58,7 @@ const DepartmentModalAdmin = observer(props => {
         // create new department
         const addDepartment = () => {
             fetching(async () => {
-                await createDepartment({code: code, name: name, is_seller: isSeller})
+                await createDepartment({code, name, is_seller: isSeller})
                     .then(data => {
                         departmentStore.setDepartments(
                             [...departmentStore.departments,
@@ -86,7 +85,7 @@ const DepartmentModalAdmin = observer(props => {
         // change department
         const changeDepartment = () => {
             fetching(async () => {
-                await updateDepartment(departmentId, {code: code, name: name, is_seller: isSeller})
+                await updateDepartment(departmentId, {code, name, is_seller: isSeller})
                     .then(() => {
                         // select all departments except the current updated one
                         const otherDepartments = departmentStore.departments.filter((item) => {
@@ -95,7 +94,7 @@ const DepartmentModalAdmin = observer(props => {
 
                         departmentStore.setDepartments(
                             [...otherDepartments,
-                                {id: currentDepartment[0].id, code: code, name: name, is_seller: isSeller}
+                                {id: currentDepartment[0].id, code, name, is_seller: isSeller}
                             ]
                         )
                     })
