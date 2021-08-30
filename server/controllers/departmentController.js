@@ -3,7 +3,6 @@ const {Department, Employee} = require('../models/models')
 const DepartmentValidator = require('../validators/DepartmentValidator')
 const fetchDataFromBD = require('../utils/fetchDataFromBD')
 
-
 class DepartmentController {
     async getAllDepartment(req, res, next) {
         fetchDataFromBD(async () => {
@@ -23,12 +22,12 @@ class DepartmentController {
         const {code, name, is_seller} = req.body
 
         const validationResult = DepartmentValidator.fieldsValidation({
-            code, name, is_seller
+            code, name:name.trim(), is_seller
         })
         if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
 
         fetchDataFromBD(async () => {
-            const department = await Department.create({code, name, is_seller})
+            const department = await Department.create({code, name:name.trim(), is_seller})
             return res.json(department)
         }, req, res, next)
     }
@@ -60,13 +59,13 @@ class DepartmentController {
         const {code, name, is_seller} = req.body
 
         const validationResult = DepartmentValidator.fieldsValidation({
-            code, name, is_seller
+            code, name:name.trim(), is_seller
         })
         if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
 
         fetchDataFromBD(async () => {
             const department = await Department.update(
-                {code: code, name: name, is_seller: is_seller},
+                {code, name:name.trim(), is_seller},
                 {where: {id: id}})
             return res.json(department)
         }, req, res, next)
