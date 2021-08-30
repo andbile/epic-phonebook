@@ -23,7 +23,7 @@ export default function useModifyStore(initialValue, keyName) {
      * Modification a state, adding an id
      * @param {array} state - mobx state
      */
-    function getModifiedState (state) {
+    function getModifiedState(state) {
         const arr = []
 
         state.map((item, i) =>
@@ -36,7 +36,12 @@ export default function useModifyStore(initialValue, keyName) {
     }
 
     // Returning the structure to its original state before updating the state in the mobx
-    const returnStructureState = () => value.map(item => item[keyName])
+    const returnStructureState = () => value
+        // the empty value is not save in the array
+        .filter(item => {
+            if (item[keyName].trim() !== '') return item[keyName]
+        })
+        .map(item => item[keyName].trim())
 
     // add entry to modified state
     const add = () => {
