@@ -3,7 +3,7 @@ import {Person} from "react-bootstrap-icons";
 import PropTypes from 'prop-types'
 import Button from "react-bootstrap/Button";
 import {useHistory} from "react-router-dom";
-import {DEPARTMENT_PHONE_BOOK_LINK} from "../../../utils/consts";
+import {EMPLOYEES_PHONE_BOOK_LINK} from "../../../utils/consts";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../../index";
 import DepartmentPhoneBookEntryItem from "./DepartmentPhoneBookEntryItem";
@@ -26,15 +26,10 @@ const DepartmentPhoneBookItem = observer((props) => {
     const {departmentId, isAdminPanel, phoneBookBtnCallbacks} = props
 
     // Get the department
-    const department = departmentStore.departments.find(item =>
-        item.id === +departmentId
-    )
-
+    const department = departmentStore.departments.find(item => item.id === departmentId)
 
     // Get phone book entries of the department
-    const phoneBookEntries = departmentStore.departmentsContacts.filter(item =>
-        item.departmentId === +departmentId
-    )
+    const phoneBookEntries = departmentStore.departmentsContacts.filter(item => item.departmentId === departmentId)
 
     /**
      * Button to display employees phone book of the department
@@ -44,7 +39,7 @@ const DepartmentPhoneBookItem = observer((props) => {
         return (
             <Button variant="outline-dark bg-secondary text-white pt-1 pb-1"
                     onClick={() =>
-                        history.push(`${DEPARTMENT_PHONE_BOOK_LINK}${department.code}`)
+                        history.push(`${EMPLOYEES_PHONE_BOOK_LINK}${department.code}`)
                     }
             > Детально<Person className='icon'/>
             </Button>

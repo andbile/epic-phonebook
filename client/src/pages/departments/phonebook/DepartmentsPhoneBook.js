@@ -6,22 +6,30 @@ import DepartmentPhoneBookItem from "./DepartmentPhoneBookItem";
 import PersonalTable from "../../../components/PersonalTable";
 import {Button} from "react-bootstrap";
 import {DepartmentPhoneBookReducer, departmentActions} from "./reducer";
-import {fetchDepartments} from '../../../http/departmentAPI'
+import {fetchDepartments, fetchDepartmentsPhoneBook} from '../../../http/departmentAPI'
+import useFetching from "../../../hooks/useFetching";
 
 // Display the abbreviated phone book of all departments
 const DepartmentsPhoneBook = observer(() => {
     const {departmentStore} = useContext(Context)
+    const fetching = useFetching(null)
 
     // Toggle display seller/notSeller/all departments
     const [departments, dispatch] = useReducer(DepartmentPhoneBookReducer, departmentStore.departments)
 
     useEffect(() => {
-        fetchDepartments().then(data => {
-            departmentStore.setDepartments(data)
-            dispatch({
-                type: departmentActions.all,
-                playload: departmentStore.departments
-            })
+        fetching(async () => {
+            await fetchDepartments()
+                .then(data => departmentStore.setDepartments(data))
+
+            await fetchDepartmentsPhoneBook()
+                .then(data => departmentStore.setDepartmentsContacts(data))
+                .then(() => {
+                    dispatch({
+                        type: departmentActions.all,
+                        playload: departmentStore.departments
+                    })
+                })
         })
     }, [])
 

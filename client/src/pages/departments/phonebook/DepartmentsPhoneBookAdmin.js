@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Form from "react-bootstrap/Form";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../../index";
@@ -8,25 +8,36 @@ import Button from "react-bootstrap/Button";
 import useModal from '../../../hooks/useModal'
 import DepartmentsPhoneBookModalAdmin from "./DepartmentsPhoneBookModalAdmin";
 import SelectDepartment from "../../../components/SelectDepartment";
+import {fetchDepartments, fetchDepartmentsPhoneBook} from "../../../http/departmentAPI";
+import useFetching from "../../../hooks/useFetching";
 
 // Display the abbreviated phone book of the department using select HTML element
 const DepartmentsPhoneBookAdmin = observer(() => {
     const {departmentStore} = useContext(Context)
 
     const modal = useModal()
+    const fetching = useFetching(null)
 
     // selected department id, used to display department with phone book after choosing one
-    const [selectedDepartmentId, setSelectedDepartmentId] = useState('')
+    const [selectedDepartmentId, setSelectedDepartmentId] = useState(null)
     // current phone book entry id, used to delete/update a phone book entry in the modal window
-    const [phoneBookEntryId, setPhoneBookEntryId] = useState('')
+    const [phoneBookEntryId, setPhoneBookEntryId] = useState(null)
     // write to a state create/delete/update for use to identify the pressed button
     const [action, setAction] = useState({})
 
+    useEffect(() => {
+        fetching(async () => {
+            await fetchDepartments()
+                .then(data => departmentStore.setDepartments(data))
+
+            await fetchDepartmentsPhoneBook()
+                .then(data => departmentStore.setDepartmentsContacts(data))
+        })
+    }, [])
+
 
     // Get selected department
-    const onChangeDepartment = evt => {
-        setSelectedDepartmentId(evt.target.value)
-    }
+    const onChangeDepartment = evt => setSelectedDepartmentId(+evt.target.value)
 
 
     // event handler - delete phone book entry
@@ -46,7 +57,7 @@ const DepartmentsPhoneBookAdmin = observer(() => {
 
     // event handler - add phone book entry
     const addPhoneBookEntry = () => {
-        setPhoneBookEntryId('')
+        setPhoneBookEntryId(null)
         setAction({create: true})
         modal.showAModal()
     }
@@ -84,7 +95,9 @@ const DepartmentsPhoneBookAdmin = observer(() => {
                             </tbody>
                         </PersonalTable>
 
-                        <DepartmentsPhoneBookModalAdmin {...modal} phoneBookEntryId={phoneBookEntryId} selectedDepartmentId={selectedDepartmentId} action={action} setAction={setAction}/>
+                        <DepartmentsPhoneBookModalAdmin {...modal} phoneBookEntryId={phoneBookEntryId}
+                                                        selectedDepartmentId={selectedDepartmentId} action={action}
+                                                        setAction={setAction}/>
                         <Button onClick={addPhoneBookEntry}>Створити новий запис</Button>
                     </>
                 )

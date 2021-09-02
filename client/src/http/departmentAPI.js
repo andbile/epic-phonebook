@@ -19,3 +19,24 @@ export const updateDepartment = async (id, department) => {
     const {data} = await $authHost.put(`department/${id}`, department)
     return data
 }
+
+// phone book
+export const fetchDepartmentsPhoneBook = async () => {
+    const {data} = await $host.get('phone-book')
+    return data
+}
+
+export const createDepartmentsPhoneBook = async (phonebook) => {
+    const {data} = await $authHost.post('phone-book', phonebook)
+    return data
+}
+
+export const deleteDepartmentsPhoneBook = async (id) => {
+    const {data} = await $authHost.delete(`phone-book/${id}`)
+    return data
+}
+
+export const updateDepartmentsPhoneBook = async (id, phonebook) => {
+    const {data} = await $authHost.put(`phone-book/${id}`, phonebook)
+    return data
+}

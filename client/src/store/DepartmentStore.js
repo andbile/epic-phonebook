@@ -2,51 +2,26 @@ import {makeAutoObservable} from "mobx";
 
 export default class DepartmentStore {
     constructor() {
-        this._departments = []
-        this._departmentsContacts = [
-            {
-                "id": 1,
-                "departmentId": 1,
-                "position": "Асистент діра",
-                "tel_dect": "",
-                "tel_landline": ["2022", "4-67-26"],
-                "email":["um.office@epicentrk.com"]
-            },
-            {
-                "id": 2,
-                "departmentId": 1,
-                "position": "Директор",
-                "tel_dect": "2000",
-                "tel_landline": [],
-                "email":["um.dir@epicentrk.com", "um.dir2@epicentrk.com"]
-            },
 
-            {
-                "id": 3,
-                "departmentId": 5,
-                "position": "Продаваны 50",
-                "tel_dect": "",
-                "tel_landline": ["2050"],
-                "email":["um.info50@epicentrk.com"]
-            },
-            {
-                "id": 4,
-                "departmentId": 5,
-                "position": "Начальник 50",
-                "tel_dect": "2005",
-                "tel_landline": [],
-                "email":["um.nach50@epicentrk.com"]
-            },
-            {
-                "id": 5,
-                "departmentId": 5,
-                "position": "Продаваны 50-2",
-                "tel_dect": "2005-2",
-                "tel_landline": [],
-                "email":[]
-            }
-        ]
-        //this._currentDepartment = ''
+        /**
+         * this._departments {array.object}
+         * code {string}
+         * id {number}
+         * is_seller {boolean}
+         * name {string}
+         */
+        this._departments = []
+
+        /**
+         * this._departmentsContacts {array.<object>}
+         * departmentId {number},
+         * email {array.<string>}
+         * id {number}
+         * position {string}
+         * tel_dect {string}
+         * tel_landline {array.<string>}
+         */
+        this._departmentsContacts = []
         makeAutoObservable(this)
     }
 
@@ -54,23 +29,15 @@ export default class DepartmentStore {
         this._departments = departments
     }
 
-    setDepartmentsContacts(departmentsContacts){
+    setDepartmentsContacts(departmentsContacts) {
         this._departmentsContacts = departmentsContacts
     }
-
-  /*  setCurrentDepartment(currentDepartment){
-        this._currentDepartment = currentDepartment
-    }*/
 
     get departments() {
         return this._departments
     }
 
-    get departmentsContacts(){
+    get departmentsContacts() {
         return this._departmentsContacts
     }
-
-   /* get currentDepartment(){
-        return this._currentDepartment
-    }*/
 }
