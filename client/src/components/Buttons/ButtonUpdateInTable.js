@@ -34,7 +34,7 @@ const ButtonUpdateInTable = props => {
 };
 
 ButtonUpdateInTable.propTypes = {
-    id: PropTypes.number,
+    id: PropTypes.string,
     tooltipMessage: PropTypes.string,
     itemId: PropTypes.number.isRequired,
     eventHandler: PropTypes.func.isRequired
