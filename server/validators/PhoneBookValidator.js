@@ -5,8 +5,8 @@ const {getValidationResult, validationUsingRegexp, validationUsingValidator} = r
 class PhoneBookValidator {
     // employee position or employee location
     static isPosition(value) {
-        const regExp = /^[,\s\.\-А-Яа-яёЁЇїІіЄєҐґ]{3,255}$/
-        return validationUsingRegexp(value,  regExp, 'Посада має містити від 3 до 255 символів українського алфавіту')
+        const regExp = /^[,\s\.\-А-Яа-яёЁЇїІіЄєҐґ\d]{3,255}$/
+        return validationUsingRegexp(value,  regExp, 'Посада має містити від 3 до 255 символів українського алфавіту та цифри')
     }
 
     // phone / email
