@@ -24,16 +24,16 @@ const DepartmentsAdmin = observer(() => {
     const modal = useModal()
 
     // department id, used to delete/update the department in the modal window
-    const [departmentId, setDepartmentId] = useState('')
+    const [departmentId, setDepartmentId] = useState(null)
     // write to a state create/delete/update for use to identify the pressed button
     const [action, setAction] = useState({})
 
 
     /**
      * event handler - delete department
-     * @param {string} id - department id from BD
+     * @param {number} id - department id from BD
      */
-    const deleteDepartment = (id) => {
+    const deleteDepartment = id => {
         setDepartmentId(id)
         setAction({delete: true})
         modal.showAModal()
@@ -41,9 +41,9 @@ const DepartmentsAdmin = observer(() => {
 
     /**
      * event handler - update department
-     * @param {string} id - department id from BD
+     * @param {number} id - department id from BD
      */
-    const updateDepartment = (id) => {
+    const updateDepartment = id => {
         setDepartmentId(id)
         setAction({update: true})
         modal.showAModal()

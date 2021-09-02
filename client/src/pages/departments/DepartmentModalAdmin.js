@@ -16,7 +16,7 @@ import useFetching from "../../hooks/useFetching";
  * @param {Object} -
  * @param {boolean} props.modalVisible - show modal state
  * @param {function} props.closeModal - set show modal state
- * @param {string} props.id - department id from DB
+ * @param {number} props.id - department id from DB
  * @param {Object} props.action - state to identify the pressed button (create/delete/update)
  * @aram {function} props.setAction - set action state
  */
@@ -30,27 +30,16 @@ const DepartmentModalAdmin = observer(props => {
         const [isSeller, setIsSeller] = useState(false)
         const fetching = useFetching(null)
 
-
         // current department for update or delete
-        const currentDepartment = departmentStore.departments.filter((item) => {
-            return departmentId === item.id
-        })
+        const currentDepartment = departmentStore.departments.find(item => departmentId === item.id)
 
 
         // filling input fields for update department
         useEffect(() => {
-            if (action.update) {
-                setCode(() => {
-                    return currentDepartment[0].code
-                })
-
-                setName(() => {
-                    return currentDepartment[0].name
-                })
-
-                setIsSeller(() => {
-                    return currentDepartment[0].is_seller
-                })
+            if (action.update && currentDepartment) {
+                setCode(currentDepartment.code)
+                setName(currentDepartment.name)
+                setIsSeller(currentDepartment.is_seller)
             }
         }, [action])
 
@@ -65,7 +54,8 @@ const DepartmentModalAdmin = observer(props => {
                                 {id: data.id, code: data.code, name: data.name, is_seller: data.is_seller}
                             ]
                         )
-                    }).then(() => closeModalWindow())
+                    })
+                    .then(closeModalWindow)
             })
         }
 
@@ -74,10 +64,10 @@ const DepartmentModalAdmin = observer(props => {
             fetching(async () => {
                 await deleteDepartment(departmentId)
                     .then(() => {
-                        const otherDepartments = departmentStore.departments.filter((item) => departmentId !== item.id)
+                        const otherDepartments = departmentStore.departments.filter(item => departmentId !== item.id)
                         departmentStore.setDepartments([...otherDepartments])
                     })
-                    .then(() => closeModalWindow())
+                    .then(closeModalWindow)
             })
         }
 
@@ -88,17 +78,15 @@ const DepartmentModalAdmin = observer(props => {
                 await updateDepartment(departmentId, {code, name, is_seller: isSeller})
                     .then(() => {
                         // select all departments except the current updated one
-                        const otherDepartments = departmentStore.departments.filter((item) => {
-                            return departmentId !== item.id
-                        })
+                        const otherDepartments = departmentStore.departments.filter(item => departmentId !== item.id)
 
                         departmentStore.setDepartments(
                             [...otherDepartments,
-                                {id: currentDepartment[0].id, code, name, is_seller: isSeller}
+                                {id: currentDepartment.id, code, name, is_seller: isSeller}
                             ]
                         )
                     })
-                    .then(() => closeModalWindow())
+                    .then(closeModalWindow)
             })
         }
 
@@ -185,7 +173,7 @@ const DepartmentModalAdmin = observer(props => {
                     action.delete && (
                         <Modal.Body>
                             Ви дійсно бажаєте видалити відділ:<br/>
-                            {currentDepartment[0] && `${currentDepartment[0].code} ${currentDepartment[0].name}`}
+                            {currentDepartment && `${currentDepartment.code} ${currentDepartment.name}`}
                         </Modal.Body>
                     )
                 }
@@ -206,15 +194,13 @@ const DepartmentModalAdmin = observer(props => {
 DepartmentModalAdmin.propTypes = {
     modalVisible: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    departmentId: PropTypes.number,
     action: PropTypes.exact({
         create: PropTypes.bool,
         update: PropTypes.bool,
         delete: PropTypes.bool,
     }).isRequired,
     setAction: PropTypes.func.isRequired,
-    showError: PropTypes.func.isRequired,
-    setErrorMessage: PropTypes.func.isRequired
 }
 
 export default DepartmentModalAdmin;
