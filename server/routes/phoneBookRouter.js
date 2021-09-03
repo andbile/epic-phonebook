@@ -1,16 +1,13 @@
 const Router = require('express').Router
 const router = new Router
-const phoneBookController = require('../controllers/phoneBookController')
 const checkRole = require('../middleware/checkRoleMiddleware')
+const phoneBookController = require('../controllers/phoneBookController')
 
 
-router.get('/', phoneBookController.getPhoneBook)
-router.post('/', phoneBookController.createItemOfPhoneBook)
-router.delete('/:id', checkRole('ADMIN'), phoneBookController.deleteItemOfPhoneBook)
-
-
-
-
+router.get('/', phoneBookController.getAllPhoneBook)
+router.delete('/:id', checkRole(['ADMIN', 'PERSONAL']), phoneBookController.deletePhoneBookEntry)
+router.post('/', checkRole(['ADMIN', 'PERSONAL']), phoneBookController.createPhoneBookEntry)
+router.put('/:id', checkRole(['ADMIN', 'PERSONAL']), phoneBookController.updatePhoneBookEntry)
 
 
 module.exports = router

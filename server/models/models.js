@@ -1,32 +1,41 @@
 const sequelize = require('../db')
 const {DataTypes} = require('sequelize') // описуються типы того или иного поля
 
-
-// описание модели таблиц
-// Отделы
+// Department
 const Department = sequelize.define('department', {
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     code: {type: DataTypes.STRING, unique: true, allowNull: false},
     name: {type: DataTypes.STRING, unique: true, allowNull: false},
-    is_seller: {type: DataTypes.BOOLEAN},
+    is_seller: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
 })
 
-// Общие контакты отделов
+// Departments phone book
 const DepartmentContact = sequelize.define('department_contact', {
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
-    position: {type: DataTypes.STRING},
-    tel_dect: {type: DataTypes.STRING},
-    tel_landline: {type: DataTypes.ARRAY(DataTypes.STRING)},
-  /*  tel_mobile:{type: DataTypes.STRING},*/
-    email: {type: DataTypes.ARRAY(DataTypes.STRING)},
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    position: {type: DataTypes.STRING, allowNull: false},
+    tel_dect: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: []
+    },
+    tel_landline: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: []
+    },
+    email: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: []
+    },
 })
 
 // Сотрудники
 const Employee = sequelize.define('employee', {
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
-    last_name: {type: DataTypes.STRING, allowNull:false},
-    first_name: {type: DataTypes.STRING, allowNull:false},
-    patronymic_name: {type: DataTypes.STRING, allowNull:false},
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    last_name: {type: DataTypes.STRING, allowNull: false},
+    first_name: {type: DataTypes.STRING, allowNull: false},
+    patronymic_name: {type: DataTypes.STRING, allowNull: false},
     position: {type: DataTypes.STRING},
     tel_mobile: {type: DataTypes.ARRAY(DataTypes.STRING)},
 })
@@ -40,14 +49,22 @@ const User = sequelize.define('user', {
 })
 
 
-
-
 // описание - как модели связаны с друг-другом
-Department.hasMany(DepartmentContact)
+Department.hasMany(DepartmentContact, {
+    foreignKey:{
+        allowNull: false
+    }
+})
 DepartmentContact.belongsTo(Department)
+/*DepartmentContact.sync({ alter: true })*/
 
 Department.hasMany(Employee)
 Employee.belongsTo(Department)
+
+
+
+
+
 
 module.exports = {
     Department,

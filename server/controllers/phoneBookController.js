@@ -8,7 +8,6 @@ class PhoneBookController {
     async getAllPhoneBook(req, res, next) {
         fetchDataFromBD(async () => {
             const phoneBook = await DepartmentContact.findAll({
-                attributes: ['id', 'position', 'tel_dect', 'tel_landline', 'email', 'departmentId'],
                 order: [
                     ['position', 'ASC']
                 ]
@@ -18,22 +17,59 @@ class PhoneBookController {
         }, req, res, next)
     }
 
-    async createPhoneBookItem(req, res, next) {
+    async createPhoneBookEntry(req, res, next) {
         const {position, tel_landline, tel_dect, email, departmentId} = req.body
 
         const emailLowerCase = email.map(item => item.toLowerCase().trim())
 
         const validationResult = PhoneBookValidator.fieldsValidation({
-            position: position.trim(), tel_landline, tel_dect, email: emailLowerCase, departmentId
+            position: position.trim(), tel_landline, tel_dect, email: emailLowerCase
         })
         if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
 
 
         fetchDataFromBD(async () => {
-            const itemPhoneBook = await DepartmentContact.create({
+            const phoneBookEntry = await DepartmentContact.create({
                 position: position.trim(), tel_landline, tel_dect, email: emailLowerCase, departmentId
             })
-            return res.json(itemPhoneBook)
+            return res.json(phoneBookEntry)
+        }, req, res, next)
+    }
+
+
+    async deletePhoneBookEntry(req, res, next) {
+        const {id} = req.params
+
+        fetchDataFromBD(async () => {
+            const result = await DepartmentContact.destroy({where: {id}})
+
+            if (result === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+
+            return res.json(result)
+        }, req, res, next)
+    }
+
+
+    async updatePhoneBookEntry(req, res, next) {
+        const {id} = req.params
+        const {position, tel_landline, tel_dect, email, departmentId} = req.body
+
+        const emailLowerCase = email.map(item => item.toLowerCase().trim())
+
+        const validationResult = PhoneBookValidator.fieldsValidation({
+            position: position.trim(), tel_landline, tel_dect, email: emailLowerCase
+        })
+        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+
+        fetchDataFromBD(async () => {
+            const result = await DepartmentContact.update(
+                {position: position.trim(), tel_landline, tel_dect, email: emailLowerCase, departmentId},
+            {where: {id}}
+            )
+
+            if (result[0] === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+
+            return res.json(result[0])
         }, req, res, next)
     }
 
@@ -41,17 +77,6 @@ class PhoneBookController {
 
 
 
-
-
-
-
-
-
-    async deleteItemOfPhoneBook(req, res) {
-        const {id} = req.params
-        const itemOfPhoneBook = await DepartmentContact.destroy({where: {id}})
-        res.json(itemOfPhoneBook)
-    }
 }
 
 module.exports = new PhoneBookController()
