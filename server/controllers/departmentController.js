@@ -7,7 +7,6 @@ class DepartmentController {
     async getAllDepartment(req, res, next) {
         fetchDataFromBD(async () => {
             const departments = await Department.findAll({
-                attributes: ['id', 'code', 'name', 'is_seller'],
                 order: [
                     ['is_seller', 'DESC'],
                     ['code', 'ASC']
@@ -22,12 +21,12 @@ class DepartmentController {
         const {code, name, is_seller} = req.body
 
         const validationResult = DepartmentValidator.fieldsValidation({
-            code, name:name.trim(), is_seller
+            code, name: name.trim(), is_seller
         })
         if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
 
         fetchDataFromBD(async () => {
-            const department = await Department.create({code, name:name.trim(), is_seller})
+            const department = await Department.create({code, name: name.trim(), is_seller})
             return res.json(department)
         }, req, res, next)
     }
@@ -47,8 +46,11 @@ class DepartmentController {
         }
 
         fetchDataFromBD(async () => {
-            const deletedDepartment = await Department.destroy({where: {id}})
-            return res.json(deletedDepartment)
+            const result = await Department.destroy({where: {id}})
+
+            if (result === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+
+            return res.json(result)
         }, req, res, next)
 
     }
@@ -59,15 +61,20 @@ class DepartmentController {
         const {code, name, is_seller} = req.body
 
         const validationResult = DepartmentValidator.fieldsValidation({
-            code, name:name.trim(), is_seller
+            code, name: name.trim(), is_seller
         })
         if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
 
         fetchDataFromBD(async () => {
-            const department = await Department.update(
-                {code, name:name.trim(), is_seller},
-                {where: {id: id}})
-            return res.json(department)
+            const result = await Department.update(
+                {code, name: name.trim(), is_seller},
+                {where: {id}}
+            )
+
+            if (result[0] === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+
+
+            return res.json(result[0])
         }, req, res, next)
     }
 }
