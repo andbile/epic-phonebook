@@ -1,7 +1,8 @@
 import React from 'react';
 import {Switch, Route} from "react-router-dom";
 import {useContext} from 'react'
-import {authRoutes, publicRoutes} from "./utils/routes";
+import {publicRoutes} from "./utils/publicRoutes";
+import {authRoutes} from "./utils/authRoutes";
 import {ROLES_ADMIN_PANEL_PERMISSION} from "./utils/consts";
 import {Context} from "./index";
 import {observer} from "mobx-react-lite";
@@ -24,7 +25,7 @@ const AppRouter = observer(() => {
                 <RouteWithSubRoutes key={i} {...route}/>
             )}
 
-            <Route component={NotFound}/>// TODO обрабатывать ошибки, писать куда-то логи
+            <Route component={NotFound}/>
             {/*<Redirect to={HOME_ROUTE} />*/}
         </Switch>
     );
