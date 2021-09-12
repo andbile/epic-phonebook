@@ -1,10 +1,9 @@
-<h1>ERP-система</h1>
+<h1>Телефонний довідник</h1>
 
 Використані технології
 <ol>
-    <li>Express</li>
-    <li>PostgreSQL</li>
-    <li>React</li>
+    <li>Express (postgreSQL, sequelize, jwt)</li>
+    <li>React (mobx, axios, bootstrap, styled components)</li>
 </ol>
 
 Наявний функціонал
