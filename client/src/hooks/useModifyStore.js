@@ -56,16 +56,16 @@ export default function useModifyStore(initialValue, keyName) {
 
     /**
      * Update entry to modified state and keep the position after render
-     * @param {object} evt - event object
+     * @param {string} inputValue -  input field value
      * @param {number} id - id in the modified state
      */
-    const update = (evt, id) => {
+    const update = (inputValue, id) => {
         const index = value.findIndex(item =>
             item[keyNameId] === id
         )
 
         value[index] = {
-            [keyName]: evt.target.value,
+            [keyName]: inputValue,
             [keyNameId]: id
         }
 
