@@ -4,7 +4,7 @@ const departmentController = require('../controllers/departmentController')
 const checkRole = require('../middleware/checkRoleMiddleware')
 
 router.get('/', departmentController.getAllDepartment)
-//router.get('/:id', departmentController.getOneDepartment)
+router.get('/:code', departmentController.getOneDepartmentByCode)
 
 router.post('/', checkRole(['ADMIN', 'PERSONAL']), departmentController.createDepartment)
 router.put('/:id', checkRole(['ADMIN', 'PERSONAL']), departmentController.updateDepartment)

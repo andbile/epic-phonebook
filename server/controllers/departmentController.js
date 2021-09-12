@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError");
-const {Department, Employee} = require('../models/models')
+const {Department, Employees} = require('../models/models')
 const DepartmentValidator = require('../validators/DepartmentValidator')
 const fetchDataFromBD = require('../utils/fetchDataFromBD')
 
@@ -13,6 +13,16 @@ class DepartmentController {
                 ]
             })
             res.json(departments)
+        }, req, res, next)
+    }
+
+    async getOneDepartmentByCode(req, res, next) {
+        let {code} = req.params
+
+        fetchDataFromBD(async () => {
+            const departments = await Department.findAll(
+                {where: {code}})
+            return res.json(departments)
         }, req, res, next)
     }
 
@@ -37,7 +47,7 @@ class DepartmentController {
 
         // get number of employees
         const numberEmployees = await fetchDataFromBD(async () => {
-            return await Employee.count({where: {departmentId: id}})
+            return await Employees.count({where: {departmentId: id}})
         }, req, res, next)
 
         // cannot deleted a department if employees are attached to it

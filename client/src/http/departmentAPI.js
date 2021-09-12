@@ -5,6 +5,11 @@ export const fetchDepartments = async () => {
     return data
 }
 
+export const fetchOneDepartmentByCode = async (departmentCode) => {
+    const {data} = await $host.get(`department/${departmentCode}`)
+    return data
+}
+
 export const createDepartment = async (department) => {
     const {data} = await $authHost.post('department', department)
     return data
