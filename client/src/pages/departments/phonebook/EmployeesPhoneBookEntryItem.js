@@ -20,15 +20,17 @@ const EmployeesPhoneBookEntryItem = observer( props => {
 
     return (
         <tr>
-            <td>{employeeEntry.last_name} {employeeEntry.first_name} {employeeEntry.patronymic_name}</td>
-            <td className='text-left'>{employeeEntry.position}</td>
+            <td className='text-left'>{employeeEntry.last_name} {employeeEntry.first_name} {employeeEntry.patronymic_name}</td>
+            <td className='text-left'>{employeeEntry.position ? employeeEntry.position : <>&mdash;</>}</td>
             <td>
                 {
+                    employeeEntry.tel_mobile && (
                     employeeEntry.tel_mobile.length > 0 ?
                         employeeEntry.tel_mobile.map( ( tel, i ) =>
                             <div key={i + tel}><a href={'tel:' + tel}>{tel}</a></div> )
                         :
-                        <span>&mdash;</span>
+                        <>&mdash;</>
+                    )
                 }
             </td>
 

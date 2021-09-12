@@ -30,17 +30,20 @@ const DepartmentContact = sequelize.define('department_contact', {
     },
 })
 
-// Сотрудники
-const Employee = sequelize.define('employee', {
+// Employees phone book
+const Employees = sequelize.define('employees', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     last_name: {type: DataTypes.STRING, allowNull: false},
     first_name: {type: DataTypes.STRING, allowNull: false},
     patronymic_name: {type: DataTypes.STRING, allowNull: false},
     position: {type: DataTypes.STRING},
-    tel_mobile: {type: DataTypes.ARRAY(DataTypes.STRING)},
+    tel_mobile: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: []
+    }
 })
 
-// пользователи
+// users
 const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     email: {type: DataTypes.STRING, unique: true},
@@ -49,27 +52,32 @@ const User = sequelize.define('user', {
 })
 
 
-// описание - как модели связаны с друг-другом
+
+
 Department.hasMany(DepartmentContact, {
     foreignKey:{
         allowNull: false
     }
 })
 DepartmentContact.belongsTo(Department)
-/*DepartmentContact.sync({ alter: true })*/
-
-Department.hasMany(Employee)
-Employee.belongsTo(Department)
+//DepartmentContact.sync({ alter: true })
 
 
-
+Department.hasMany(Employees, {
+    foreignKey:{
+        allowNull: false
+    }
+})
+//Department.sync({ alter: true })
+Employees.belongsTo(Department)
+//Employees.sync({ alter: true })
 
 
 
 module.exports = {
     Department,
     DepartmentContact,
-    Employee,
+    Employees,
     User
 }
 

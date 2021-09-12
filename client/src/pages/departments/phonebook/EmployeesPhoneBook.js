@@ -1,8 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import MainContainer from "../../../components/MainContainer";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../../index";
 import {useParams} from 'react-router-dom'
+import {useHistory} from "react-router-dom";
 import Button from "react-bootstrap/cjs/Button";
 import {DEPARTMENTS_PHONE_BOOK_ROUTE} from "../../../utils/consts";
 import {Link} from "react-router-dom";
@@ -11,8 +12,9 @@ import {BoxArrowLeft} from "react-bootstrap-icons";
 import EmployeesPhoneBookEntryItem from "./EmployeesPhoneBookEntryItem";
 import PropTypes from 'prop-types'
 import isPhoneBookBtnCallbacks from './../../../components/propTypeValidators/isPhoneBookBtnCallbacks'
-import isDepartmentId from './../../../components/propTypeValidators/isDepartmentId'
-import {fetchDepartments} from "../../../http/departmentAPI";
+import {fetchOneDepartmentByCode} from "../../../http/departmentAPI";
+import useFetching from "../../../hooks/useFetching";
+import {fetchEmployeesByDepartmentId} from "../../../http/employeeAPI";
 
 
 /**
@@ -23,64 +25,32 @@ import {fetchDepartments} from "../../../http/departmentAPI";
  * @param {object} props.phoneBookBtnCallbacks - event handlers delete/update phone book entry
  * @return {React.FunctionComponent<object>}
  */
-const EmployeesPhoneBook = observer( props => {
-    const {employeesStore, departmentStore} = useContext( Context )
-    const {departmentId, isAdminPanel, phoneBookBtnCallbacks} = props
-
+const EmployeesPhoneBook = observer(props => {
+    const {employeesStore, departmentStore} = useContext(Context)
+    const {isAdminPanel, phoneBookBtnCallbacks} = props
 
     const {departmentCode} = useParams()
-
-    const [currentDepartment, setCurrentDepartment] = useState({})
-
-    //TODO если такого departmentCode нету, вывод ошибки - такого департамента не существует, сейчас реакт крушится
-    // с базы тянуть только конкретный департамент по departmentCode
+    const history = useHistory()
+    const fetching = useFetching(null)
 
     useEffect(() => {
-        fetchDepartments().then(data => {
-            departmentStore.setDepartments(data)
+        if (departmentCode) {
+            fetching(async () => {
+                // get department using department code from request parameter
+                fetchOneDepartmentByCode(departmentCode)
+                    .then( data => {
+                        // redirect if department is not found
+                        if (data.length === 0) return history.push(DEPARTMENTS_PHONE_BOOK_ROUTE)
 
-            setCurrentDepartment(
-                isAdminPanel
-                    ? getCurrentDepartmentByID( departmentId )
-                    : getCurrentDepartmentByCode( departmentCode ))
-        })
+                        departmentStore.setCurrentDepartment(data[0])
+
+                        // get employees
+                        fetchEmployeesByDepartmentId(departmentStore.currentDepartment.id)
+                            .then(data => employeesStore.setEmployees(data))
+                    })
+            })
+        }
     }, [])
-
-    /**
-     * Get the department using department id
-     * @param {string} departmentId - department id from DB
-     * @return {object} the department from state
-     */
-    const getCurrentDepartmentByID = departmentId => {
-        return departmentStore.departments.find( item =>
-            item.id === +departmentId
-        )
-    }
-
-    /**
-     * Get the department using the request parameter
-     * @param {string} departmentCode - department code
-     * @return {object} the department from state
-     */
-    const getCurrentDepartmentByCode = departmentCode => {
-        return departmentStore.departments.find( item =>
-            item.code === departmentCode
-        )
-    }
-
-    /**
-     * Get an array of employees phone book of the selected department
-     * @param {number} departmentId - department id from DB
-     * @return {array} employees from state
-     */
-    const getCurrentEmployees = ( departmentId ) =>
-        employeesStore.employees.filter( item =>
-            item.departmentId === departmentId
-        )
-
-
-    const employees = getCurrentEmployees( currentDepartment.id )
-
 
     return (
         <MainContainer>
@@ -90,7 +60,7 @@ const EmployeesPhoneBook = observer( props => {
                         <Link to={DEPARTMENTS_PHONE_BOOK_ROUTE}>
                             <Button><BoxArrowLeft className='icon'/> Повернутися</Button>
                         </Link>
-                        <h2>Відділ {departmentCode} &ndash; {currentDepartment.name}</h2>
+                        <h2 className='mt-3'>Відділ {departmentCode} &ndash; {departmentStore.currentDepartment.name}</h2>
                     </>
                 )
             }
@@ -106,7 +76,7 @@ const EmployeesPhoneBook = observer( props => {
                 </thead>
                 <tbody>
                 {
-                    employees.map( ( employeeItem, i ) =>
+                    employeesStore.employees.map((employeeItem) =>
                         <EmployeesPhoneBookEntryItem
                             key={employeeItem.id}
                             employeeEntry={employeeItem}
@@ -119,12 +89,11 @@ const EmployeesPhoneBook = observer( props => {
             </PersonalTable>
         </MainContainer>
     );
-} );
+});
 
 
 EmployeesPhoneBook.propTypes = {
     isAdminPanel: PropTypes.bool,
-    departmentId: isDepartmentId,
     phoneBookBtnCallbacks: isPhoneBookBtnCallbacks
 }
 

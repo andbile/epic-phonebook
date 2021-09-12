@@ -9,10 +9,6 @@ const userRouter = require('./userRouter')
 // объединение "подмаршрутов" к основному маршруту
 router.use('/department', departmentRouter)
 router.use('/phone-book', phoneBookRouter)
-
-
-
-
 router.use('/employee', employeeRouter)
 
 router.use('/user', userRouter)

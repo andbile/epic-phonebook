@@ -11,6 +11,7 @@ export default class DepartmentStore {
          * name {string}
          */
         this._departments = []
+        this._currentDepartment = {}
 
         /**
          * this._departmentsContacts {array.<object>}
@@ -29,12 +30,20 @@ export default class DepartmentStore {
         this._departments = departments
     }
 
+    setCurrentDepartment(department) {
+        this._currentDepartment = department
+    }
+
     setDepartmentsContacts(departmentsContacts) {
         this._departmentsContacts = departmentsContacts
     }
 
     get departments() {
         return this._departments
+    }
+
+    get currentDepartment(){
+        return this._currentDepartment
     }
 
     get departmentsContacts() {
