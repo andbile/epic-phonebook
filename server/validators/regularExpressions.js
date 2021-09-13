@@ -8,8 +8,9 @@ module.exports = regularExpressions = {
     // Expression is used to validate fields, for example: contacts of departments, offices, for example - pay desk 1...10
     baseStringUkrRusWithDigits: /^[.,'`\-\sА-Яа-яёЁЇїІіЄєҐґ\d]{3,255}$/,
 
-    // internal phone number, for example 4025 / 2001
-    internalPhoneNumber: /^\d{4}$/,
+    // internal phone number, for example: 4025 / 2001
+    // external phone number, for example: 33700
+    internalPhoneNumber: /^\d{4,5}$/,
 
     // only 2-3 digits or/and dot and 2-3 digits, for example: 10 or 10.10 / 999.10.999
     departmentCode: /^\d{2,3}((\.\d{2,3})?)+$/
