@@ -24,7 +24,7 @@ import ChangeDepartmentTable from '../../../components/ChangeDepartmentTable'
  * @return {React.FunctionComponent<object>}
  */
 
-// TODO смена департамента
+// TODO предупреждение об смене департамента или после смены вывод сообщения об успешных изменениях
 const EmployeesPhoneBookModalAdmin = observer(props => {
     const {employeesStore} = useContext(Context)
     const {modalVisible, closeModal, employeesEntryId, selectedDepartmentId, action, setAction} = props
