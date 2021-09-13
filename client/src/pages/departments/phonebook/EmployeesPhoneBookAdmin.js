@@ -72,6 +72,13 @@ const EmployeesPhoneBookAdmin = observer(() => {
         modal.showAModal()
     }
 
+    //
+    const changeEmployeeDepartment = (id)=>{
+        setEmployeesEntryId(id)
+        setAction({change: true})
+        modal.showAModal()
+    }
+
     return (
         <>
             <h3 className='pt-2 pb-2'>Контакти співробітників</h3>
@@ -87,7 +94,7 @@ const EmployeesPhoneBookAdmin = observer(() => {
                 selectedDepartmentId && (
                     <>
                         <EmployeesPhoneBook
-                            phoneBookBtnCallbacks={{updatePhoneBookEntry, deletePhoneBookEntry}}
+                            phoneBookBtnCallbacks={{updatePhoneBookEntry, deletePhoneBookEntry, changeEmployeeDepartment}}
                             isAdminPanel={true}
                         />
 

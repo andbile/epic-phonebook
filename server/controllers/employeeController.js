@@ -44,7 +44,6 @@ class EmployeeController {
 
     async updateEmployee(req, res, next) {
         const {id} = req.params
-        // TODO departmentId - для смены департамента
         const {last_name, first_name, patronymic_name, position, tel_mobile, departmentId} = req.body
 
         const validationResult = EmployeeValidator.fieldsValidation({
@@ -83,6 +82,22 @@ class EmployeeController {
             return res.json(result)
         }, req, res, next)
 
+    }
+
+    async changeEmployeeDepartment(req, res, next) {
+        const {id} = req.params
+        const {departmentId} = req.body
+
+        fetchDataFromBD(async () => {
+            const result = await Employees.update(
+                {departmentId},
+                {where: {id}}
+            )
+
+            if (result[0] === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+
+            return res.json(result)
+        }, req, res, next)
     }
 }
 

@@ -8,8 +8,9 @@ import ButtonDelete from "../../../components/Buttons/ButtonDelete";
 import PropTypes from "prop-types";
 import useModifyStore from "../../../hooks/useModifyStore";
 import useFetching from "../../../hooks/useFetching";
-import {createEmployee, deleteEmployee, updateEmployee} from "../../../http/employeeAPI";
+import {createEmployee, deleteEmployee, moveEmployeeToDepartment, updateEmployee} from "../../../http/employeeAPI";
 import InputMask from 'react-input-mask';
+import ChangeDepartmentTable from '../../../components/ChangeDepartmentTable'
 
 /**
  * Modal window for create/update/delete theEmployee phone book entry
@@ -128,6 +129,19 @@ const EmployeesPhoneBookModalAdmin = observer(props => {
         })
     }
 
+    const changeEmployeeDepartment = (departmentId)=>{
+        fetching(async ()=>{
+            await moveEmployeeToDepartment(employeesEntryId, departmentId)
+                .then(() => {
+                    // select all phone book entry except the current moved one
+                    const otherEmployeePhoneBookEntries = employeesStore.employees.filter(item => employeesEntryId !== item.id)
+
+                    employeesStore.setEmployees([...otherEmployeePhoneBookEntries])
+                })
+                .then(closeModalWindow)
+        })
+    }
+
 
     const closeModalWindow = () => {
         setLastName('')
@@ -151,6 +165,7 @@ const EmployeesPhoneBookModalAdmin = observer(props => {
                     {action.create && 'Створити новий запис'}
                     {action.update && 'Редагувати запис'}
                     {action.delete && 'Видалити запис'}
+                    {action.change && 'Змінити департамент'}
                 </Modal.Title>
             </Modal.Header>
 
@@ -218,8 +233,7 @@ const EmployeesPhoneBookModalAdmin = observer(props => {
                                                    onChange={evt => {
                                                        const value = evt.target.value.replace(/[()_\s]/g, '')
                                                        telMobile.update(value, item.tel_id)
-                                                   }
-                                                   }
+                                                   }}
                                                    autoComplete='nope'
                                         >
                                             {(inputProps) => <FormControl {...inputProps}/>}
@@ -242,20 +256,34 @@ const EmployeesPhoneBookModalAdmin = observer(props => {
                 </Modal.Body>
             )}
 
-            {
-                action.delete && (
-                    <Modal.Body>
-                        Ви дійсно бажаєте видалити запис:<br/>
-                        {currentEmployeePhoneBookEntry && (
-                            <>
-                                {`${currentEmployeePhoneBookEntry.last_name}`} &nbsp;
-                                {`${currentEmployeePhoneBookEntry.first_name}`} &nbsp;
-                                {`${currentEmployeePhoneBookEntry.patronymic_name}`} &ndash;&nbsp;
-                                {`${currentEmployeePhoneBookEntry.position}`}
-                            </>
-                        )}
-                    </Modal.Body>
-                )}
+            {action.delete && (
+                <Modal.Body>
+                    Ви дійсно бажаєте видалити запис:<br/>
+                    {currentEmployeePhoneBookEntry && (
+                        <>
+                            {`${currentEmployeePhoneBookEntry.last_name}`} &nbsp;
+                            {`${currentEmployeePhoneBookEntry.first_name}`} &nbsp;
+                            {`${currentEmployeePhoneBookEntry.patronymic_name}`} &ndash;&nbsp;
+                            {`${currentEmployeePhoneBookEntry.position}`}
+                        </>
+                    )}
+                </Modal.Body>
+            )}
+
+            {action.change && (
+                <Modal.Body>
+                    Ви дійсно бажаєте змінити департамент у співробітника:<br/>
+                    {currentEmployeePhoneBookEntry && (
+                    <b>
+                        {`${currentEmployeePhoneBookEntry.last_name}`}&nbsp;
+                        {`${currentEmployeePhoneBookEntry.first_name}`}&nbsp;
+                        {`${currentEmployeePhoneBookEntry.patronymic_name}`}
+                    </b>
+                    )}
+                    <ChangeDepartmentTable eventHandler={changeEmployeeDepartment} className='mt-4'/>
+
+                </Modal.Body>
+            )}
 
             <Modal.Footer>
                 {action.create && <Button variant="success" onClick={addEmployeePhoneBookEntry}>Додати</Button>}

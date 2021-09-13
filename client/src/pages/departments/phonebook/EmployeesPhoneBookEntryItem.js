@@ -6,6 +6,7 @@ import {ROLES_ADMIN_PANEL_PERMISSION} from "../../../utils/consts";
 import ButtonUpdateInTable from "../../../components/Buttons/ButtonUpdateInTable";
 import ButtonDeleteInTable from "../../../components/Buttons/ButtonDeleteInTable";
 import isPhoneBookBtnCallbacks from "../../../components/propTypeValidators/isPhoneBookBtnCallbacks";
+import ButtonChangeInTable from "../../../components/Buttons/ButtonChangeInTable";
 
 /**
  * Employee phone book of one departments
@@ -48,6 +49,13 @@ const EmployeesPhoneBookEntryItem = observer( props => {
                             tooltipId='tooltip-employee-phonebook-delete'
                             tooltipIdMessage='Видалити запис'
                             eventHandler={phoneBookBtnCallbacks.deletePhoneBookEntry}
+                            itemId={employeeEntry.id}
+                        />
+
+                        <ButtonChangeInTable
+                            tooltipId='tooltip-employee-change-department'
+                            tooltipIdMessage='Змінити департамент'
+                            eventHandler={phoneBookBtnCallbacks.changeEmployeeDepartment}
                             itemId={employeeEntry.id}
                         />
                     </CheckPermissions>

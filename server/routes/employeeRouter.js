@@ -8,6 +8,7 @@ router.get('/byId/:id', employeeController.getEmployeesByDepartmentId)
 router.post('/', checkRole(['ADMIN', 'PERSONAL']), employeeController.createEmployee)
 router.delete('/:id', checkRole(['ADMIN', 'PERSONAL']), employeeController.deleteEmployee)
 router.put('/:id', checkRole(['ADMIN', 'PERSONAL']), employeeController.updateEmployee)
+router.put('/change-department/:id', checkRole(['ADMIN', 'PERSONAL']), employeeController.changeEmployeeDepartment)
 
 
 

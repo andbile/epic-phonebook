@@ -1,11 +1,11 @@
 import {$authHost, $host} from "./index";
 
-export const fetchEmployeesByDepartmentId = async (id) =>{
+export const fetchEmployeesByDepartmentId = async (id) => {
     const {data} = await $host.get(`employee/byId/${id}`)
     return data
 }
 
-export const createEmployee = async (employee) =>{
+export const createEmployee = async (employee) => {
     const {data} = await $authHost.post('employee', employee)
     return data
 }
@@ -18,5 +18,10 @@ export const updateEmployee = async (id, employee) => {
 
 export const deleteEmployee = async (id) => {
     const {data} = await $authHost.delete(`employee/${id}`)
+    return data
+}
+
+export const moveEmployeeToDepartment = async (employeeId, departmentId) => {
+    const {data} = await $authHost.put(`employee/change-department/${employeeId}`, {departmentId: departmentId})
     return data
 }

@@ -71,7 +71,7 @@ const EmployeesPhoneBook = observer(props => {
                     <th>ПІБ</th>
                     <th>Посада</th>
                     <th>Мобільний телефон</th>
-                    {isAdminPanel && <th colSpan={2}/>}
+                    {isAdminPanel && <th colSpan={3}/>}
                 </tr>
                 </thead>
                 <tbody>
