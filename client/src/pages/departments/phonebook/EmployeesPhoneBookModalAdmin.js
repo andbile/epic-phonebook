@@ -211,7 +211,7 @@ const EmployeesPhoneBookModalAdmin = observer(props => {
                                     <InputGroup
                                         key={i + item.tel_id}
                                         className="mb-3">
-                                        <InputMask mask="+\38(999) 999 99 99"
+                                        <InputMask mask="+\38(099) 999 99 99"
                                                    type='text'
                                                    placeholder="Введіть номер телефону"
                                                    value={item.tel}
