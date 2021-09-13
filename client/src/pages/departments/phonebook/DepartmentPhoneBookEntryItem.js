@@ -25,44 +25,47 @@ const DepartmentPhoneBookEntryItem = observer((props) => {
             <td className='text-left'>{departmentPhoneBookEntryItem.position}</td>
             <td>
                 {
-                    departmentPhoneBookEntryItem.tel_landline &&
-                    departmentPhoneBookEntryItem.tel_landline.length > 0 ?
-                        departmentPhoneBookEntryItem.tel_landline.map(tel =>
-                            <div key={departmentPhoneBookEntryItem.id + tel}>
-                                {tel}
-                                <Telephone className='icon icon-phone'/>
-                            </div>
-                        )
-                        :
-                        <span>&mdash;</span>
+                    departmentPhoneBookEntryItem.tel_landline && (
+                        departmentPhoneBookEntryItem.tel_landline.length > 0 ?
+                            departmentPhoneBookEntryItem.tel_landline.map(tel =>
+                                <div key={departmentPhoneBookEntryItem.id + tel}>
+                                    {tel}
+                                    <Telephone className='icon icon-phone'/>
+                                </div>
+                            )
+                            :
+                            <span>&mdash;</span>
+                    )
                 }
             </td>
             <td>
                 {
-                    departmentPhoneBookEntryItem.tel_dect &&
-                    departmentPhoneBookEntryItem.tel_dect.length > 0 ?
-                        departmentPhoneBookEntryItem.tel_dect.map(tel =>
-                            <div key={departmentPhoneBookEntryItem.id + tel}>
-                                {tel}
-                                <Phone className='icon icon-phone'/>
-                            </div>
-                        )
-                        :
-                        <span>&mdash;</span>
+                    departmentPhoneBookEntryItem.tel_dect && (
+                        departmentPhoneBookEntryItem.tel_dect.length > 0 ?
+                            departmentPhoneBookEntryItem.tel_dect.map(tel =>
+                                <div key={departmentPhoneBookEntryItem.id + tel}>
+                                    {tel}
+                                    <Phone className='icon icon-phone'/>
+                                </div>
+                            )
+                            :
+                            <span>&mdash;</span>
+                    )
                 }
             </td>
             <td>
                 {
-                    departmentPhoneBookEntryItem.email &&
-                    departmentPhoneBookEntryItem.email.length > 0 ?
-                        departmentPhoneBookEntryItem.email.map(email =>
-                            <span key={departmentPhoneBookEntryItem.id + email}>
+                        departmentPhoneBookEntryItem.email && (
+                        departmentPhoneBookEntryItem.email.length > 0 ?
+                            departmentPhoneBookEntryItem.email.map(email =>
+                                    <span key={departmentPhoneBookEntryItem.id + email}>
                                 <a href={"mailto:" + email}>{email}</a>
                                 <br/>
                             </span>
-                        )
-                        :
-                        <span>&mdash;</span>
+                            )
+                            :
+                            <span>&mdash;</span>
+                    )
                 }
             </td>
 

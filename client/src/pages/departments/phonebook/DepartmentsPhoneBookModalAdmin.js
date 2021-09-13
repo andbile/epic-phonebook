@@ -14,6 +14,10 @@ import {
     updateDepartmentsPhoneBook
 } from "../../../http/departmentAPI";
 
+// TODO смена департамента
+
+
+
 /**
  * Modal window for create/update/delete the phone book entry
  * @type {React.FunctionComponent<object>}
@@ -32,7 +36,8 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
 
         const [position, setPosition] = useState('')
         const telLandline = useModifyStore([], 'tel')
-        const telDect = useModifyStore([], 'dect')
+
+    const telDect = useModifyStore([], 'dect')
         const email = useModifyStore([], 'email')
         const fetching = useFetching(null)
 
@@ -183,7 +188,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                                                 type='text'
                                                 placeholder="Введіть номер телефону"
                                                 value={item.tel}
-                                                onChange={evt => telLandline.update(evt, item.tel_id)}
+                                                onChange={evt => telLandline.update(evt.target.value, item.tel_id)}
                                             />
                                             <InputGroup.Append>
                                                 <ButtonDelete
@@ -218,7 +223,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                                                 type='text'
                                                 placeholder="Введіть номер телефону"
                                                 value={item.dect}
-                                                onChange={evt => telDect.update(evt, item.dect_id)}
+                                                onChange={evt => telDect.update(evt.target.value, item.dect_id)}
                                             />
                                             <InputGroup.Append>
                                                 <ButtonDelete
@@ -250,7 +255,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                                                 type='text'
                                                 placeholder="Введіть email"
                                                 value={item.email}
-                                                onChange={evt => email.update(evt, item.email_id)}
+                                                onChange={evt => email.update(evt.target.value, item.email_id)}
                                             />
                                             <InputGroup.Append>
                                                 <ButtonDelete
@@ -273,8 +278,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                     action.delete && (
                         <Modal.Body>
                             Ви дійсно бажаєте видалити запис:<br/>
-                            {
-                                currentPhoneBookEntry &&
+                            {currentPhoneBookEntry &&
                                 (
                                     <>
                                         {`${currentPhoneBookEntry.position}`}
@@ -288,8 +292,7 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                                         {currentPhoneBookEntry.email.length > 0 &&
                                         (<>&nbsp;&ndash;&nbsp;{`${currentPhoneBookEntry.email}`}</>)}
                                     </>
-                                )
-                            }
+                                )}
                         </Modal.Body>
                     )
                 }
