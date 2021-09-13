@@ -2,27 +2,27 @@ const validator = require('validator')
 const regularExpressions = require("./regularExpressions");
 const {validateArrayUsingValidator} = require("./validationFunctions");
 const {validateStringUsingValidator} = require("./validationFunctions");
-const {getValidationResult, validateUsingRegexp} = require('./validationFunctions')
+const {getValidationResult, validateStringUsingRegexp} = require('./validationFunctions')
 
 class EmployeeValidator {
 
     // last/first/patronymic name, patronymic
-    static baseStringUkrRus(value, isEmptyValueAllowed = false) {
-        return validateUsingRegexp(value, regularExpressions.baseStringUkrRus, `Ім'я/прізвище/по-батькові/посада має містити від 3 до 255 символів українського алфавіту`, isEmptyValueAllowed)
+    static baseStringUkrRus(value, emptyValueIsAllowed = false) {
+        return validateStringUsingRegexp(value, regularExpressions.baseStringUkrRus, `Ім'я/прізвище/по-батькові/посада має містити від 3 до 255 символів українського алфавіту`, emptyValueIsAllowed)
     }
 
     // mobile phone
     static isMobilePhone(value, emptyValueIsAllowed = false) {
-        const mobilePhone = validator.isMobilePhone
+        const mobilePhoneValidator = validator.isMobilePhone
         const options = [
             ['uk-UA'], {strictMode: true}
         ]
 
         if (typeof value === 'string')
-            return validateStringUsingValidator(value, mobilePhone, options, 'Некоректний мобільний телефонний номер', emptyValueIsAllowed)
+            return validateStringUsingValidator(value, mobilePhoneValidator, options, 'Некоректний мобільний телефонний номер', emptyValueIsAllowed)
 
         if(Array.isArray(value))
-            return validateArrayUsingValidator(value, mobilePhone, options, 'Некоректний мобільний телефонний номер', emptyValueIsAllowed)
+            return validateArrayUsingValidator(value, mobilePhoneValidator, options, 'Некоректний мобільний телефонний номер', emptyValueIsAllowed)
     }
 
 

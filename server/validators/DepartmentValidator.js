@@ -1,25 +1,27 @@
 const validator = require('validator')
-const {getValidationResult, validationUsingRegexp, validationUsingValidator} = require('./validationFunctions')
+const regularExpressions = require("./regularExpressions");
+const {getValidationResult, validateStringUsingRegexp, validateStringUsingValidator} = require('./validationFunctions')
 
 // validation of the "department" form
 class DepartmentValidator {
     // code of the department
-    static isCode(value) {
-        // only 2-3 digits or/and dot and 2-3 digits, example regular expressions: 10 or 10.10 / 999.10.999
-        const regExp = /^\d{2,3}((\.\d{2,3})?)+$/
-        return validationUsingRegexp(value,  regExp, 'Номер відділу не відповідає шаблону, наприклад: 99 або 99.999')
+    static isCode(value, emptyValueIsAllowed = false) {
+        return validateStringUsingRegexp(value,  regularExpressions.departmentCode, 'Номер відділу не відповідає шаблону, наприклад: 99 або 99.999', emptyValueIsAllowed)
     }
 
     // name of the department
-    static isName(value) {
-        const regExp = /^[,\s\.\-А-Яа-яёЁЇїІіЄєҐґ]{3,255}$/
-        return validationUsingRegexp(value,  regExp, 'Назва відділу має містити від 3 до 255 символів українського алфавіту')
+    static isName(value, emptyValueIsAllowed = false) {
+        return validateStringUsingRegexp(value,  regularExpressions.baseStringUkrRus, 'Назва відділу має містити від 3 до 255 символів українського алфавіту', emptyValueIsAllowed)
     }
 
     // seller/not seller sign of the department
-    static isPosition(value) {
+    static isPosition(value, emptyValueIsAllowed = false) {
         const validatorBoolean = validator.isBoolean
-        return validationUsingValidator((value.toString()),  validatorBoolean, {loose: false}, 'Необхідно поставити відмітку: "Торговий" або "Не торговий"')
+        const options = [
+            {loose: false}
+        ]
+
+        return validateStringUsingValidator((value.toString()),  validatorBoolean, options, 'Необхідно поставити відмітку: "Торговий" або "Не торговий"', emptyValueIsAllowed)
     }
 
 

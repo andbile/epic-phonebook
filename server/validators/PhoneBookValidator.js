@@ -1,50 +1,33 @@
 const validator = require('validator')
-const {getValidationResult, validationUsingRegexp, validationUsingValidator} = require('./validationFunctions')
+const regularExpressions = require("./regularExpressions");
+const {validateArrayUsingValidator} = require("./validationFunctions");
+const {validateArrayUsingRegexp} = require("./validationFunctions");
+const {getValidationResult, validateStringUsingRegexp, validateStringUsingValidator} = require('./validationFunctions')
 
 // validation of the "department phone book" form
 class PhoneBookValidator {
     // employee position or employee location
-    static isPosition(value) {
-        const regExp = /^[,\s\.\-А-Яа-яёЁЇїІіЄєҐґ\d]{3,255}$/
-        return validationUsingRegexp(value,  regExp, 'Посада має містити від 3 до 255 символів українського алфавіту та цифри')
+    static isPosition(value, emptyValueIsAllowed = false) {
+        return validateStringUsingRegexp(value, regularExpressions.baseStringUkrRusWithDigits, 'Посада має містити від 3 до 255 символів українського алфавіту та цифри')
     }
 
-    // phone / email
-    // accepts a string or an array
-    static isInternalTel(value) {
-        // only 4 digits
-        const regExp = /^\d{4}$/
 
-        if (typeof value === 'string') return validationUsingRegexp(value,  regExp, 'Телефон відділу має містити 4 цифри', true)
+    // phone landline/dect
+    static isInternalTel(value, emptyValueIsAllowed = false) {
+        if (typeof value === 'string') return validateStringUsingRegexp(value, regularExpressions.internalPhoneNumber, 'Телефон відділу має містити 4 цифри', emptyValueIsAllowed)
 
-        if (Array.isArray(value)) {
-            for (let i = 0; i < value.length; i++) {
-                const validationResult = validationUsingRegexp(value[i], regExp, 'Телефон відділу має містити 4 цифри')
-                // if an error, we stop the iterating and return the error
-                if(!validationResult.result) return validationResult
-            }
-            // else return successful result
-            return getValidationResult(true)
-        }
+        if (Array.isArray(value))
+            return validateArrayUsingRegexp(value, regularExpressions.internalPhoneNumber, 'Телефон відділу має містити 4 цифри', emptyValueIsAllowed)
     }
 
     // email
-    // accepts a string or an array
-    static isEmail(value) {
+    static isEmail(value, emptyValueIsAllowed = false) {
+        const emailValidator = validator.isEmail
 
-        const validatorEmail = validator.isEmail
+        if (typeof value === 'string') return validateStringUsingValidator(value, emailValidator, [], 'Некоректна адреса поштової скриньки', emptyValueIsAllowed)
 
-        if (typeof value === 'string') return validationUsingValidator(value,  validatorEmail, {},'Некоректна адреса поштової скриньки')
-
-        if (Array.isArray(value)) {
-            for (let i = 0; i < value.length; i++) {
-                const validationResult = validationUsingValidator(value[i], validatorEmail, {},'Некоректна адреса поштової скриньки')
-                // if an error, we stop the iterating and return the error
-                if(!validationResult.result) return validationResult
-            }
-            // else return successful result
-            return getValidationResult(true)
-        }
+        if (Array.isArray(value))
+            return validateArrayUsingValidator(value, emailValidator, [], 'Некоректна адреса поштової скриньки', emptyValueIsAllowed)
     }
 
 
@@ -57,14 +40,14 @@ class PhoneBookValidator {
         const isPosition = PhoneBookValidator.isPosition(fields.position)
         if (!isPosition.result) return isPosition
 
-        const isInternalTelLandline = PhoneBookValidator.isInternalTel(fields.tel_landline)
+        const isInternalTelLandline = PhoneBookValidator.isInternalTel(fields.tel_landline, true)
         if (!isInternalTelLandline.result) return isInternalTelLandline
 
-        const isInternalTelDect = PhoneBookValidator.isInternalTel(fields.tel_dect)
+        const isInternalTelDect = PhoneBookValidator.isInternalTel(fields.tel_dect, true)
         if (!isInternalTelDect.result) return isInternalTelDect
 
-         const isEmail = PhoneBookValidator.isEmail(fields.email)
-         if (!isEmail.result) return isEmail
+        const isEmail = PhoneBookValidator.isEmail(fields.email, true)
+        if (!isEmail.result) return isEmail
 
         return getValidationResult(true)
     }

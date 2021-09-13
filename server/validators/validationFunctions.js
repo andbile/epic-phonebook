@@ -20,7 +20,7 @@ const getValidationResult = (isValid = false, errorMessage = '') => {
  * @param {boolean} emptyValueIsAllowed - field is optional to fill
  * @return {{result: boolean, errorMessage: string}}
  */
-const validateUsingRegexp = (value, regExp, errorMessage = '', emptyValueIsAllowed = false) => {
+const validateStringUsingRegexp = (value, regExp, errorMessage = '', emptyValueIsAllowed = false) => {
     if (typeof value === 'string') {
         // field is optional to fill
         if (emptyValueIsAllowed && value.trim() === '') {
@@ -32,6 +32,29 @@ const validateUsingRegexp = (value, regExp, errorMessage = '', emptyValueIsAllow
             : getValidationResult(false, errorMessage)
     }
 }
+
+/**
+ * Validation array using regular expressions
+ * @param {array} value - value for validation
+ * @param {RegExp} regExp - regular expression
+ * @param {string} errorMessage - error message
+ * @param {boolean} emptyValueIsAllowed - field is optional to fill
+ * @return {{result: boolean, errorMessage: string}}
+ */
+const validateArrayUsingRegexp = (value, regExp, errorMessage = '', emptyValueIsAllowed = false) => {
+    if (Array.isArray(value)) {
+        // field is optional to fill
+        if (emptyValueIsAllowed && value.length === 0) return getValidationResult(true)
+
+        for (let i = 0; i < value.length; i++) {
+            const validationResult = validateStringUsingRegexp(value[i], regExp, errorMessage, emptyValueIsAllowed)
+            // if an error, we stop the iterating and return the error
+            if (!validationResult.result) return validationResult
+        }
+        return getValidationResult(true)
+    }
+}
+
 
 
 /**
@@ -58,7 +81,6 @@ const validateStringUsingValidator = (value, validatorFunc, validatorOptions = [
 
 
 /**
- *
  * Validation array using other libraries
  * @param {array} value - value for validation
  * @param {function} validatorFunc - validation function
@@ -84,7 +106,8 @@ const validateArrayUsingValidator = (value, validatorFunc, validatorOptions = []
 
 module.exports = {
     getValidationResult,
-    validateUsingRegexp,
+    validateStringUsingRegexp,
+    validateArrayUsingRegexp,
     validateStringUsingValidator,
     validateArrayUsingValidator
 }
