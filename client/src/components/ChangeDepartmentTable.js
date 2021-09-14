@@ -2,6 +2,7 @@ import PersonalTable from "./PersonalTable";
 import React, {useContext} from "react";
 import styled from "styled-components";
 import {Context} from "../index";
+import PropTypes from "prop-types";
 
 const StyledChangeDepartmentTable = styled.div`
 max-height: 50vh;
@@ -16,8 +17,13 @@ tbody tr{
  }
 }
 `
-
-// TODO полоса прокрутки
+/**
+ * Select a department and call the event handler with one
+ * Used when changing the user's department
+ * @param props
+ * @param {function} props.eventHandler - event handler
+ * @return {JSX.Element}
+ */
 const ChangeDepartmentTable = props => {
     const {departmentStore} = useContext(Context)
     const {eventHandler} = props
@@ -49,7 +55,10 @@ const ChangeDepartmentTable = props => {
     );
 }
 
-// TODO props
+ChangeDepartmentTable.propTypes = {
+    eventHandler: PropTypes.func.isRequired
+}
+
 export default ChangeDepartmentTable;
 
 
