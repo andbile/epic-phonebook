@@ -3,8 +3,20 @@ import MainContainer from "../../components/MainContainer";
 import RouteWithSubRoutes from "../../components/RouteWithSubRoutes";
 import AdminBar from "./AdminBar";
 import {Row, Col} from "react-bootstrap";
+import PropTypes from "prop-types";
 
+/**
+ * Admin panel
+ * @param {array.<object>} routes - nested routes
+ *      routes.path {string} - URL path
+ *      routes.components {object} - react component
+ *      routes.permission {array.<string>} - rendering conditions
+ * @return {JSX.Element}
+ * @constructor
+ */
 const Admin =  ({routes}) => {
+    console.log(routes)
+
     return (
         <MainContainer>
             <h2 className="text-center">Адміністративна панель</h2>
@@ -16,7 +28,6 @@ const Admin =  ({routes}) => {
                 <Col md={9}>
                     {routes.map((route, i) => (
                         <RouteWithSubRoutes key={i} {...route} />
-                        // TODO маршрут по умолчанию, доделать
                     ))}
                 </Col>
             </Row>
@@ -24,5 +35,14 @@ const Admin =  ({routes}) => {
     );
 };
 
-// TODO proptypes
+
+Admin.propTypes = {
+    path: PropTypes.string,
+    permissions: PropTypes.arrayOf(PropTypes.string),
+    component: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.object
+    ])
+}
+
 export default Admin;
