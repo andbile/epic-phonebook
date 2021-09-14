@@ -1,7 +1,7 @@
 import React from 'react';
 import MainContainer from "../../components/MainContainer";
 import RouteWithSubRoutes from "../../components/RouteWithSubRoutes";
-import AdminBar from "./AdminBar";
+import AdminSidebar from "./AdminSidebar";
 import {Row, Col} from "react-bootstrap";
 import PropTypes from "prop-types";
 
@@ -23,7 +23,7 @@ const Admin =  ({routes}) => {
             <hr/>
             <Row>
                 <Col md={3} className='pr-2'>
-                    <AdminBar/>
+                    <AdminSidebar/>
                 </Col>
                 <Col md={9}>
                     {routes.map((route, i) => (
