@@ -20,9 +20,9 @@ export const ADMIN_EMPLOYEES_PHONE_BOOK_ROUTE = '/admin/employees'
 
 // роли пользователей
 // TODO получать от сервера
-export const ROLE_ADMIN = 'ADMIN' // полный доступ к сайту
-export const ROLE_PERSONAL = 'PERSONAL' // доступ на правку департаментов, контактов и телефонной книги
-export const ROLE_TEST_ADMIN = 'TEST_ADMIN'
+export const ROLE_ADMIN = 'admin' // полный доступ к сайту
+export const ROLE_PERSONAL = 'personal' // доступ на правку департаментов, контактов и телефонной книги
+export const ROLE_TEST_ADMIN = 'test_admin'
 
 // доступ пользователей к кнопке "Админка" компонента Login и маршруту ADMIN_ROUTE (административная панель)
 // ROLE_ADMIN не требует дополнительной проверки

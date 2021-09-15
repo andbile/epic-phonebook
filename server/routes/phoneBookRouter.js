@@ -5,9 +5,9 @@ const phoneBookController = require('../controllers/phoneBookController')
 
 
 router.get('/', phoneBookController.getAllPhoneBook)
-router.delete('/:id', checkRole(['ADMIN', 'PERSONAL']), phoneBookController.deletePhoneBookEntry)
-router.post('/', checkRole(['ADMIN', 'PERSONAL']), phoneBookController.createPhoneBookEntry)
-router.put('/:id', checkRole(['ADMIN', 'PERSONAL']), phoneBookController.updatePhoneBookEntry)
+router.delete('/:id', checkRole(['admin', 'personal']), phoneBookController.deletePhoneBookEntry)
+router.post('/', checkRole(['admin', 'personal']), phoneBookController.createPhoneBookEntry)
+router.put('/:id', checkRole(['admin', 'personal']), phoneBookController.updatePhoneBookEntry)
 
 
 module.exports = router
