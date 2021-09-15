@@ -15,7 +15,7 @@ class PhoneBookValidator {
 
     // phone landline/dect
     static isInternalTel(value, emptyValueIsAllowed = false) {
-        const errorMessage = 'Телефон відділу має містити 4 цифри'
+        const errorMessage = 'Телефон відділу має містити 4-5 цифр(и)'
 
         if (typeof value === 'string') return validateStringUsingRegexp(value, regularExpressions.internalPhoneNumber, errorMessage, emptyValueIsAllowed)
 
