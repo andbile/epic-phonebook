@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError");
-const {User} = require('../models/models')
+const {Users} = require('../models/models')
 const jwt = require('jsonwebtoken')
 const _ = require('lodash');
 
@@ -16,7 +16,7 @@ module.exports = async function (req, res, next) {
         console.log(userFromDecodedToken)
 
         // get user from bd
-        const user = await User.findOne({where: {id: userFromDecodedToken.id}})
+        const user = await Users.findOne({where: {id: userFromDecodedToken.id}})
         if (!user) return next(ApiError.unauthorized('Не авторизований'))
 
         // Compare the user's roles with the token and the database, and if they do not converge, log out

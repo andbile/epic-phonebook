@@ -1,7 +1,9 @@
 const ApiError = require('../error/ApiError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {User} = require('../models/models')
+const RegistrationValidator = require("../validators/RegistrationValidator");
+const {Users} = require('../models/models')
+const fetchDataFromBD = require('../utils/fetchDataFromBD')
 
 /**
  * @param {number} id - user id from db
@@ -18,41 +20,44 @@ const generateJwt = (id, email, role) => {
 }
 
 
-class UserController{
-    // регистрация
-    // TODO сделать валидацию, перевести на украинский
-    // TODO сообщение об ошибке на фронте
+class UserController {
     async registration(req, res, next) {
-        const {email, password, role} = req.body
+        const {email, password} = req.body
+        const emailLowerCase = email.toLowerCase().trim()
 
-        // TODO role tolowercase
+        const validationResult = RegistrationValidator.fieldsValidation({
+            email: emailLowerCase, password
+        })
+        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
 
-        //console.log(req.body)
-        if (!email || !password) {
-            return next(ApiError.badRequest('Некорректный email или password'))
-        }
-        const candidate = await User.findOne({where: {email}})
-        if (candidate) {
-            return next(ApiError.badRequest('Пользователь с таким email уже существует'))
-        }
+        // Get users with the same email
+        const candidate = await fetchDataFromBD(async () => {
+            return await Users.findOne({where: {email}})
+        }, next)
+        if (candidate) return next(ApiError.badRequest('Користувач з таким email вже існує'))
+
+
         const hashPassword = await bcrypt.hash(password, 5)
-        const user = await User.create({email, password: hashPassword, role})
-
-        const token = generateJwt(user.id, user.email, user.role)
-        return res.json({token})
+        // new user to assign the default role "user"
+        fetchDataFromBD(async () => {
+            const user = await Users.create({email:emailLowerCase, password: hashPassword})
+            const token = generateJwt(user.id, user.email, user.role)
+            return res.json({token})
+        }, next)
     }
 
     // логин
     async login(req, res, next) {
         const {email, password} = req.body
-        const user = await User.findOne({where: {email}})
-        if (!user) {
-            return next(ApiError.internal('Пользователь не найден'))
-        }
+
+        const user = await fetchDataFromBD(async () =>
+             await Users.findOne({where: {email}})
+        , next)
+        if (!user) return next(ApiError.badRequest('Користувач не знайдений'))
+
         let comparePassword = bcrypt.compareSync(password, user.password)
-        if (!comparePassword) {
-            return next(ApiError.internal('Указан неверный пароль'))
-        }
+        if (!comparePassword) return next(ApiError.internal('Введено недійсний пароль'))
+
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }

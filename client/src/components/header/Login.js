@@ -8,7 +8,6 @@ import CheckPermissions from "../CheckPermissions";
 
 
 const Login = observer(() => {
-
     const {user} = useContext(Context)
     const history = useHistory()
 
@@ -31,15 +30,13 @@ const Login = observer(() => {
                                 </CheckPermissions>
                                 <Button
                                     className="ml-3"
-                                    onClick={() => {
-                                        logOut()
-                                    }}>
+                                    onClick={logOut}>
                                     Вийти
                                 </Button>
                             </div>
                             :
                             <div>
-                                <Button onClick={() => history.push(LOGIN_ROUTE)}>Авторизация</Button>
+                                <Button onClick={() => history.push(LOGIN_ROUTE)}>Авторизація</Button>
                             </div>
                     }
                 </Col>
