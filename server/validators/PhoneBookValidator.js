@@ -8,26 +8,34 @@ const {getValidationResult, validateStringUsingRegexp, validateStringUsingValida
 class PhoneBookValidator {
     // employee position or employee location
     static isPosition(value, emptyValueIsAllowed = false) {
-        return validateStringUsingRegexp(value, regularExpressions.baseStringUkrRusWithDigits, 'Посада має містити від 3 до 255 символів українського алфавіту та цифри')
+        const errorMessage = 'Посада має містити від 3 до 255 символів українського алфавіту та цифри'
+        return validateStringUsingRegexp(value, regularExpressions.baseStringUkrRusWithDigits, errorMessage, emptyValueIsAllowed)
     }
 
 
     // phone landline/dect
     static isInternalTel(value, emptyValueIsAllowed = false) {
-        if (typeof value === 'string') return validateStringUsingRegexp(value, regularExpressions.internalPhoneNumber, 'Телефон відділу має містити 4 цифри', emptyValueIsAllowed)
+        const errorMessage = 'Телефон відділу має містити 4 цифри'
+
+        if (typeof value === 'string') return validateStringUsingRegexp(value, regularExpressions.internalPhoneNumber, errorMessage, emptyValueIsAllowed)
 
         if (Array.isArray(value))
-            return validateArrayUsingRegexp(value, regularExpressions.internalPhoneNumber, 'Телефон відділу має містити 4 цифри', emptyValueIsAllowed)
+            return validateArrayUsingRegexp(value, regularExpressions.internalPhoneNumber, errorMessage, emptyValueIsAllowed)
+
+        return getValidationResult(false, errorMessage)
     }
 
     // email
     static isEmail(value, emptyValueIsAllowed = false) {
+        const errorMessage = 'Некоректна адреса поштової скриньки'
         const emailValidator = validator.isEmail
 
-        if (typeof value === 'string') return validateStringUsingValidator(value, emailValidator, [], 'Некоректна адреса поштової скриньки', emptyValueIsAllowed)
+        if (typeof value === 'string') return validateStringUsingValidator(value, emailValidator, [], errorMessage, emptyValueIsAllowed)
 
         if (Array.isArray(value))
-            return validateArrayUsingValidator(value, emailValidator, [], 'Некоректна адреса поштової скриньки', emptyValueIsAllowed)
+            return validateArrayUsingValidator(value, emailValidator, [], errorMessage, emptyValueIsAllowed)
+
+        return getValidationResult(false, errorMessage)
     }
 
 

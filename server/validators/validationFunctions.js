@@ -30,6 +30,8 @@ const validateStringUsingRegexp = (value, regExp, errorMessage = '', emptyValueI
         return regExp.test(value)
             ? getValidationResult(true)
             : getValidationResult(false, errorMessage)
+    }else {
+        return getValidationResult(false, errorMessage)
     }
 }
 
@@ -76,6 +78,8 @@ const validateStringUsingValidator = (value, validatorFunc, validatorOptions = [
         return validatorFunc(value, ...validatorOptions)
             ? getValidationResult(true)
             : getValidationResult(false, errorMessage)
+    } else {
+        return getValidationResult(false, errorMessage)
     }
 }
 

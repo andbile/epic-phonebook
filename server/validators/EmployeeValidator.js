@@ -8,21 +8,25 @@ class EmployeeValidator {
 
     // last/first/patronymic name, patronymic
     static baseStringUkrRus(value, emptyValueIsAllowed = false) {
-        return validateStringUsingRegexp(value, regularExpressions.baseStringUkrRus, `Ім'я/прізвище/по-батькові/посада має містити від 3 до 255 символів українського алфавіту`, emptyValueIsAllowed)
+        const errorMessage = `Ім'я/прізвище/по-батькові/посада має містити від 3 до 255 символів українського алфавіту`
+        return validateStringUsingRegexp(value, regularExpressions.baseStringUkrRus, errorMessage, emptyValueIsAllowed)
     }
 
     // mobile phone
     static isMobilePhone(value, emptyValueIsAllowed = false) {
+        const errorMessage = 'Некоректний мобільний телефонний номер'
         const mobilePhoneValidator = validator.isMobilePhone
         const options = [
             ['uk-UA'], {strictMode: true}
         ]
 
         if (typeof value === 'string')
-            return validateStringUsingValidator(value, mobilePhoneValidator, options, 'Некоректний мобільний телефонний номер', emptyValueIsAllowed)
+            return validateStringUsingValidator(value, mobilePhoneValidator, options, errorMessage, emptyValueIsAllowed)
 
-        if(Array.isArray(value))
-            return validateArrayUsingValidator(value, mobilePhoneValidator, options, 'Некоректний мобільний телефонний номер', emptyValueIsAllowed)
+        if (Array.isArray(value))
+            return validateArrayUsingValidator(value, mobilePhoneValidator, options, errorMessage, emptyValueIsAllowed)
+
+        return getValidationResult(false, errorMessage)
     }
 
 
