@@ -1,6 +1,17 @@
-// здесь мы реализуем функции регистрации/авторизации и проверки токина на валидность
 import {$authHost, $host} from "./index";
 import jwt_decode from "jwt-decode";
+
+export const checkUserAuthorization = async () => {
+    const {data} = await $authHost.get('user/auth' )
+    localStorage.setItem('token', data.token)
+    return jwt_decode(data.token)
+}
+
+
+
+
+
+
 
 export const registration = async (email, password) => {
    /* const {data} = await $host.post('user/registration', {email, password, role: ['ADMIN']})*/
@@ -16,10 +27,3 @@ export const login = async (email, password) => {
     return jwt_decode(data.token)
 }
 
-// каждый раз при обновлении старицы будем проверять валидность токина и/или розлогинивать пользователя
-// TODO розлогирование пока не реализовано
-export const check = async () => {
-    const {data} = await $authHost.get('user/auth' )
-    localStorage.setItem('token', data.token)
-    return jwt_decode(data.token)
-}

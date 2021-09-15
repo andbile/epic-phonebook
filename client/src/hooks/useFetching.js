@@ -7,11 +7,15 @@ import {Context} from "../index";
  */
 export default function useFetching() {
     const {fetchErrorStore} = useContext(Context)
+    const {user} = useContext(Context)
 
     return callback => {
         callback()
             .catch(error => {
                 let message = ''
+
+                // log out if unauthorized
+                if (error.response.status === 401) return user.logOut()
 
                 if (error.response) {
                     message = (`${error.response.status} - ${error.response.data.message}`)

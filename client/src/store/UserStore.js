@@ -38,7 +38,7 @@ export default class UserStore {
         this.setEmail(userData.email)
     }
 
-    loginOut(){
+    logOut(){
         this.setIsAuth(false)
         this.setEmail('')
         this.setRole([])

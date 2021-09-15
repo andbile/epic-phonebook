@@ -3,9 +3,13 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {User} = require('../models/models')
 
-
+/**
+ * @param {number} id - user id from db
+ * @param {string} email - user email
+ * @param {array} role - user roles
+ * @return {string} jwt token
+ */
 const generateJwt = (id, email, role) => {
-    //
     return jwt.sign(
         {id, email, role},
         process.env.SECRET_KEY,
@@ -16,9 +20,14 @@ const generateJwt = (id, email, role) => {
 
 class UserController{
     // регистрация
+    // TODO сделать валидацию, перевести на украинский
+    // TODO сообщение об ошибке на фронте
     async registration(req, res, next) {
         const {email, password, role} = req.body
-        console.log(req.body)
+
+        // TODO role tolowercase
+
+        //console.log(req.body)
         if (!email || !password) {
             return next(ApiError.badRequest('Некорректный email или password'))
         }
@@ -48,11 +57,9 @@ class UserController{
         return res.json({token})
     }
 
-    // проверяем авторизован пользователь или нет
-    // если пользователь постоянно использует свой акаунт, токен будет перезаписываться
-    // TODO отправляем новый токин не проверив присутствует ли пользователь в БД и не изменились ли у него права
-    //  !!!Исправить
-    async check(req, res, next) {
+
+    // if the user is authorized, update the token
+    async generateNewToken(req, res, next) {
         const token = generateJwt(req.user.id, req.user.email, req.user.role)
         return res.json({token})
     }

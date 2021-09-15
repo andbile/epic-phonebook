@@ -5,7 +5,8 @@ const authMiddleware = require('../middleware/authMiddleware')
 
 router.post('/login', userController.login)
 router.post('/registration', userController.registration)
-router.get('/auth', authMiddleware, userController.check) // проверка авторизован пользователь или нет
+// check if the user is authorized
+router.get('/auth', authMiddleware, userController.generateNewToken)
 
 
 module.exports = router

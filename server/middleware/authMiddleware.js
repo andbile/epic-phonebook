@@ -1,32 +1,33 @@
-// тут декодируем токин и проверяем на валидность
-
+const ApiError = require("../error/ApiError");
+const {User} = require('../models/models')
 const jwt = require('jsonwebtoken')
+const _ = require('lodash');
 
-module.exports = function (req, res, next) {
-    // если метод == OPTIONS то пропускаем
-    // нас интересует ПОСТ/ПУТ/ДЕЛИТ
-    if (req.method === "OPTIONS") {
-        next()
-    }
+// checking token validity
+module.exports = async function (req, res, next) {
+    if (req.method === "OPTIONS") next()
+
     try {
-        // из заголовка запроса получаем токин
-        // но в хедер обычно помещают сначала тип токена а потом сам токен
-        const token = req.headers.authorization.split(' ')[1] // Bearer asfasnfkajsfnjk
-        if (!token) {
-            // если токена нет снова возвращаем ошибку
-            return res.status(401).json({message: "Не авторизован"})
-        }
-        // а если есть
-        // TODO проверяем на валидность токен, но не сверяем юзера с БД в контроллере userController.check
-        //  после удаления юзера из БД, сам токен остался валидным со всеми правами на фронте
-        //
-        const decoded = jwt.verify(token, process.env.SECRET_KEY)
+        //get the token from the request header
+        const token = req.headers.authorization.split(' ')[1] // Bearer[0] token[1]
+        if (!token) return next(ApiError.unauthorized('Не авторизований'))
 
-        req.user = decoded
-        console.log(decoded)
+        const userFromDecodedToken = jwt.verify(token, process.env.SECRET_KEY)
+        console.log(userFromDecodedToken)
+
+        // get user from bd
+        const user = await User.findOne({where: {id: userFromDecodedToken.id}})
+        if (!user) return next(ApiError.unauthorized('Не авторизований'))
+
+        // Compare the user's roles with the token and the database, and if they do not converge, log out
+        // Why: after the creation of the token and before the expiration date, the user's role could change,
+        // you need to log out the user to enter a password and get a new token with current roles
+        const compareRoles = _.difference(userFromDecodedToken.role, user.role)
+        if (compareRoles.length > 0) return next(ApiError.unauthorized('Не авторизований'))
+
+        req.user = userFromDecodedToken
         next()
     } catch (e) {
-        // если какая-то ошибка, то возвращаем сообщение
-        res.status(401).json({message: "Не авторизован"})
+        return next(ApiError.unauthorized('Не авторизований'))
     }
 };

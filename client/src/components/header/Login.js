@@ -13,7 +13,7 @@ const Login = observer(() => {
     const history = useHistory()
 
     const logOut = () => {
-        user.loginOut()
+        user.logOut()
         history.push(HOME_ROUTE)
     }
 
