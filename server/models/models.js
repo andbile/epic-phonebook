@@ -44,11 +44,14 @@ const Employees = sequelize.define('employees', {
 })
 
 // users
-const User = sequelize.define('user', {
+const Users = sequelize.define('users', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    email: {type: DataTypes.STRING, unique: true},
-    password: {type: DataTypes.STRING},
-    role: {type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: ["USER"]}, // роли пользователей
+    email: {type: DataTypes.STRING, unique: true, allowNull: false},
+    password: {type: DataTypes.STRING, allowNull: false},
+    role: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: ["user"]
+    }
 })
 
 
@@ -72,13 +75,16 @@ Department.hasMany(Employees, {
 Employees.belongsTo(Department)
 //Employees.sync({ alter: true })
 
+//Users.sync({ alter: true })
+
+
 
 
 module.exports = {
     Department,
     DepartmentContact,
     Employees,
-    User
+    Users
 }
 
 
