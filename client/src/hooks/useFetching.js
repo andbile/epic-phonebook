@@ -14,10 +14,10 @@ export default function useFetching() {
             .catch(error => {
                 let message = ''
 
-                // log out if unauthorized
-                if (error.response.status === 401) return user.logOut()
-
                 if (error.response) {
+                    // log out if unauthorized
+                    if (error.response?.status === 401) return user.logOut()
+
                     message = (`${error.response.status} - ${error.response.data.message}`)
                 } else if (error.request) {
                     message = (`Непередбачена помилка! Спробуйте пізніше або зверніться до адміністратора + ${error.request}`)
