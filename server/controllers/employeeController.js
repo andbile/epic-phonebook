@@ -11,7 +11,7 @@ class EmployeeController {
             const employees = await Employees.findAll(
                 {where: {departmentId: id}})
             return res.json(employees)
-        }, req, res, next)
+        }, next)
     }
 
 
@@ -38,7 +38,7 @@ class EmployeeController {
                 departmentId
             })
             return res.json(employee)
-        }, req, res, next)
+        }, next)
     }
 
 
@@ -67,7 +67,7 @@ class EmployeeController {
                 },
                 {where: {id}})
             return res.json(employee)
-        }, req, res, next)
+        }, next)
     }
 
 
@@ -80,7 +80,7 @@ class EmployeeController {
             if (result === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result)
-        }, req, res, next)
+        }, next)
 
     }
 
@@ -97,7 +97,7 @@ class EmployeeController {
             if (result[0] === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result)
-        }, req, res, next)
+        }, next)
     }
 }
 

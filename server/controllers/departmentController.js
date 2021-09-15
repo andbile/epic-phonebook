@@ -13,7 +13,7 @@ class DepartmentController {
                 ]
             })
             res.json(departments)
-        }, req, res, next)
+        }, next)
     }
 
     async getOneDepartmentByCode(req, res, next) {
@@ -23,7 +23,7 @@ class DepartmentController {
             const departments = await Department.findAll(
                 {where: {code}})
             return res.json(departments)
-        }, req, res, next)
+        }, next)
     }
 
 
@@ -38,7 +38,7 @@ class DepartmentController {
         fetchDataFromBD(async () => {
             const department = await Department.create({code, name: name.trim(), is_seller})
             return res.json(department)
-        }, req, res, next)
+        }, next)
     }
 
 
@@ -48,7 +48,7 @@ class DepartmentController {
         // get number of employees
         const numberEmployees = await fetchDataFromBD(async () => {
             return await Employees.count({where: {departmentId: id}})
-        }, req, res, next)
+        }, next)
 
         // cannot deleted a department if employees are attached to it
         if (numberEmployees > 0) {
@@ -61,7 +61,7 @@ class DepartmentController {
             if (result === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result)
-        }, req, res, next)
+        }, next)
 
     }
 
@@ -85,7 +85,7 @@ class DepartmentController {
 
 
             return res.json(result[0])
-        }, req, res, next)
+        }, next)
     }
 }
 

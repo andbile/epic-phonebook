@@ -14,7 +14,7 @@ class PhoneBookController {
             })
 
             res.json(phoneBook)
-        }, req, res, next)
+        }, next)
     }
 
     async createPhoneBookEntry(req, res, next) {
@@ -33,7 +33,7 @@ class PhoneBookController {
                 position: position.trim(), tel_landline, tel_dect, email: emailLowerCase, departmentId
             })
             return res.json(phoneBookEntry)
-        }, req, res, next)
+        }, next)
     }
 
 
@@ -46,7 +46,7 @@ class PhoneBookController {
             if (result === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result)
-        }, req, res, next)
+        }, next)
     }
 
 
@@ -70,7 +70,7 @@ class PhoneBookController {
             if (result[0] === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result[0])
-        }, req, res, next)
+        }, next)
     }
 
 

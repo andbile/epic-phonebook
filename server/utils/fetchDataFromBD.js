@@ -5,12 +5,10 @@ const ApiError = require("../error/ApiError");
  * Makes a request to the database with error handling and send a result
  * @function
  * @param {function} callback - makes a request to the database and sends the response
- * @param {object} req - Express request object
- * @param {object} res - Express response object
  * @param {function} next - Express next middleware function
  * @return {undefined}
  */
-module.exports = async function (callback, req, res, next) {
+module.exports = async function (callback, next) {
    return callback()
         .catch(err => {
                 if (err instanceof Sequelize.ValidationError) {
