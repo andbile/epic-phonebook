@@ -14,10 +14,6 @@ import {
     updateDepartmentsPhoneBook
 } from "../../../http/departmentAPI";
 
-// TODO смена департамента
-
-
-
 /**
  * Modal window for create/update/delete the phone book entry
  * @type {React.FunctionComponent<object>}
