@@ -2,8 +2,8 @@
 
 Використані технології
 <ol>
-    <li>Express (postgreSQL, sequelize, jwt)</li>
-    <li>React (mobx, axios, bootstrap, styled components)</li>
+    <li>Express, REST API, postgreSQL, sequelize, jwt</li>
+    <li>React, mobx, axios, bootstrap, styled components</li>
 </ol>
 
 Наявний функціонал
