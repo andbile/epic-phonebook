@@ -2,6 +2,7 @@
 
 Використані технології
 <ol>
+    <li>Дизайн - Axure</li>
     <li>Express, REST API, postgreSQL, sequelize, jwt</li>
     <li>React, mobx, axios, bootstrap, styled components</li>
 </ol>
