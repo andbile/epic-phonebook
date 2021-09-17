@@ -22,13 +22,11 @@ const baseRoutes = [
         exact: true
     },
     {
-        // TODO
         path: LOGIN_ROUTE,
         component: Auth,
         exact: true
     },
     {
-        // TODO
         path: REGISTRATION_ROUTE,
         component: Auth,
         exact: true
