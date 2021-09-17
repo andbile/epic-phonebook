@@ -36,7 +36,7 @@ ALTER TABLE department_contacts
     DROP CONSTRAINT department_code_fkey;
 
 
-ALTER TABLE employee
+ALTER TABLE employees
     ADD CONSTRAINT departments_code_employee_fkey FOREIGN KEY(department_code) REFERENCES department(department_code);
 
 
@@ -67,7 +67,7 @@ CREATE TABLE employee
     tel_number_mobile   VARCHAR ARRAY DEFAULT NULL,
     email               VARCHAR ARRAY DEFAULT NULL
 );
-COMMENT ON TABLE employee IS 'Службовці';
+COMMENT ON TABLE employees IS 'Службовці';
 
 
 
@@ -88,26 +88,26 @@ COMMENT ON TABLE employee IS 'Службовці';
 -- Необязательное предложение USING определяет, как новое значение столбца будет получено из старого; если оно отсутствует,
 -- выполняется приведение типа по умолчанию, как обычное присваивание значения старого типа новому.
 -- Предложение USING становится обязательным, если неявное приведение или присваивание с приведением старого типа к новому не определено.
-ALTER TABLE employee
+ALTER TABLE employees
     ALTER COLUMN tel_number_dect SET DATA TYPE varchar USING tel_number_dect::varchar;
 
-ALTER TABLE employee
+ALTER TABLE employees
     ALTER COLUMN tel_number_landline SET DATA TYPE varchar USING tel_number_landline::varchar;
 
-ALTER TABLE employee
+ALTER TABLE employees
     ALTER COLUMN department_id SET DATA TYPE varchar USING department_id::varchar;
 
-ALTER TABLE employee
+ALTER TABLE employees
     ALTER COLUMN department_id SET DATA TYPE varchar USING department_id::varchar;
 
-ALTER TABLE employee
+ALTER TABLE employees
     alter column tel_number_landline drop default,
     alter column tel_number_landline type VARCHAR[] using array[tel_number_landline],
     alter column tel_number_landline set default null;
 
-SELECT tel_number_landline FROM employee;
+SELECT tel_number_landline FROM employees;
 
-UPDATE employee
+UPDATE employees
 SET tel_number_landline = NULL
 WHERE tel_number_landline[1] IS NULL;
 
@@ -135,7 +135,7 @@ ALTER TABLE department
 
 -- добовление автоинкримента к уже существующей таблице, надо было использовать псеводотип serial
 CREATE SEQUENCE employee_id_seq START 8;
-ALTER TABLE employee ALTER employee_id SET DEFAULT NEXTVAL('employee_id_seq');
+ALTER TABLE employees ALTER employee_id SET DEFAULT NEXTVAL('employee_id_seq');
 
 
 
@@ -146,24 +146,24 @@ ALTER TABLE department
     ADD COLUMN IF NOT EXISTS isSeller boolean;
 Alter table department alter column isSeller set not null;
 
-ALTER TABLE employee
+ALTER TABLE employees
     ADD COLUMN IF NOT EXISTS email varchar ARRAY[];
 
 ALTER TABLE department
     DROP COLUMN department_id;
 
-ALTER TABLE employee
+ALTER TABLE employees
     ALTER COLUMN email SET DATA TYPE varchar ARRAY USING email::varchar[];
 
-ALTER TABLE employee
+ALTER TABLE employees
     ADD COLUMN IF NOT EXISTS position varchar;
 
 -- переименования таблицы
 ALTER TABLE department RENAME COLUMN isseller TO is_seller;
 
 -- очистка/удаление таблицы
-TRUNCATE employee RESTART IDENTITY;
-DROP TABLE IF EXISTS employee;
+TRUNCATE employees RESTART IDENTITY;
+DROP TABLE IF EXISTS employees;
 
 
 INSERT INTO departments VALUES (6, '100', 'Деко', true , current_timestamp, current_timestamp);
