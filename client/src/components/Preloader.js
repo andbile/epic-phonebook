@@ -19,10 +19,10 @@ position: absolute;
 display: flex;
 flex-direction: column;
 align-items: center;
-top: calc(50% - 50px);
-left: calc(50% - 50px);
-width: 120px;
-height: 120px;
+top: calc(50% - 40px);
+left: calc(50% - 40px);
+width: 80px;
+height: 80px;
 margin: 0 auto;
 
 & svg{
@@ -69,7 +69,6 @@ const Preloader = () => {
                         1 9 -230 11 -511z"/>
                 </g>
             </svg>
-            Завантаження...
         </StylesPreloader>
     );
 };
