@@ -7,7 +7,7 @@ import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import Card from "react-bootstrap/Card";
 import {createDepartment, deleteDepartment, updateDepartment} from "../../http/departmentAPI";
-import useFetching from "../../hooks/useFetching";
+import {useFetching} from "../../hooks/useFetching";
 
 
 /**
@@ -28,7 +28,50 @@ const DepartmentModalAdmin = observer(props => {
         const [code, setCode] = useState('')
         const [name, setName] = useState('')
         const [isSeller, setIsSeller] = useState(false)
-        const fetching = useFetching(null)
+
+        //create new department
+        const [addDepartment] = useFetching(async () => {
+            const department = await createDepartment({code, name, is_seller: isSeller})
+
+            departmentStore.setDepartments(
+                [...departmentStore.departments,
+                    {id: department.id, code: department.code, name: department.name, is_seller: department.is_seller}
+                ]
+            )
+
+            closeModalWindow()
+        })
+
+
+        // delete department
+        const [removeDepartment] = useFetching(async (departmentId) => {
+            await deleteDepartment(departmentId)
+                .then(() => {
+                    const otherDepartments = departmentStore.departments.filter(item => departmentId !== item.id)
+                    departmentStore.setDepartments([...otherDepartments])
+                })
+
+            closeModalWindow()
+        })
+
+
+        // change department
+        const [changeDepartment] = useFetching(async (departmentId) => {
+            await updateDepartment(departmentId, {code, name, is_seller: isSeller})
+                .then(() => {
+                    // select all departments except the current updated one
+                    const otherDepartments = departmentStore.departments.filter(item => departmentId !== item.id)
+
+                    departmentStore.setDepartments(
+                        [...otherDepartments,
+                            {id: currentDepartment.id, code, name, is_seller: isSeller}
+                        ]
+                    )
+                })
+
+            closeModalWindow()
+        })
+
 
         // current department for update or delete
         const currentDepartment = departmentStore.departments.find(item => departmentId === item.id)
@@ -42,53 +85,6 @@ const DepartmentModalAdmin = observer(props => {
                 setIsSeller(currentDepartment.is_seller)
             }
         }, [action])
-
-
-        // create new department
-        const addDepartment = () => {
-            fetching(async () => {
-                await createDepartment({code, name, is_seller: isSeller})
-                    .then(data => {
-                        departmentStore.setDepartments(
-                            [...departmentStore.departments,
-                                {id: data.id, code: data.code, name: data.name, is_seller: data.is_seller}
-                            ]
-                        )
-                    })
-                    .then(closeModalWindow)
-            })
-        }
-
-        // delete department
-        const removeDepartment = () => {
-            fetching(async () => {
-                await deleteDepartment(departmentId)
-                    .then(() => {
-                        const otherDepartments = departmentStore.departments.filter(item => departmentId !== item.id)
-                        departmentStore.setDepartments([...otherDepartments])
-                    })
-                    .then(closeModalWindow)
-            })
-        }
-
-
-        // change department
-        const changeDepartment = () => {
-            fetching(async () => {
-                await updateDepartment(departmentId, {code, name, is_seller: isSeller})
-                    .then(() => {
-                        // select all departments except the current updated one
-                        const otherDepartments = departmentStore.departments.filter(item => departmentId !== item.id)
-
-                        departmentStore.setDepartments(
-                            [...otherDepartments,
-                                {id: currentDepartment.id, code, name, is_seller: isSeller}
-                            ]
-                        )
-                    })
-                    .then(closeModalWindow)
-            })
-        }
 
 
         const closeModalWindow = () => {
@@ -181,8 +177,12 @@ const DepartmentModalAdmin = observer(props => {
 
                 <Modal.Footer>
                     {action.create && <Button variant="success" onClick={addDepartment}>Додати</Button>}
-                    {action.update && <Button variant="success" onClick={changeDepartment}>Застосувати</Button>}
-                    {action.delete && <Button variant="danger" onClick={removeDepartment}>Видалити</Button>}
+                    {action.update && <Button variant="success" onClick={() => {
+                        changeDepartment(departmentId)
+                    }}>Застосувати</Button>}
+                    {action.delete && <Button variant="danger" onClick={() => {
+                        removeDepartment(departmentId)
+                    }}>Видалити</Button>}
                     <Button onClick={closeModalWindow}>Закрити</Button>
                 </Modal.Footer>
             </Modal>

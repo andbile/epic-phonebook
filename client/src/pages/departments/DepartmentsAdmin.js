@@ -8,17 +8,20 @@ import PersonalTable from "../../components/PersonalTable";
 import ButtonUpdateInTable from "../../components/Buttons/ButtonUpdateInTable";
 import ButtonDeleteInTable from "../../components/Buttons/ButtonDeleteInTable";
 import {fetchDepartments} from "../../http/departmentAPI";
-import useFetching from "../../hooks/useFetching";
+import {useFetching} from "../../hooks/useFetching";
 
 // Create, update, delete departments
 const DepartmentsAdmin = observer(() => {
     const {departmentStore} = useContext(Context)
-    const fetching = useFetching(null)
+
+    const [fetchAllDepartment] = useFetching( async ()=>{
+        const departments = await fetchDepartments()
+        departmentStore.setDepartments(departments)
+    })
+
 
     useEffect(() => {
-        fetching(async () => {
-            await fetchDepartments().then(data => departmentStore.setDepartments(data))
-        })
+        fetchAllDepartment()
     }, [])
 
     const modal = useModal()
