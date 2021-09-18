@@ -9,14 +9,13 @@ import useModal from '../../../hooks/useModal'
 import DepartmentsPhoneBookModalAdmin from "./DepartmentsPhoneBookModalAdmin";
 import SelectDepartment from "../../../components/SelectDepartment";
 import {fetchDepartments, fetchDepartmentsPhoneBook} from "../../../http/departmentAPI";
-import useFetching from "../../../hooks/useFetching";
+import {useFetching} from "../../../hooks/useFetching";
 
 // Display the abbreviated phone book of the department using select HTML element
 const DepartmentsPhoneBookAdmin = observer(() => {
     const {departmentStore} = useContext(Context)
 
     const modal = useModal()
-    const fetching = useFetching(null)
 
     // selected department id, used to display department with phone book after choosing one
     const [selectedDepartmentId, setSelectedDepartmentId] = useState(null)
@@ -25,14 +24,17 @@ const DepartmentsPhoneBookAdmin = observer(() => {
     // write to a state create/delete/update for use to identify the pressed button
     const [action, setAction] = useState({})
 
-    useEffect(() => {
-        fetching(async () => {
-            await fetchDepartments()
-                .then(data => departmentStore.setDepartments(data))
+    const [fetchAllDepartments] = useFetching(async () => {
+        const departments = await fetchDepartments()
+        const departmentsPhoneBook = await fetchDepartmentsPhoneBook()
 
-            await fetchDepartmentsPhoneBook()
-                .then(data => departmentStore.setDepartmentsContacts(data))
-        })
+        departmentStore.setDepartments(departments)
+        departmentStore.setDepartmentsContacts(departmentsPhoneBook)
+    })
+
+
+    useEffect(() => {
+        fetchAllDepartments()
     }, [])
 
 

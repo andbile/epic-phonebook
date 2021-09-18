@@ -7,7 +7,7 @@ import {Context} from "../../../index";
 import ButtonDelete from "../../../components/Buttons/ButtonDelete";
 import PropTypes from "prop-types";
 import useModifyStore from "../../../hooks/useModifyStore";
-import useFetching from "../../../hooks/useFetching";
+import {useFetching} from "../../../hooks/useFetching";
 import {
     createDepartmentsPhoneBook,
     deleteDepartmentsPhoneBook,
@@ -33,9 +33,80 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
         const [position, setPosition] = useState('')
         const telLandline = useModifyStore([], 'tel')
 
-    const telDect = useModifyStore([], 'dect')
+        const telDect = useModifyStore([], 'dect')
         const email = useModifyStore([], 'email')
-        const fetching = useFetching(null)
+
+        // create new phone book entry
+        const [addPhoneBookEntry] = useFetching(async () => {
+            const phoneBookEntry = await createDepartmentsPhoneBook({
+                position,
+                tel_dect: telDect.returnStructureState(),
+                tel_landline: telLandline.returnStructureState(),
+                email: email.returnStructureState(),
+                departmentId: selectedDepartmentId
+            })
+
+            departmentStore.setDepartmentsContacts(
+                [...departmentStore.departmentsContacts,
+                    {
+                        id: phoneBookEntry.id,
+                        position: phoneBookEntry.position,
+                        tel_dect: phoneBookEntry.tel_dect,
+                        tel_landline: phoneBookEntry.tel_landline,
+                        email: phoneBookEntry.email,
+                        departmentId: phoneBookEntry.departmentId,
+                    }
+                ]
+            )
+
+            closeModalWindow()
+        })
+
+        // delete phone book entry
+        const [removePhoneBookEntry] = useFetching(async (phoneBookEntryId) => {
+            await deleteDepartmentsPhoneBook(phoneBookEntryId)
+                .then(() => {
+                    // select all phone book entry except the current deleted one
+                    const otherPhoneBookEntries = departmentStore.departmentsContacts.filter(item => phoneBookEntryId !== item.id)
+
+                    departmentStore.setDepartmentsContacts([...otherPhoneBookEntries])
+                })
+
+            closeModalWindow()
+
+        })
+
+    // update phone book entry
+        const [changePhoneBookEntry] = useFetching(async (phoneBookEntryId) => {
+            await updateDepartmentsPhoneBook(phoneBookEntryId, {
+                position,
+                tel_dect: telDect.returnStructureState(),
+                tel_landline: telLandline.returnStructureState(),
+                email: email.returnStructureState(),
+                departmentId: selectedDepartmentId
+            })
+                .then(() => {
+                    const otherDepartmentsContacts = departmentStore.departmentsContacts.filter(item =>
+                        phoneBookEntryId !== item.id
+                    )
+
+                    departmentStore.setDepartmentsContacts(
+                        [...otherDepartmentsContacts,
+                            {
+                                id: phoneBookEntryId,
+                                position,
+                                tel_dect: telDect.returnStructureState(),
+                                tel_landline: telLandline.returnStructureState(),
+                                email: email.returnStructureState(),
+                                departmentId: selectedDepartmentId
+                            }
+                        ]
+                    )
+                })
+
+            closeModalWindow()
+        })
+
 
         // current phone book entry of the department for update or delete
         const currentPhoneBookEntry = departmentStore.departmentsContacts.find(item => phoneBookEntryId === item.id)
@@ -50,83 +121,6 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
             }
         }, [action])
 
-
-        // create new phone book entry
-        const addPhoneBookEntry = () => {
-            fetching(async () => {
-                await createDepartmentsPhoneBook({
-                    position,
-                    tel_dect: telDect.returnStructureState(),
-                    tel_landline: telLandline.returnStructureState(),
-                    email: email.returnStructureState(),
-                    departmentId: selectedDepartmentId
-                })
-                    .then(data => {
-                        departmentStore.setDepartmentsContacts(
-                            [...departmentStore.departmentsContacts,
-                                {
-                                    id: data.id,
-                                    position: data.position,
-                                    tel_dect: data.tel_dect,
-                                    tel_landline: data.tel_landline,
-                                    email: data.email,
-                                    departmentId: data.departmentId,
-                                }
-                            ]
-                        )
-                    })
-                    .then(closeModalWindow)
-            })
-        }
-
-
-        // delete phone book entry
-        const removePhoneBookEntry = () => {
-            fetching(async () => {
-                await deleteDepartmentsPhoneBook(phoneBookEntryId)
-                    .then(() => {
-                        // select all phone book entry except the current deleted one
-                        const otherPhoneBookEntries = departmentStore.departmentsContacts.filter(item => phoneBookEntryId !== item.id)
-
-                        departmentStore.setDepartmentsContacts([...otherPhoneBookEntries])
-                    })
-                    .then(closeModalWindow)
-            })
-        }
-
-
-        // update phone book entry
-        const changePhoneBookEntry = () => {
-            fetching(async () => {
-                await updateDepartmentsPhoneBook(phoneBookEntryId, {
-                    position,
-                    tel_dect: telDect.returnStructureState(),
-                    tel_landline: telLandline.returnStructureState(),
-                    email: email.returnStructureState(),
-                    departmentId: selectedDepartmentId
-                })
-                    .then(() => {
-                        const otherDepartmentsContacts = departmentStore.departmentsContacts.filter(item =>
-                            phoneBookEntryId !== item.id
-                        )
-
-                        departmentStore.setDepartmentsContacts(
-                            [...otherDepartmentsContacts,
-                                {
-                                    id: phoneBookEntryId,
-                                    position,
-                                    tel_dect: telDect.returnStructureState(),
-                                    tel_landline: telLandline.returnStructureState(),
-                                    email: email.returnStructureState(),
-                                    departmentId: selectedDepartmentId
-                                }
-                            ]
-                        )
-                    })
-                    .then(closeModalWindow)
-            })
-
-        }
 
         const closeModalWindow = () => {
             setPosition('')
@@ -198,8 +192,6 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                                     )
                                 }
                             </Form.Group>
-
-
 
 
                             <Form.Group>
@@ -275,28 +267,32 @@ const DepartmentsPhoneBookModalAdmin = observer((props) => {
                         <Modal.Body>
                             Ви дійсно бажаєте видалити запис:<br/>
                             {currentPhoneBookEntry &&
-                                (
-                                    <>
-                                        {`${currentPhoneBookEntry.position}`}
+                            (
+                                <>
+                                    {`${currentPhoneBookEntry.position}`}
 
-                                        {currentPhoneBookEntry.tel_landline.length > 0 &&
-                                        (<>&nbsp;&ndash;&nbsp;{`${currentPhoneBookEntry.tel_landline}`}</>)}
+                                    {currentPhoneBookEntry.tel_landline.length > 0 &&
+                                    (<>&nbsp;&ndash;&nbsp;{`${currentPhoneBookEntry.tel_landline}`}</>)}
 
-                                        {currentPhoneBookEntry.tel_dect.length > 0 &&
-                                        (<>&nbsp;&ndash;&nbsp;{`${currentPhoneBookEntry.tel_dect}`}</>)}
+                                    {currentPhoneBookEntry.tel_dect.length > 0 &&
+                                    (<>&nbsp;&ndash;&nbsp;{`${currentPhoneBookEntry.tel_dect}`}</>)}
 
-                                        {currentPhoneBookEntry.email.length > 0 &&
-                                        (<>&nbsp;&ndash;&nbsp;{`${currentPhoneBookEntry.email}`}</>)}
-                                    </>
-                                )}
+                                    {currentPhoneBookEntry.email.length > 0 &&
+                                    (<>&nbsp;&ndash;&nbsp;{`${currentPhoneBookEntry.email}`}</>)}
+                                </>
+                            )}
                         </Modal.Body>
                     )
                 }
 
                 <Modal.Footer>
                     {action.create && <Button variant="success" onClick={addPhoneBookEntry}>Додати</Button>}
-                    {action.update && <Button variant="success" onClick={changePhoneBookEntry}>Застосувати</Button>}
-                    {action.delete && <Button variant="danger" onClick={removePhoneBookEntry}>Видалити</Button>}
+                    {action.update && <Button variant="success" onClick={() => {
+                        changePhoneBookEntry(phoneBookEntryId)
+                    }}>Застосувати</Button>}
+                    {action.delete && <Button variant="danger" onClick={() => {
+                        removePhoneBookEntry(phoneBookEntryId)
+                    }}>Видалити</Button>}
                     <Button onClick={closeModalWindow}>Закрити</Button>
                 </Modal.Footer>
             </Modal>
