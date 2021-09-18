@@ -7,10 +7,10 @@ import Button from "react-bootstrap/Button";
 import ButtonDelete from "../../../components/Buttons/ButtonDelete";
 import PropTypes from "prop-types";
 import useModifyStore from "../../../hooks/useModifyStore";
-import useFetching from "../../../hooks/useFetching";
 import {createEmployee, deleteEmployee, moveEmployeeToDepartment, updateEmployee} from "../../../http/employeeAPI";
 import InputMask from 'react-input-mask';
 import ChangeDepartmentTable from '../../../components/ChangeDepartmentTable'
+import {useFetching} from "../../../hooks/useFetching";
 
 /**
  * Modal window for create/update/delete theEmployee phone book entry
@@ -34,10 +34,95 @@ const EmployeesPhoneBookModalAdmin = observer(props => {
     const [patronymicName, setPatronymicName] = useState('')
     const [position, setPosition] = useState('')
     const telMobile = useModifyStore([], 'tel')
-    const fetching = useFetching(null)
 
     // current employee phone book entry for update/delete
     const currentEmployeePhoneBookEntry = employeesStore.employees.find(item => employeesEntryId === item.id)
+
+    // create new employee phone book entry
+    const [fetchCreate] = useFetching(async () => {
+        const employee = await createEmployee({
+            last_name: lastName,
+            first_name: firstName,
+            patronymic_name: patronymicName,
+            position,
+            tel_mobile: telMobile.returnStructureState(),
+            departmentId: selectedDepartmentId
+        })
+
+        employeesStore.setEmployees(
+            [...employeesStore.employees,
+                {
+                    id: employee.id,
+                    last_name: employee.last_name,
+                    first_name: employee.first_name,
+                    patronymic_name: employee.patronymic_name,
+                    position: employee.position,
+                    tel_mobile: employee.tel_mobile,
+                    departmentId: employee.departmentId
+                }
+            ])
+
+        closeModalWindow()
+    })
+
+    // update new employee phone book entry
+    const [fetchChange] = useFetching(async employeesEntryId => {
+        await updateEmployee(employeesEntryId, {
+            last_name: lastName,
+            first_name: firstName,
+            patronymic_name: patronymicName,
+            position,
+            tel_mobile: telMobile.returnStructureState(),
+            departmentId: selectedDepartmentId
+        })
+            .then(() => {
+                const otherEmployeePhoneBookEntries = employeesStore.employees.filter(item =>
+                    employeesEntryId !== item.id
+                )
+
+                employeesStore.setEmployees([
+                    ...otherEmployeePhoneBookEntries,
+                    {
+                        id: employeesEntryId,
+                        last_name: lastName,
+                        first_name: firstName,
+                        patronymic_name: patronymicName,
+                        position,
+                        tel_mobile: telMobile.returnStructureState(),
+                        departmentId: selectedDepartmentId
+                    }
+
+                ])
+            })
+
+        closeModalWindow()
+    })
+
+    // delete phone book entry
+    const [fetchDelete] = useFetching(async employeesEntryId => {
+        await deleteEmployee(employeesEntryId)
+            .then(() => {
+                // select all phone book entry except the current deleted one
+                const otherEmployeePhoneBookEntries = employeesStore.employees.filter(item => employeesEntryId !== item.id)
+
+                employeesStore.setEmployees([...otherEmployeePhoneBookEntries])
+            })
+
+        closeModalWindow()
+    })
+
+    // change department
+    const [fetchChangeDepartment] = useFetching(async departmentId => {
+        await moveEmployeeToDepartment(employeesEntryId, departmentId)
+            .then(() => {
+                // select all phone book entry except the current moved one
+                const otherEmployeePhoneBookEntries = employeesStore.employees.filter(item => employeesEntryId !== item.id)
+
+                employeesStore.setEmployees([...otherEmployeePhoneBookEntries])
+            })
+        closeModalWindow()
+    })
+
 
     // filling input fields for update employee phone book entry
     useEffect(() => {
@@ -49,98 +134,6 @@ const EmployeesPhoneBookModalAdmin = observer(props => {
             telMobile.getModifiedState(currentEmployeePhoneBookEntry.tel_mobile)
         }
     }, [action])
-
-
-    // create new employee phone book entry
-    const addEmployeePhoneBookEntry = () => {
-        fetching(async () => {
-            await createEmployee({
-                last_name: lastName,
-                first_name: firstName,
-                patronymic_name: patronymicName,
-                position,
-                tel_mobile: telMobile.returnStructureState(),
-                departmentId: selectedDepartmentId
-            })
-                .then(data => {
-                    employeesStore.setEmployees(
-                        [...employeesStore.employees,
-                            {
-                                id: data.id,
-                                last_name: data.last_name,
-                                first_name: data.first_name,
-                                patronymic_name: data.patronymic_name,
-                                position: data.position,
-                                tel_mobile: data.tel_mobile,
-                                departmentId: data.departmentId
-                            }
-                        ])
-                })
-                .then(closeModalWindow)
-        })
-    }
-
-    // update new employee phone book entry
-    const changeEmployeePhoneBookEntry = () => {
-        fetching(async () => {
-            await updateEmployee(employeesEntryId, {
-                last_name: lastName,
-                first_name: firstName,
-                patronymic_name: patronymicName,
-                position,
-                tel_mobile: telMobile.returnStructureState(),
-                departmentId: selectedDepartmentId
-            })
-                .then(() => {
-                    const otherEmployeePhoneBookEntries = employeesStore.employees.filter(item =>
-                        employeesEntryId !== item.id
-                    )
-
-                    employeesStore.setEmployees([
-                        ...otherEmployeePhoneBookEntries,
-                        {
-                            id: employeesEntryId,
-                            last_name: lastName,
-                            first_name: firstName,
-                            patronymic_name: patronymicName,
-                            position,
-                            tel_mobile: telMobile.returnStructureState(),
-                            departmentId: selectedDepartmentId
-                        }
-
-                    ])
-                })
-                .then(closeModalWindow)
-        })
-    }
-
-
-    // delete phone book entry
-    const removeEmployeePhoneBookEntry = () => {
-        fetching(async () => {
-            await deleteEmployee(employeesEntryId)
-                .then(() => {
-                    // select all phone book entry except the current deleted one
-                    const otherEmployeePhoneBookEntries = employeesStore.employees.filter(item => employeesEntryId !== item.id)
-
-                    employeesStore.setEmployees([...otherEmployeePhoneBookEntries])
-                })
-                .then(closeModalWindow)
-        })
-    }
-
-    const changeEmployeeDepartment = (departmentId)=>{
-        fetching(async ()=>{
-            await moveEmployeeToDepartment(employeesEntryId, departmentId)
-                .then(() => {
-                    // select all phone book entry except the current moved one
-                    const otherEmployeePhoneBookEntries = employeesStore.employees.filter(item => employeesEntryId !== item.id)
-
-                    employeesStore.setEmployees([...otherEmployeePhoneBookEntries])
-                })
-                .then(closeModalWindow)
-        })
-    }
 
 
     const closeModalWindow = () => {
@@ -274,21 +267,25 @@ const EmployeesPhoneBookModalAdmin = observer(props => {
                 <Modal.Body>
                     Ви дійсно бажаєте змінити департамент у співробітника:<br/>
                     {currentEmployeePhoneBookEntry && (
-                    <b>
-                        {`${currentEmployeePhoneBookEntry.last_name}`}&nbsp;
-                        {`${currentEmployeePhoneBookEntry.first_name}`}&nbsp;
-                        {`${currentEmployeePhoneBookEntry.patronymic_name}`}
-                    </b>
+                        <b>
+                            {`${currentEmployeePhoneBookEntry.last_name}`}&nbsp;
+                            {`${currentEmployeePhoneBookEntry.first_name}`}&nbsp;
+                            {`${currentEmployeePhoneBookEntry.patronymic_name}`}
+                        </b>
                     )}
-                    <ChangeDepartmentTable eventHandler={changeEmployeeDepartment} className='mt-4'/>
+                    <ChangeDepartmentTable eventHandler={fetchChangeDepartment} className='mt-4'/>
 
                 </Modal.Body>
             )}
 
             <Modal.Footer>
-                {action.create && <Button variant="success" onClick={addEmployeePhoneBookEntry}>Додати</Button>}
-                {action.update && <Button variant="success" onClick={changeEmployeePhoneBookEntry}>Застосувати</Button>}
-                {action.delete && <Button variant="danger" onClick={removeEmployeePhoneBookEntry}>Видалити</Button>}
+                {action.create && <Button variant="success" onClick={fetchCreate}>Додати</Button>}
+                {action.update && <Button variant="success" onClick={() => {
+                    fetchChange(employeesEntryId)
+                }}>Застосувати</Button>}
+                {action.delete && <Button variant="danger" onClick={() => {
+                    fetchDelete(employeesEntryId)
+                }}>Видалити</Button>}
                 <Button onClick={closeModalWindow}>Закрити</Button>
             </Modal.Footer>
         </Modal>

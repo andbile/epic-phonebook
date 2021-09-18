@@ -8,8 +8,8 @@ import EmployeesPhoneBook from "./EmployeesPhoneBook";
 import Button from "react-bootstrap/Button";
 import EmployeesPhoneBookModalAdmin from "./EmployeesPhoneBookModalAdmin";
 import {fetchDepartments} from "../../../http/departmentAPI";
-import useFetching from "../../../hooks/useFetching";
 import {fetchEmployeesByDepartmentId} from "../../../http/employeeAPI";
+import {useFetching} from "../../../hooks/useFetching";
 
 // Add/update/delete employees phone book entry
 // Get current employees phone book entry using select department
@@ -17,7 +17,6 @@ const EmployeesPhoneBookAdmin = observer(() => {
     const {employeesStore, departmentStore} = useContext(Context)
 
     const modal = useModal()
-    const fetching = useFetching(null)
 
     // selected department id
     const [selectedDepartmentId, setSelectedDepartmentId] = useState(null)
@@ -26,24 +25,27 @@ const EmployeesPhoneBookAdmin = observer(() => {
     // write to a state create/delete/update for use to identify the pressed button
     const [action, setAction] = useState({})
 
+    const [fetchAllDepartments] = useFetching(async () => {
+        const departments = await fetchDepartments()
+        departmentStore.setDepartments(departments)
+    })
+
+    const [fetchAllEmployeesByDepartmentId] = useFetching(async (selectedDepartmentId) => {
+        const employees = await fetchEmployeesByDepartmentId(selectedDepartmentId)
+        employeesStore.setEmployees(employees)
+    })
+
 
     // get departments for select one
     useEffect(() => {
-        fetching(async () => {
-            await fetchDepartments()
-                .then(data => departmentStore.setDepartments(data))
-        })
+        fetchAllDepartments()
     }, [])
 
     // get employees
     useEffect(() => {
         if (selectedDepartmentId) {
-            fetching(async () => {
-                await fetchEmployeesByDepartmentId(selectedDepartmentId)
-                    .then(data => employeesStore.setEmployees(data))
-            })
+            fetchAllEmployeesByDepartmentId(selectedDepartmentId)
         }
-
     }, [selectedDepartmentId])
 
 
@@ -73,7 +75,7 @@ const EmployeesPhoneBookAdmin = observer(() => {
     }
 
     //
-    const changeEmployeeDepartment = (id)=>{
+    const changeEmployeeDepartment = (id) => {
         setEmployeesEntryId(id)
         setAction({change: true})
         modal.showAModal()
@@ -94,7 +96,11 @@ const EmployeesPhoneBookAdmin = observer(() => {
                 selectedDepartmentId && (
                     <>
                         <EmployeesPhoneBook
-                            phoneBookBtnCallbacks={{updatePhoneBookEntry, deletePhoneBookEntry, changeEmployeeDepartment}}
+                            phoneBookBtnCallbacks={{
+                                updatePhoneBookEntry,
+                                deletePhoneBookEntry,
+                                changeEmployeeDepartment
+                            }}
                             isAdminPanel={true}
                         />
 

@@ -13,8 +13,8 @@ import EmployeesPhoneBookEntryItem from "./EmployeesPhoneBookEntryItem";
 import PropTypes from 'prop-types'
 import isPhoneBookBtnCallbacks from './../../../components/propTypeValidators/isPhoneBookBtnCallbacks'
 import {fetchOneDepartmentByCode} from "../../../http/departmentAPI";
-import useFetching from "../../../hooks/useFetching";
 import {fetchEmployeesByDepartmentId} from "../../../http/employeeAPI";
+import {useFetching} from "../../../hooks/useFetching";
 
 
 /**
@@ -31,24 +31,30 @@ const EmployeesPhoneBook = observer(props => {
 
     const {departmentCode} = useParams()
     const history = useHistory()
-    const fetching = useFetching(null)
+
+
+    const [fetchEmployeeByDepartmentCode] = useFetching(async () => {
+        // get department using department code from request parameter
+        const department = await fetchOneDepartmentByCode(departmentCode)
+        // redirect if department is not found
+        if (department.length === 0) return history.push(DEPARTMENTS_PHONE_BOOK_ROUTE)
+
+        // if department found
+        departmentStore.setCurrentDepartment(department[0])
+
+        // get employees
+        const employees = await fetchEmployeesByDepartmentId(departmentStore.currentDepartment.id)
+        employeesStore.setEmployees(employees)
+    })
+
 
     useEffect(() => {
+        // clear the state, if the connection is slow, you can see the old state (another department/employees phone book)
+        departmentStore.setCurrentDepartment([])
+        employeesStore.setEmployees([])
+
         if (departmentCode) {
-            fetching(async () => {
-                // get department using department code from request parameter
-                fetchOneDepartmentByCode(departmentCode)
-                    .then( data => {
-                        // redirect if department is not found
-                        if (data.length === 0) return history.push(DEPARTMENTS_PHONE_BOOK_ROUTE)
-
-                        departmentStore.setCurrentDepartment(data[0])
-
-                        // get employees
-                        fetchEmployeesByDepartmentId(departmentStore.currentDepartment.id)
-                            .then(data => employeesStore.setEmployees(data))
-                    })
-            })
+            fetchEmployeeByDepartmentCode(departmentCode)
         }
     }, [])
 
