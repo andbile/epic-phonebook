@@ -29,16 +29,16 @@ margin-right: 10px;
 `
 
 const ModalError = observer(() => {
-    const {fetchErrorStore} = useContext(Context)
+    const {fetchStore} = useContext(Context)
 
     const closeModalWindow = () => {
-        fetchErrorStore.setErrorMessage('')
-        fetchErrorStore.setIsError(false)
+        fetchStore.setErrorMessage('')
+        fetchStore.setIsError(false)
     }
 
     return (
         <StyledModalError
-            show={fetchErrorStore.isError}
+            show={fetchStore.isError}
             onHide={closeModalWindow}
             size="sx"
             centered
@@ -48,7 +48,7 @@ const ModalError = observer(() => {
             </Modal.Header>
 
             <Modal.Body>
-                {fetchErrorStore.errorMessage}
+                {fetchStore.errorMessage}
             </Modal.Body>
 
             <Modal.Footer>

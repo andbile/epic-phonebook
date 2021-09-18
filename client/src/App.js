@@ -8,43 +8,48 @@ import {checkUserAuthorization} from "./http/userAPI";
 import {observer} from "mobx-react-lite";
 import Preloader from "./components/Preloader";
 import ModalError from "./components/modal/ModalError";
-import useFetching from "./hooks/useFetching";
+import {useFetching} from "./hooks/useFetching";
 
 
 const App = observer(() => {
-    const {user} = useContext(Context)
-    const fetching = useFetching(null)
+    const {user, fetchStore} = useContext(Context)
+
 
     // выводим прелоадер, пока проверяем и авторизуем пользователя
     const [loading, setLoading] = useState(true)
     const [checkingUser, setCheckingUser] = useState(true)
 
+    const [fetchCheckUserAuthorization] = useFetching(async () => {
+        const userData = await checkUserAuthorization()
+        user.login(userData)
+        setCheckingUser(false)
+        setLoading(false)
+    })
+
+
     useEffect(() => {
-        fetching(async () => {
-            await checkUserAuthorization()
-                .then(data => {
-                    user.login(data)
-                })
-                .finally(() => {
-                    // TODO убрать setTimeout
-                    setTimeout(() => {
-                        setLoading(false)
-                        setCheckingUser(false)
-                    }, 100)
-                })
-        })
+        fetchCheckUserAuthorization()
+            .finally(()=>{
+                setCheckingUser(false)
+                setLoading(false)
+            })
     }, [])
 
-    if (loading) {
-        return <Preloader/>
-    }
+
+    if (loading) return <Preloader/>
 
     return (
         <BrowserRouter>
-            <Header/>
-            {!checkingUser && <AppRouter/>}
-            <Footer/>
+            {!checkingUser && (
+                <>
+                    <Header/>
+                    <AppRouter/>
+                    <Footer/>
+                </>
+            )}
+
             <ModalError/>
+            {fetchStore.isLoading && <Preloader/>}
         </BrowserRouter>
     );
 })

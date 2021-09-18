@@ -1,10 +1,15 @@
 import {makeAutoObservable} from "mobx";
 
-export default class FetchError {
+export default class FetchStore {
     constructor() {
+        this._isLoading = false
         this._isError = false
-        this._message = ''
+        this._errorMessage = ''
         makeAutoObservable(this)
+    }
+
+    setIsLoading(bool) {
+        this._isLoading = bool
     }
 
     setIsError(bool) {
@@ -12,7 +17,11 @@ export default class FetchError {
     }
 
     setErrorMessage(message) {
-        this._message = message
+        this._errorMessage = message
+    }
+
+    get isLoading(){
+        return this._isLoading
     }
 
     get isError() {
@@ -20,6 +29,6 @@ export default class FetchError {
     }
 
     get errorMessage() {
-        return this._message
+        return this._errorMessage
     }
 }
