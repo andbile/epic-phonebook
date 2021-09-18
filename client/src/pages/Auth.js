@@ -7,12 +7,12 @@ import {Context} from "../index";
 import {login, registration} from "../http/userAPI";
 import {observer} from "mobx-react-lite";
 import MainContainer from "../components/MainContainer";
-import useFetching from "../hooks/useFetching";
+import {useFetching} from "../hooks/useFetching";
+
 
 const Auth = observer(() => {
     const {user} = useContext(Context)
     const history = useHistory()
-    const fetching = useFetching(null)
 
     // depending on the route we render registration or authorization
     const location = useLocation()
@@ -21,22 +21,17 @@ const Auth = observer(() => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const userLogin = ()=>{
-        fetching(async ()=>{
-            const data = await login(email, password)
-            user.login(data)
-            history.push(HOME_ROUTE)
-        })
-    }
+    const [userLogin] = useFetching(async () => {
+        const data = await login(email, password)
+        user.login(data)
+        history.push(HOME_ROUTE)
+    })
 
-    const userRegistration = ()=>{
-        fetching(async ()=>{
-            const data = await registration(email, password)
-            user.login(data)
-            history.push(HOME_ROUTE)
-        })
-    }
-
+    const [userRegistration] = useFetching(async () => {
+        const data = await registration(email, password)
+        user.login(data)
+        history.push(HOME_ROUTE)
+    })
 
     return (
         <MainContainer className={'d-flex flex-column justify-content-center align-items-center'}>
