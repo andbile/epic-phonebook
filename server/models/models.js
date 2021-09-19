@@ -2,7 +2,7 @@ const sequelize = require('../db')
 const {DataTypes} = require('sequelize') // описуються типы того или иного поля
 
 // Department
-const Department = sequelize.define('department', {
+const Department = sequelize.define('departments', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     code: {type: DataTypes.STRING, unique: true, allowNull: false},
     name: {type: DataTypes.STRING, unique: true, allowNull: false},
@@ -13,7 +13,7 @@ const Department = sequelize.define('department', {
 })
 
 // Departments phone book
-const DepartmentContact = sequelize.define('department_contact', {
+const DepartmentContact = sequelize.define('department_contacts', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     position: {type: DataTypes.STRING, allowNull: false},
     tel_dect: {

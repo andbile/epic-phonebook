@@ -193,3 +193,6 @@ select last_name, first_name, patronymic_name, position, tel_number_mobile, curr
 
 -- лечение счётчика
 SELECT setval('departments_id_seq', (SELECT MAX(id) from departments));
+
+-- получение данных без учета регистра
+select * from departments WHERE LOWER(name) LIKE LOWER ('%Кас%')

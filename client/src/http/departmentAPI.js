@@ -5,8 +5,15 @@ export const fetchDepartments = async () => {
     return data
 }
 
+export const fetchSearchDepartmentsByName = async (searchQuery) => {
+    const {data} = await $host.get('department/search-by-name/', {
+        params: searchQuery
+    })
+    return data
+}
+
 export const fetchOneDepartmentByCode = async (departmentCode) => {
-    const {data} = await $host.get(`department/${departmentCode}`)
+    const {data} = await $host.get(`department/by-code/${departmentCode}`)
     return data
 }
 

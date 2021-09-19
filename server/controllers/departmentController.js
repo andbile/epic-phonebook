@@ -1,3 +1,5 @@
+const {Sequelize} = require('sequelize')
+const {Op} = require("sequelize");
 const ApiError = require("../error/ApiError");
 const {Department, Employees} = require('../models/models')
 const DepartmentValidator = require('../validators/DepartmentValidator')
@@ -87,6 +89,31 @@ class DepartmentController {
             return res.json(result[0])
         }, next)
     }
+
+    async getDepartmentsByName(req, res, next) {
+        const name = req.query.name
+
+        fetchDataFromBD(async () => {
+            const departments = await Department.findAll({
+                where: [
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')),
+                        {
+                            [Op.like]: Sequelize.fn('LOWER', `%${name}%`)
+                        },
+                    )],
+
+                order: [
+                    ['is_seller', 'DESC'],
+                    ['code', 'ASC']
+                ]
+            })
+
+
+            return res.json(departments)
+        }, next)
+    }
+
+
 }
 
 module.exports = new DepartmentController()
