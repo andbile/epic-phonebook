@@ -27,9 +27,11 @@ const DepartmentsPhoneBook = observer(() => {
 
     // Toggle display seller/notSeller/all departments
     const initialState = departmentStore.departments
+
     function init(initialState) {
         return initialState;
     }
+
     const [departments, dispatch] = useReducer(DepartmentPhoneBookReducer, initialState, init)
 
     useEffect(() => {
@@ -48,15 +50,13 @@ const DepartmentsPhoneBook = observer(() => {
     const [fetchSearchDepartment] = useFetching(async (value) => {
         const departments = await fetchSearchDepartmentsByName({name: value})
 
-        // if found
-        if (departments.length > 0) {
-            dispatch({
-                type: departmentActions.all,
-                playload: init(departments)
-            })
+        // if not found
+        if (departments.length === 0) return
 
-            departmentStore.setDepartments(departments)
-        }
+        dispatch({
+            type: departmentActions.all,
+            playload: init(departments)
+        })
     })
 
     // added fetch delay
@@ -105,7 +105,7 @@ const DepartmentsPhoneBook = observer(() => {
                 <Button
                     onClick={() => dispatch({
                         type: departmentActions.seller,
-                        playload: departmentStore.departments
+                        playload: initialState
                     })}
                 >
                     Торгові
@@ -113,7 +113,7 @@ const DepartmentsPhoneBook = observer(() => {
                 <Button className="ml-3" variant='success'
                         onClick={() => dispatch({
                             type: departmentActions.notSeller,
-                            playload: departmentStore.departments
+                            playload: initialState
                         })}
                 >
                     Не торгові
@@ -121,7 +121,7 @@ const DepartmentsPhoneBook = observer(() => {
                 <Button className="ml-3" variant='secondary'
                         onClick={() => dispatch({
                             type: departmentActions.all,
-                            playload: departmentStore.departments
+                            playload: initialState
                         })}
                 >
                     Всі

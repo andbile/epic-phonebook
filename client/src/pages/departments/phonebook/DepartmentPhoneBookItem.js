@@ -50,11 +50,11 @@ const DepartmentPhoneBookItem = observer((props) => {
         <>
             <tr>
                 <td
-                    className={department.is_seller ? 'seller' : 'not-seller'}
+                    className={department && department.is_seller ? 'seller' : 'not-seller'}
                     colSpan={isAdminPanel ? 6 : 4}
                 >
                     <div className='d-flex align-items-center'>
-                        <span className='flex-grow-1'>{department.code} &ndash; {department.name}</span>
+                        <span className='flex-grow-1'>{department && department.code} &ndash; {department && department.name}</span>
                         {!isAdminPanel && btnToShowEmployeesPhoneBookByDepartment()}
                     </div>
                 </td>
@@ -63,7 +63,7 @@ const DepartmentPhoneBookItem = observer((props) => {
             {
                 phoneBookEntries.map(item =>
                     <DepartmentPhoneBookEntryItem
-                        key={department.code + item.id}
+                        key={department && department.code + item.id}
                         departmentPhoneBookEntryItem={item}
                         isAdminPanel={isAdminPanel}
                         phoneBookBtnCallbacks={phoneBookBtnCallbacks}
