@@ -25,7 +25,7 @@ class PhoneBookController {
         const validationResult = PhoneBookValidator.fieldsValidation({
             position: position.trim(), tel_landline, tel_dect, email: emailLowerCase
         })
-        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+        if (!validationResult.result) return next(ApiError.validationError(validationResult.errorMessage))
 
 
         fetchDataFromBD(async () => {
@@ -43,7 +43,7 @@ class PhoneBookController {
         fetchDataFromBD(async () => {
             const result = await DepartmentContact.destroy({where: {id}})
 
-            if (result === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+            if (result === 0) return next(ApiError.validationError(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result)
         }, next)
@@ -59,7 +59,7 @@ class PhoneBookController {
         const validationResult = PhoneBookValidator.fieldsValidation({
             position: position.trim(), tel_landline, tel_dect, email: emailLowerCase
         })
-        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+        if (!validationResult.result) return next(ApiError.validationError(validationResult.errorMessage))
 
         fetchDataFromBD(async () => {
             const result = await DepartmentContact.update(
@@ -67,7 +67,7 @@ class PhoneBookController {
             {where: {id}}
             )
 
-            if (result[0] === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+            if (result[0] === 0) return next(ApiError.validationError(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result[0])
         }, next)

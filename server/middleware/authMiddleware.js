@@ -13,7 +13,6 @@ module.exports = async function (req, res, next) {
         if (!token) return next(ApiError.unauthorized('Не авторизований'))
 
         const userFromDecodedToken = jwt.verify(token, process.env.SECRET_KEY)
-        console.log(userFromDecodedToken)
 
         // get user from bd
         const user = await Users.findOne({where: {id: userFromDecodedToken.id}})

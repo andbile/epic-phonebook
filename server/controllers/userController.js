@@ -28,13 +28,13 @@ class UserController {
         const validationResult = RegistrationValidator.fieldsValidation({
             email: emailLowerCase, password
         })
-        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+        if (!validationResult.result) return next(ApiError.validationError(validationResult.errorMessage))
 
         // Get users with the same email
         const candidate = await fetchDataFromBD(async () => {
             return await Users.findOne({where: {email}})
         }, next)
-        if (candidate) return next(ApiError.badRequest('Користувач з таким email вже існує'))
+        if (candidate) return next(ApiError.validationError('Користувач з таким email вже існує'))
 
 
         const hashPassword = await bcrypt.hash(password, 5)
@@ -53,7 +53,7 @@ class UserController {
         const user = await fetchDataFromBD(async () =>
              await Users.findOne({where: {email}})
         , next)
-        if (!user) return next(ApiError.badRequest('Користувач не знайдений'))
+        if (!user) return next(ApiError.validationError('Користувач не знайдений'))
 
         let comparePassword = bcrypt.compareSync(password, user.password)
         if (!comparePassword) return next(ApiError.internal('Введено недійсний пароль'))

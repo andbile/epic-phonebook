@@ -18,6 +18,10 @@ class ApiError extends Error{
         return new ApiError(404, message)
     }
 
+    static validationError(message){
+        return new ApiError(404, {validationErrorMessage: message})
+    }
+
     static internal(message) {
         return new ApiError(500, message)
     }

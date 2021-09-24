@@ -35,7 +35,7 @@ class DepartmentController {
         const validationResult = DepartmentValidator.fieldsValidation({
             code, name: name.trim(), is_seller
         })
-        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+        if (!validationResult.result) return next(ApiError.validationError(validationResult.errorMessage))
 
         fetchDataFromBD(async () => {
             const department = await Department.create({code, name: name.trim(), is_seller})
@@ -54,13 +54,13 @@ class DepartmentController {
 
         // cannot deleted a department if employees are attached to it
         if (numberEmployees > 0) {
-            return next(ApiError.badRequest(`За відділом закріплено ${numberEmployees} співробітник(а/ів), перед видаленням відділу перемістить їх у інший відділ`))
+            return next(ApiError.validationError(`За відділом закріплено ${numberEmployees} співробітник(а/ів), перед видаленням відділу перемістить їх у інший відділ`))
         }
 
         fetchDataFromBD(async () => {
             const result = await Department.destroy({where: {id}})
 
-            if (result === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+            if (result === 0) return next(ApiError.validationError(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result)
         }, next)
@@ -75,7 +75,7 @@ class DepartmentController {
         const validationResult = DepartmentValidator.fieldsValidation({
             code, name: name.trim(), is_seller
         })
-        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+        if (!validationResult.result) return next(ApiError.validationError(validationResult.errorMessage))
 
         fetchDataFromBD(async () => {
             const result = await Department.update(
@@ -83,8 +83,7 @@ class DepartmentController {
                 {where: {id}}
             )
 
-            if (result[0] === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
-
+            if (result[0] === 0) return next(ApiError.validationError(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result[0])
         }, next)

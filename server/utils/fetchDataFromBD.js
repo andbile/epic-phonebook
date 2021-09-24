@@ -12,7 +12,7 @@ module.exports = async function (callback, next) {
    return callback()
         .catch(err => {
                 if (err instanceof Sequelize.ValidationError) {
-                    return next(ApiError.badRequest(`${err}`))
+                    return next(ApiError.validationError(`${err}`))
 
                 } else if (err instanceof Sequelize.DatabaseError) {
                     console.log(`${err}`)

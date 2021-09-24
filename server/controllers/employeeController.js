@@ -25,7 +25,7 @@ class EmployeeController {
             position: position.trim(),
             tel_mobile
         })
-        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+        if (!validationResult.result) return next(ApiError.validationError(validationResult.errorMessage))
 
 
         fetchDataFromBD(async () => {
@@ -53,7 +53,7 @@ class EmployeeController {
             position: position.trim(),
             tel_mobile
         })
-        if (!validationResult.result) return next(ApiError.badRequest(validationResult.errorMessage))
+        if (!validationResult.result) return next(ApiError.validationError(validationResult.errorMessage))
 
 
         fetchDataFromBD(async () => {
@@ -77,7 +77,7 @@ class EmployeeController {
         fetchDataFromBD(async () => {
             const result = await Employees.destroy({where: {id}})
 
-            if (result === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+            if (result === 0) return next(ApiError.validationError(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result)
         }, next)
@@ -94,7 +94,7 @@ class EmployeeController {
                 {where: {id}}
             )
 
-            if (result[0] === 0) return next(ApiError.badRequest(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
+            if (result[0] === 0) return next(ApiError.validationError(`Запис id: ${id} відсутній. Зверніться до адміністратора`))
 
             return res.json(result)
         }, next)

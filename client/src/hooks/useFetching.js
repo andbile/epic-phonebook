@@ -17,18 +17,22 @@ export const useFetching = (callback) => {
             let message = ''
 
             if (error.response) {
+                const response = error.response
+
                 // log out if unauthorized
-                if (error.response?.status === 401) return user.logOut()
+                if (response.status === 401) return user.logOut()
 
-                message = (`${error.response.status} - ${error.response.data.message}`)
+                if(response.status === 404 && response.data?.message?.validationErrorMessage){
+                    message = (`${response.status} - ${response.data.message.validationErrorMessage}`)
+                    fetchStore.setErrorMessage(message)
+                    fetchStore.setIsError(true)
+                }
+
             } else if (error.request) {
-                message = (`Непередбачена помилка! Спробуйте пізніше або зверніться до адміністратора + ${error.request}`)
+                console.log(`Непередбачена помилка! Спробуйте пізніше або зверніться до адміністратора + ${error.request}`)
             } else {
-                message = (`Непередбачена помилка! Спробуйте пізніше або зверніться до адміністратора - ${error.message}`)
+                console.log(`Непередбачена помилка! Спробуйте пізніше або зверніться до адміністратора - ${error.message}`)
             }
-
-            fetchStore.setErrorMessage(message)
-            fetchStore.setIsError(true)
 
         } finally {
             fetchStore.setIsLoading(false)
