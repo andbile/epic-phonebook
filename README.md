@@ -1,13 +1,14 @@
-<h1>Телефонний довідник</h1>
+<h1>Phonebook</h1>
 
-Використані технології
+Technologies used
 <ol>
-    <li>Дизайн - Axure</li>
-    <li>Express, REST API, postgreSQL, sequelize, jwt</li>
-    <li>React, mobx, axios, bootstrap, styled components</li>
+     <li>Design - Axure</li>
+     <li>Express, REST API, postgreSQL, sequelize, jwt</li>
+     <li>React, mobx, axios, bootstrap, styled components</li>
 </ol>
 
-Наявний функціонал
+Available functionality
 <ol>
-    <li>Довідник телефонних номерів та електронної пошти</li>
+     <li>Directory of telephone numbers and e-mail</li>
+     <li>Admin panel</li>
 </ol>
