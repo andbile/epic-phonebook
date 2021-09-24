@@ -2,7 +2,7 @@
 node_modules/
 client/node_modules
 client/build
-client/.env
+client/.env.development
 
 
 server/node_modules
