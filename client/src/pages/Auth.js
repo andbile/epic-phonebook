@@ -9,9 +9,9 @@ import {observer} from "mobx-react-lite";
 import MainContainer from "../components/MainContainer";
 import {useFetching} from "../hooks/useFetching";
 
-
+// TODO отключена регистрацию, она бессмысленная при текущем развитии проекта
 const Auth = observer(() => {
-    const {user} = useContext(Context)
+    const {user, fetchStore} = useContext(Context)
     const history = useHistory()
 
     // depending on the route we render registration or authorization
@@ -32,6 +32,13 @@ const Auth = observer(() => {
         user.login(data)
         history.push(HOME_ROUTE)
     })
+
+    const registrationDisabled = (evt) => {
+        evt.preventDefault()
+        fetchStore.setErrorMessage('Реєстрація тимчасово відключена')
+        fetchStore.setIsError(true)
+
+    }
 
     return (
         <MainContainer className={'d-flex flex-column justify-content-center align-items-center'}>
@@ -56,7 +63,8 @@ const Auth = observer(() => {
                     <Row className="d-flex justify-content-between mt-3 pl-3 pr-3">
                         <div>
                             {isLoginRoute ?
-                                <div>Нет аккаунта? <Link to={REGISTRATION_ROUTE}>Зареєструйся!</Link></div>
+                                <div>Нет аккаунта? <Link onClick={registrationDisabled}
+                                                         to={REGISTRATION_ROUTE}>Зареєструйся!</Link></div>
                                 :
                                 <div>Есть аккаунт? <Link to={LOGIN_ROUTE}>Увійдіть!</Link></div>
                             }

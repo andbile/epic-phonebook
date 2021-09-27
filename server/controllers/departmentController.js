@@ -89,6 +89,7 @@ class DepartmentController {
         }, next)
     }
 
+    // TODO search department by name, if query param is number = find by code
     async getDepartmentsByName(req, res, next) {
         const name = req.query.name
 

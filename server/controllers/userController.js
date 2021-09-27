@@ -25,6 +25,11 @@ class UserController {
         const {email, password} = req.body
         const emailLowerCase = email.toLowerCase().trim()
 
+        // TODO registration disabled
+        const isRegistrationDisabled = true
+        if(isRegistrationDisabled) return next(ApiError.validationError('Реєстрація тимчасово відключена'))
+
+
         const validationResult = RegistrationValidator.fieldsValidation({
             email: emailLowerCase, password
         })
