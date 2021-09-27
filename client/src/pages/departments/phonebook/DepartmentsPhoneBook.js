@@ -92,12 +92,13 @@ const DepartmentsPhoneBook = observer(() => {
                     <FormControl
                         className='w-25 flex-grow-0'
                         aria-label="Пошук"
+                        placeholder="Пошук по назві відділу"
                         aria-describedby="search-department"
                         value={searchValue}
                         onChange={onSearch}
 
                     />
-                    <InputGroup.Text id="search-department">Пошук...</InputGroup.Text>
+                   {/* <InputGroup.Text id="search-department">Пошук...</InputGroup.Text>*/}
                 </InputGroup>
             </div>
 
