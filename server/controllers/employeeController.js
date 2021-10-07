@@ -9,7 +9,12 @@ class EmployeeController {
 
         fetchDataFromBD(async () => {
             const employees = await Employees.findAll(
-                {where: {departmentId: id}})
+                {
+                    where: {departmentId: id},
+                    order: [
+                        ['last_name', 'ASC']
+                    ]
+                })
             return res.json(employees)
         }, next)
     }
